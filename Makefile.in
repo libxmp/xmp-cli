@@ -1,0 +1,70 @@
+VERSION	= 3.9.0
+
+CC		= @CC@
+CFLAGS		= -c @CFLAGS@ @DEFS@ @CPPFLAGS@
+LD		= @CC@
+LDFLAGS		= @LDFLAGS@
+LIBS		= @LIBS@
+INSTALL		= @INSTALL@
+DESTDIR		=
+prefix		= @prefix@
+exec_prefix	= @prefix@
+datarootdir	= @datarootdir@
+BINDIR		= @bindir@
+LIBDIR		= @libdir@
+MANDIR		= @mandir@/man1
+SYSCONFDIR	= @sysconfdir@/xmp
+SHELL		= /bin/sh
+
+DIST		= xmp-$(VERSION)
+DFILES		= README INSTALL configure configure.ac Makefile.in
+DDIRS		= src drivers
+V		= 0
+
+all: binaries
+
+include src/Makefile
+include src/drivers/Makefile
+
+CFLAGS += -I. -DVERSION=\"$(VERSION)\"
+
+.SUFFIXES: .c .o .lo .a .so .dll
+
+.c.o:
+	@CMD='$(CC) $(CFLAGS) -o $*.o $<'; \
+	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo CC $*.o ; fi; \
+	eval $$CMD
+
+binaries: src/xmp
+
+clean:
+	@rm -f $(OBJS)
+
+install: install-xmp install-docs
+
+depend:
+	@echo Building dependencies...
+	@echo > $@
+	@for i in $(OBJS) do \
+	    c="$${i%.o}.c"; l="$${i%.o}.lo"; \
+	    $(CC) $(CFLAGS) -MM $$c | \
+		sed "s!^.*\.o:!$$i $$l:!" >> $@ ; \
+	done
+	    
+dist: dist-prepare dist-subdirs
+
+dist-prepare:
+	rm -Rf $(DIST) $(DIST).tar.gz
+	mkdir -p $(DIST)
+	cp -RPp $(DFILES) $(DIST)/
+
+dist-subdirs: $(addprefix dist-,$(DDIRS))
+	chmod -R u+w $(DIST)/*
+	tar cvf - $(DIST) | gzip -9c > $(DIST).tar.gz
+	rm -Rf $(DIST)
+	ls -l $(DIST).tar.gz
+
+$(OBJS): Makefile
+
+sinclude depend
+
