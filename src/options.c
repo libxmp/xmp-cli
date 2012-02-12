@@ -42,53 +42,6 @@ extern int rt;
 #define OPT_SHOWTIME	0x111
 #define OPT_DUMP	0x112
 
-static void exclude_formats(char *list)
-{
-	char *tok;
-
-	tok = strtok(list, ", ");
-	while (tok) {
-		xmp_enable_format(tok, 0);
-		tok = strtok(NULL, ", ");
-	}
-}
-
-static void list_wrap(char *s, int l, int r, int v)
-{
-	int i;
-	static int c = 0;
-	static int m = 0;
-	char *t;
-
-	if (s == NULL) {
-		for (i = 0; i < l; i++)
-			printf(" ");
-		c = l;
-		m = r;
-		return;
-	} else if (c > l) {
-		c++;
-		printf(v ? "," : " ");
-	}
-
-	t = strtok(s, " ");
-
-	while (t) {
-		if ((c + strlen(t) + 1) > m) {
-			c = l;
-			printf("\n");
-			for (i = 0; i < l; i++) {
-				printf(" ");
-			}
-		} else if (c > l) {
-			printf(" ");
-		}
-		c += strlen(t) + 1;
-		printf("%s", t);
-		t = strtok(NULL, " ");
-	}
-}
-
 static void usage(char *s)
 {
 	struct xmp_fmt_info *f, *fmt;
