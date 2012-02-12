@@ -9,6 +9,7 @@ struct options {
 	int loop;		/* loop module */
 	int random;		/* play in random order */
 	int load_only;		/* load module and exit */
+	int verbose;
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */
 	char mute[XMP_MAX_CHANNELS];

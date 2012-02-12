@@ -63,6 +63,8 @@ int main(int argc, char **argv)
 #endif
 
 	memset(&options, 0, sizeof (struct options));
+	options.verbose = 1;
+
 	get_options(argc, argv, &options);
 
 	if (options.random) {
@@ -107,7 +109,13 @@ int main(int argc, char **argv)
 
 			xmp_player_get_info(ctx, &mi);
 
-			info_mod(&mi);
+			if (options.verbose > 0) {
+				info_mod(&mi);
+			}
+			if (options.verbose == 2) {
+				info_instruments_compact(&mi);
+			}
+	
 
 			/* Play module */
 

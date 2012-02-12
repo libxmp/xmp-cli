@@ -261,7 +261,7 @@ void get_options(int argc, char **argv, struct options *options)
 			puts("Extended Module Player " VERSION);
 			exit(0);
 		case 'v':
-			//options->verbosity++;
+			options->verbose++;
 			break;
 		case 'h':
 			usage(argv[0]);
