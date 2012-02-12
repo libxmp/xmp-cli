@@ -48,7 +48,6 @@ int main(int argc, char **argv)
 	struct xmp_module_info mi;
 	struct options options;
 	int i;
-	int silent = 0;
 	int first;
 #ifndef WIN32
 	struct timeval tv;
@@ -67,7 +66,7 @@ int main(int argc, char **argv)
 		shuffle(argc - optind + 1, &argv[optind - 1]);
 	}
 
-	if (!silent && sound_init(44100, 2) < 0) {
+	if (sound_init(44100, 2) < 0) {
 		fprintf(stderr, "%s: can't initialize sound\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
@@ -116,9 +115,7 @@ int main(int argc, char **argv)
 					break;
 
 				info_frame(&mi, new_mod);
-				if (!silent) {
-					sound_play(mi.buffer, mi.buffer_size);
-				}
+				sound_play(mi.buffer, mi.buffer_size);
 
 				new_mod = 0;
 				options.start = 0;
@@ -134,9 +131,7 @@ int main(int argc, char **argv)
 
 	reset_tty();
 
-	if (!silent) {
-		sound_deinit();
-	}
+	sound_deinit();
 
 	exit(EXIT_SUCCESS);
 }
