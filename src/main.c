@@ -8,10 +8,13 @@
 #include <signal.h>
 #include <sys/time.h>
 #include <xmp.h>
-//#include "sound.h"
+#include "sound.h"
 #include "common.h"
 
 extern int optind;
+extern struct sound_driver sound_alsa;
+
+struct sound_driver *sound = &sound_alsa;
 
 static void cleanup(int sig)
 {
@@ -21,7 +24,7 @@ static void cleanup(int sig)
 	signal(SIGFPE, SIG_DFL);
 	signal(SIGSEGV, SIG_DFL);
 
-	sound_deinit();
+	sound->deinit();
 	reset_tty();
 
 	signal(sig, SIG_DFL);
@@ -66,7 +69,7 @@ int main(int argc, char **argv)
 		shuffle(argc - optind + 1, &argv[optind - 1]);
 	}
 
-	if (sound_init(44100, 2) < 0) {
+	if (sound->init(44100, 2) < 0) {
 		fprintf(stderr, "%s: can't initialize sound\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
@@ -115,7 +118,7 @@ int main(int argc, char **argv)
 					break;
 
 				info_frame(&mi, new_mod);
-				sound_play(mi.buffer, mi.buffer_size);
+				sound->play(mi.buffer, mi.buffer_size);
 
 				new_mod = 0;
 				options.start = 0;
@@ -124,14 +127,14 @@ int main(int argc, char **argv)
 			xmp_player_end(ctx);
 		}
 
+		sound->flush();
 		xmp_release_module(ctx);
 		printf("\n");
 	}
+
 	xmp_free_context(ctx);
-
 	reset_tty();
-
-	sound_deinit();
+	sound->deinit();
 
 	exit(EXIT_SUCCESS);
 }

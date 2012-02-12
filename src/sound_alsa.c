@@ -6,7 +6,7 @@
 static snd_pcm_t *pcm_handle;
 
 
-int sound_init(int sampling_rate, int channels)
+static int init(int sampling_rate, int channels)
 {
 	snd_pcm_hw_params_t *hwparams;
 	int ret;
@@ -51,7 +51,7 @@ int sound_init(int sampling_rate, int channels)
 	return 0;
 }
 
-void sound_play(void *b, int i)
+static void play(void *b, int i)
 {
 	int frames;
 
@@ -61,10 +61,40 @@ void sound_play(void *b, int i)
 	}
 }
 
-void sound_deinit()
+static void deinit()
 {
-	/* snd_pcm_drain(pcm_handle); */
 	snd_pcm_close(pcm_handle);
 }
 
+static void flush()
+{
+	snd_pcm_drain(pcm_handle);
+}
 
+static void onpause()
+{
+}
+
+static void onresume()
+{
+}
+
+
+static char *help[] = {
+	"buffer=num", "Set the ALSA buffer time in milliseconds",
+	"period=num", "Set the ALSA period time in milliseconds",
+	"card <name>", "Select sound card to use",
+	NULL
+};
+
+struct sound_driver sound_alsa = {
+	"alsa",
+	"ALSA pcm audio",
+	help,
+	init,
+	deinit,
+	play,
+	flush,
+	onpause,
+	onresume	
+};
