@@ -13,7 +13,7 @@
 
 extern int optind;
 
-static void cleanup()
+static void cleanup(int sig)
 {
 	signal(SIGTERM, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
@@ -23,8 +23,9 @@ static void cleanup()
 
 	sound_deinit();
 	reset_tty();
-	printf("\n");
-	exit(EXIT_FAILURE);
+
+	signal(sig, SIG_DFL);
+	kill(getpid (), sig);
 }
 
 
