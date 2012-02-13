@@ -13,6 +13,7 @@
 
 extern int optind;
 extern struct sound_driver sound_alsa;
+extern struct sound_driver sound_null;
 
 struct sound_driver *sound = &sound_alsa;
 
@@ -69,6 +70,10 @@ int main(int argc, char **argv)
 
 	if (options.random) {
 		shuffle(argc - optind + 1, &argv[optind - 1]);
+	}
+
+	if (options.silent) {
+		sound = &sound_null;
 	}
 
 	if (sound->init(44100, 2) < 0) {

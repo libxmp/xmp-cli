@@ -129,38 +129,37 @@ static void usage(char *s)
 	       "   -v --verbose           Verbose mode (incremental)\n");
 }
 
+static struct option lopt[] = {
+	{ "amplify",		1, 0, 'a' },
+	{ "bits",		1, 0, 'b' },
+	{ "driver",		1, 0, 'd' },
+	{ "frequency",		1, 0, 'f' },
+	{ "offset-bug-emulation", 0, 0, OPT_FX9BUG },
+	{ "help",		0, 0, 'h' },
+	{ "instrument-path", 1, 0, 'I' },
+	{ "load-only",		0, 0, OPT_LOADONLY },
+	{ "loop",		0, 0, 'l' },
+	{ "mono",		0, 0, 'm' },
+	{ "mute",		1, 0, 'M' },
+	{ "output-file",	1, 0, 'o' },
+	{ "pan",		1, 0, 'P' },
+	{ "quiet",		0, 0, 'q' },
+	{ "random",		0, 0, 'R' },
+	{ "solo",		1, 0, 'S' },
+	{ "start",		1, 0, 's' },
+	{ "stdout",		0, 0, 'c' },
+	{ "tempo",		1, 0, 'T' },
+	{ "time",		1, 0, 't' },
+	{ "unsigned",		0, 0, 'u' },
+	{ "version",		0, 0, 'V' },
+	{ "verbose",		0, 0, 'v' },
+	{ NULL,			0, 0, 0   }
+};
+
 void get_options(int argc, char **argv, struct options *options)
 {
 	int optidx = 0;
-#define OPTIONS "a:b:cD:d:f:hI:lM:mo:qRS:s:T:t:uVv"
-	static struct option lopt[] = {
-		{"amplify", 1, 0, 'a'},
-		{"bits", 1, 0, 'b'},
-		{"driver", 1, 0, 'd'},
-		{"frequency", 1, 0, 'f'},
-		{"offset-bug-emulation", 0, 0, OPT_FX9BUG},
-		{"help", 0, 0, 'h'},
-		{"instrument-path", 1, 0, 'I'},
-		{"load-only", 0, 0, OPT_LOADONLY},
-		{"loop", 0, 0, 'l'},
-		{"mono", 0, 0, 'm'},
-		{"mute", 1, 0, 'M'},
-		{"nocmd", 0, 0, OPT_NOCMD},
-		{"output-file", 1, 0, 'o'},
-		{"pan", 1, 0, 'P'},
-		{"quiet", 0, 0, 'q'},
-		{"random", 0, 0, 'R'},
-		{"solo", 1, 0, 'S'},
-		{"start", 1, 0, 's'},
-		{"stdout", 0, 0, 'c'},
-		{"tempo", 1, 0, 'T'},
-		{"time", 1, 0, 't'},
-		{"unsigned", 0, 0, 'u'},
-		{"version", 0, 0, 'V'},
-		{"verbose", 0, 0, 'v'},
-		{NULL, 0, 0, 0}
-	};
-
+#define OPTIONS "a:b:cD:d:f:hI:lM:mno:qRS:s:T:t:uVv"
 	i = 0;
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
@@ -200,6 +199,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'm':
 			options->format |= XMP_FORMAT_MONO;
+			break;
+		case 'n':
+			options->silent = 1;
 			break;
 		case 'o':
 			options->out_file = optarg;
