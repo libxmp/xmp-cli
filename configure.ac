@@ -8,10 +8,9 @@ AC_ARG_WITH(libxmp, [  --with-libxmp=<path>    libxmp prefix (optional)],
 AC_PROG_CC
 
 if test "$libxmp_path" != ""; then
-  CINCS="${CINCS} -I${libxmp_path}/include"
+  CPPFLAGS="${CPPFLAGS} -I${libxmp_path}/include"
   LIBS="${LIBS} -L${libxmp_path}/lib"
 fi
-CPPFLAGS="${CINCS}"
 
 AC_CHECK_HEADER(xmp.h)
 if test "${ac_cv_header_xmp_h}" = "yes"; then
