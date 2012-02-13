@@ -1,7 +1,7 @@
 
-#SRC_OBJS	= getopt.o getopt1.o options.o drivers.o main.o
-SRC_OBJS	= sound_null.o sound_alsa.o terminal.o info.o options.o main.o
-SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h
+SRC_OBJS	= sound_null.o sound_alsa.o terminal.o info.o options.o \
+		  getopt.o getopt1.o main.o
+SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h
 SRC_PATH	= src
 
 OBJS += $(addprefix $(SRC_PATH)/,$(SRC_OBJS))

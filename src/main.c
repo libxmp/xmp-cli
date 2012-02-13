@@ -1,7 +1,3 @@
-/* A simple frontend for xmp */
-
-#define HAVE_TERMIOS_H
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

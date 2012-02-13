@@ -12,7 +12,8 @@ if test "$libxmp_path" != ""; then
   LIBS="${LIBS} -L${libxmp_path}/lib"
 fi
 
-AC_CHECK_HEADER(xmp.h)
+AC_CHECK_HEADERS(xmp.h getopt.h termios.h alsa/asoundlib.h)
+
 if test "${ac_cv_header_xmp_h}" = "yes"; then
   AC_CHECK_LIB(xmp,xmp_player_start,,
     AC_MSG_ERROR(Can't find libxmp))
@@ -20,6 +21,7 @@ else
   AC_MSG_ERROR(Can't find libxmp header files)
 fi
 
+AC_CHECK_FUNCS(getopt_long)
 
 AC_PROG_INSTALL
 AC_CONFIG_FILES([Makefile])
