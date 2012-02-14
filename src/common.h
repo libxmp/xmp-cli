@@ -16,6 +16,12 @@ struct options {
 	char mute[XMP_MAX_CHANNELS];
 };
 
+struct control {
+	int skip;
+	int loop;
+	int pause;
+};
+
 int set_tty(void);
 int reset_tty(void);
 

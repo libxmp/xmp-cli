@@ -2,6 +2,8 @@
 #include <string.h>
 #include <xmp.h>
 
+static int max_channels = -1;
+
 void info_mod(struct xmp_module_info *mi)
 {
 	int i;
@@ -24,10 +26,9 @@ void info_mod(struct xmp_module_info *mi)
 }
 
 
-void info_frame(struct xmp_module_info *mi, int reset)
+void info_frame(struct xmp_module_info *mi, int loop, int reset)
 {
 	static int ord = -1, tpo = -1, bpm = -1;
-	static int max_channels = -1;
 	int time;
 
 	if (reset) {
@@ -45,7 +46,7 @@ void info_frame(struct xmp_module_info *mi, int reset)
 
 	if (mi->order != ord || mi->bpm != bpm || mi->tempo != tpo) {
 	        printf("\rTempo[%02X] BPM[%02X] Pos[%02X/%02X] "
-			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]   0:00:00.0",
+			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]     0:00:00.0",
 					mi->tempo, mi->bpm,
 					mi->order, mi->mod->len - 1,
 					mi->pattern, mi->mod->pat - 1);
@@ -54,11 +55,22 @@ void info_frame(struct xmp_module_info *mi, int reset)
 		tpo = mi->tempo;
 	}
 
-	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-	       "%02X/%02X] Chn[%02X/%02X] %3d:%02d:%02d.%d",
+	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+	       "%02X/%02X] Chn[%02X/%02X] %c %3d:%02d:%02d.%d",
 		mi->row, mi->num_rows - 1, mi->virt_used, max_channels,
+		loop ? 'L' : ' ',
 		(int)(time / (60 * 600)), (int)((time / 600) % 60),
 		(int)((time / 10) % 60), (int)(time % 10));
+
+	fflush(stdout);
+}
+
+void info_pause(struct xmp_module_info *mi, int loop)
+{
+	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+	       "%02X/%02X] Chn[%02X/%02X] %c  - PAUSED -",
+		mi->row, mi->num_rows - 1, mi->virt_used, max_channels,
+		loop ? 'L' : ' ');
 
 	fflush(stdout);
 }

@@ -47,8 +47,10 @@ int main(int argc, char **argv)
 	xmp_context ctx;
 	struct xmp_module_info mi;
 	struct options options;
+	struct control control;
 	int i;
 	int first;
+	int skipprev;
 #ifndef WIN32
 	struct timeval tv;
 	struct timezone tz;
@@ -60,6 +62,7 @@ int main(int argc, char **argv)
 #endif
 
 	memset(&options, 0, sizeof (struct options));
+	memset(&control, 0, sizeof (struct control));
 	options.verbose = 1;
 
 	get_options(argc, argv, &options);
@@ -87,15 +90,24 @@ int main(int argc, char **argv)
 
 	ctx = xmp_create_context();
 
+	skipprev = 0;
+
 	for (first = optind; optind < argc; optind++) {
 		printf("\nLoading %s... (%d of %d)\n",
 			argv[optind], optind - first + 1, argc - first);
 
 		if (xmp_load_module(ctx, argv[optind]) < 0) {
 			fprintf(stderr, "%s: error loading %s\n", argv[0],
-				argv[i]);
+				argv[optind]);
+			if (skipprev) {
+		        	optind -= 2;
+				if (optind < first) {
+					optind += 2;
+				}
+			}
 			continue;
 		}
+		skipprev = 0;
 
 		if (xmp_player_start(ctx, options.start, 44100, 0) == 0) {
 			int new_mod = 1;
@@ -121,24 +133,43 @@ int main(int argc, char **argv)
 			/* Play module */
 
 			while (xmp_player_frame(ctx) == 0) {
-
+				int old_loop = mi.loop_count;
+				
 				xmp_player_get_info(ctx, &mi);
-				if (mi.loop_count > 0)
+//printf("%d %d\n", old_loop, mi.loop_count);
+				if (!control.loop && old_loop != mi.loop_count)
 					break;
 
-				info_frame(&mi, new_mod);
+				info_frame(&mi, control.loop, new_mod);
 				sound->play(mi.buffer, mi.buffer_size);
+
+				read_command(ctx, &control);
+				if (control.pause) {
+					sound->pause();
+					info_pause(&mi, control.loop);
+					while (control.pause) {
+						usleep(100000);
+						read_command(ctx, &control);
+					}
+					sound->resume();
+				}
 
 				new_mod = 0;
 				options.start = 0;
-
 			}
 			xmp_player_end(ctx);
 		}
 
-		sound->flush();
 		xmp_release_module(ctx);
 		printf("\n");
+
+		if (control.skip == -1) {
+			optind -= optind > first ? 2 : 1;
+			skipprev = 1;
+		} else if (control.skip == -2) {
+			break;
+		}
+		control.skip = 0;
 	}
 
 	xmp_free_context(ctx);

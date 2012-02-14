@@ -1,6 +1,6 @@
 
-SRC_OBJS	= sound_null.o sound_alsa.o terminal.o info.o options.o \
-		  getopt.o getopt1.o main.o
+SRC_OBJS	= sound_null.o sound_alsa.o terminal.o info.o commands.o \
+		  options.o getopt.o getopt1.o main.o
 SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h
 SRC_PATH	= src
 
