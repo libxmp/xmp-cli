@@ -44,11 +44,6 @@ extern int rt;
 
 static void usage(char *s)
 {
-	struct xmp_fmt_info *f, *fmt;
-	struct xmp_drv_info *d, *drv;
-	char **hlp, buf[80];
-	int i;
-
 	printf("Usage: %s [options] [modules]\n", s);
 
 #if 0

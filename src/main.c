@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_SIGNAL_H
 #include <signal.h>
+#endif
 #include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <xmp.h>
 #include "sound.h"
 #include "common.h"
@@ -13,6 +17,7 @@ extern struct sound_driver sound_null;
 
 struct sound_driver *sound = &sound_alsa;
 
+#ifdef HAVE_SIGNAL_H
 static void cleanup(int sig)
 {
 	signal(SIGTERM, SIG_DFL);
@@ -27,7 +32,7 @@ static void cleanup(int sig)
 	signal(sig, SIG_DFL);
 	kill(getpid (), sig);
 }
-
+#endif
 
 static void shuffle(int argc, char **argv)
 {
@@ -80,11 +85,13 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
+#ifdef HAVE_SIGNAL_H
 	signal(SIGTERM, cleanup);
 	signal(SIGINT, cleanup);
 	signal(SIGFPE, cleanup);
 	signal(SIGSEGV, cleanup);
 	signal(SIGQUIT, cleanup);
+#endif
 
 	set_tty();
 

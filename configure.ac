@@ -12,7 +12,7 @@ if test "$libxmp_path" != ""; then
   LIBS="${LIBS} -L${libxmp_path}/lib"
 fi
 
-AC_CHECK_HEADERS(xmp.h getopt.h termios.h alsa/asoundlib.h)
+AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h alsa/asoundlib.h)
 
 if test "${ac_cv_header_xmp_h}" = "yes"; then
   AC_CHECK_LIB(xmp,xmp_player_start,,

@@ -4,6 +4,7 @@
 
 static int init(int sampling_rate, int channels)
 {
+	return 0;
 }
 
 static void play(void *b, int i)
