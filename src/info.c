@@ -1,8 +1,26 @@
 #include <stdio.h>
 #include <string.h>
 #include <xmp.h>
+#include "common.h"
 
 static int max_channels = -1;
+
+void info_help(void)
+{
+	printf(
+"COMMAND KEYS SUMMARY\n"
+"     Space      Pause/unpause\n"
+"    F, Right    Advance to next order\n"
+"    B, Left     Return to previous order\n"
+"    N, Up       Advance to next module\n"
+"    P, Down     Return to previous module\n"
+"    1 - 0       Mute/unmute channels\n"
+"      !         Unmute all channels\n"
+"      ?         Display available commands\n"
+"      m         Display module information\n"
+"      i         Display instrument list\n"
+);
+}
 
 void info_mod(struct xmp_module_info *mi)
 {
@@ -26,7 +44,7 @@ void info_mod(struct xmp_module_info *mi)
 }
 
 
-void info_frame(struct xmp_module_info *mi, int loop, int reset)
+void info_frame(struct xmp_module_info *mi, struct control *ctl, int reset)
 {
 	static int ord = -1, tpo = -1, bpm = -1;
 	int time;
@@ -39,7 +57,7 @@ void info_frame(struct xmp_module_info *mi, int loop, int reset)
 	if (mi->virt_used > max_channels)
 		max_channels = mi->virt_used;
 
-	if (mi->frame != 0)
+	if (!reset && mi->frame != 0)
 		return;
 
 	time = mi->current_time / 100;
@@ -56,21 +74,17 @@ void info_frame(struct xmp_module_info *mi, int loop, int reset)
 	}
 
 	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-	       "%02X/%02X] Chn[%02X/%02X] %c %3d:%02d:%02d.%d",
+	       "%02X/%02X] Chn[%02X/%02X] %c ",
 		mi->row, mi->num_rows - 1, mi->virt_used, max_channels,
-		loop ? 'L' : ' ',
-		(int)(time / (60 * 600)), (int)((time / 600) % 60),
-		(int)((time / 10) % 60), (int)(time % 10));
+		ctl->loop ? 'L' : ' ');
 
-	fflush(stdout);
-}
-
-void info_pause(struct xmp_module_info *mi, int loop)
-{
-	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-	       "%02X/%02X] Chn[%02X/%02X] %c  - PAUSED -",
-		mi->row, mi->num_rows - 1, mi->virt_used, max_channels,
-		loop ? 'L' : ' ');
+	if (ctl->pause) {
+		printf(" - PAUSED -");
+	} else {
+		printf("%3d:%02d:%02d.%d",
+			(int)(time / (60 * 600)), (int)((time / 600) % 60),
+			(int)((time / 10) % 60), (int)(time % 10));
+	}
 
 	fflush(stdout);
 }

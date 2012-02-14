@@ -87,14 +87,14 @@ static int read_key()
  * ESC [ C - right arrow
  * ESC [ D - left arrow
  */
-void read_command(xmp_context ctx, struct control *ctl)
+void read_command(xmp_context handle, struct control *ctl)
 {
 	int cmd;
 
 	cmd = read_key();	
 	if (cmd <= 0)
 		return;
-	
+
 	switch (cmd) {
 	case 0x1b:		/* escape */
 		cmd = read_key();
@@ -115,29 +115,29 @@ void read_command(xmp_context ctx, struct control *ctl)
 		break;
 	case 'q':		/* quit */
 	cmd_quit:
-		xmp_mod_stop(ctx);
+		xmp_mod_stop(handle);
 		ctl->pause = 0;
 		ctl->skip = -2;
 		break;
 	case 'f':		/* jump to next order */
 	cmd_next_ord:
-		xmp_ord_next(ctx);
+		xmp_ord_next(handle);
 		ctl->pause = 0;
 		break;
 	case 'b':		/* jump to previous order */
 	cmd_prev_ord:
-		xmp_ord_prev(ctx);
+		xmp_ord_prev(handle);
 		ctl->pause = 0;
 		break;
 	case 'n':		/* skip to next module */
 	cmd_next_mod:
-		xmp_mod_stop(ctx);
+		xmp_mod_stop(handle);
 		ctl->pause = 0;
 		ctl->skip = 1;
 		break;
 	case 'p':		/* skip to previous module */
 	cmd_prev_mod:
-		xmp_mod_stop(ctx);
+		xmp_mod_stop(handle);
 		ctl->pause = 0;
 		ctl->skip = -1;
 		break;
@@ -156,16 +156,21 @@ void read_command(xmp_context ctx, struct control *ctl)
 	case '7':
 	case '8':
 	case '9':
-		xmp_channel_mute(ctx, cmd - '1', -1);
+		xmp_channel_mute(handle, cmd - '1', -1);
 		break;
 	case '0':
-		xmp_channel_mute(ctx, 9, -1);
+		xmp_channel_mute(handle, 9, -1);
 		break;
 	case '!': {
 		int i;
 		for (i = 0; i < 10; i++) {
-			xmp_channel_mute(ctx, i, 0);
+			xmp_channel_mute(handle, i, 0);
 		}
 		break; }
+	case '?':
+	case 'i':
+	case 'm':
+		ctl->display = cmd;
+		break;
 	}
 }

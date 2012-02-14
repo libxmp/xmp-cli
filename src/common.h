@@ -20,6 +20,7 @@ struct control {
 	int skip;
 	int loop;
 	int pause;
+	int display;
 };
 
 
@@ -32,9 +33,9 @@ int reset_tty(void);
 
 /* info */
 void info_mod(struct xmp_module_info *);
-void info_frame(struct xmp_module_info *, int, int);
-void info_pause(struct xmp_module_info *, int);
+void info_frame(struct xmp_module_info *, struct control *, int);
 void info_instruments_compact(struct xmp_module_info *);
+void info_help(void);
 
 /* commands */
 void read_command(xmp_context, struct control *);

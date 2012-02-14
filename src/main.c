@@ -34,6 +34,22 @@ static void cleanup(int sig)
 }
 #endif
 
+static void show_info(int what, struct xmp_module_info *mi)
+{
+	printf("\r%78.78s\n", " ");
+	switch (what) {
+	case '?':
+		info_help();
+		break;
+	case 'i':
+		info_instruments_compact(mi);
+		break;
+	case 'm':
+		info_mod(mi);
+		break;
+	}
+}
+
 static void shuffle(int argc, char **argv)
 {
 	int i, j;
@@ -47,9 +63,28 @@ static void shuffle(int argc, char **argv)
 	}
 }
 
+static void check_pause(xmp_context handle, struct control *ctl,
+                        struct xmp_module_info *mi)
+{
+	if (ctl->pause) {
+		sound->pause();
+		info_frame(mi, ctl, 1);
+		while (ctl->pause) {
+			usleep(100000);
+			read_command(handle, ctl);
+			if (ctl->display) {
+				show_info(ctl->display, mi);
+				info_frame(mi, ctl, 1);
+				ctl->display = 0;
+			}
+		}
+		sound->resume();
+	}
+}
+
 int main(int argc, char **argv)
 {
-	xmp_context ctx;
+	xmp_context handle;
 	struct xmp_module_info mi;
 	struct options options;
 	struct control control;
@@ -95,7 +130,7 @@ int main(int argc, char **argv)
 
 	set_tty();
 
-	ctx = xmp_create_context();
+	handle = xmp_create_context();
 
 	skipprev = 0;
 
@@ -103,7 +138,7 @@ int main(int argc, char **argv)
 		printf("\nLoading %s... (%d of %d)\n",
 			argv[optind], optind - first + 1, argc - first);
 
-		if (xmp_load_module(ctx, argv[optind]) < 0) {
+		if (xmp_load_module(handle, argv[optind]) < 0) {
 			fprintf(stderr, "%s: error loading %s\n", argv[0],
 				argv[optind]);
 			if (skipprev) {
@@ -116,18 +151,18 @@ int main(int argc, char **argv)
 		}
 		skipprev = 0;
 
-		if (xmp_player_start(ctx, options.start, 44100, 0) == 0) {
-			int new_mod = 1;
+		if (xmp_player_start(handle, options.start, 44100, 0) == 0) {
+			int refresh_line = 1;
 
 			/* Mute channels */
 
 			for (i = 0; i < XMP_MAX_CHANNELS; i++) {
-				xmp_channel_mute(ctx, i, options.mute[i]);
+				xmp_channel_mute(handle, i, options.mute[i]);
 			}
 
 			/* Show module data */
 
-			xmp_player_get_info(ctx, &mi);
+			xmp_player_get_info(handle, &mi);
 
 			if (options.verbose > 0) {
 				info_mod(&mi);
@@ -139,35 +174,32 @@ int main(int argc, char **argv)
 
 			/* Play module */
 
-			while (xmp_player_frame(ctx) == 0) {
+			while (xmp_player_frame(handle) == 0) {
 				int old_loop = mi.loop_count;
 				
-				xmp_player_get_info(ctx, &mi);
-//printf("%d %d\n", old_loop, mi.loop_count);
+				xmp_player_get_info(handle, &mi);
 				if (!control.loop && old_loop != mi.loop_count)
 					break;
 
-				info_frame(&mi, control.loop, new_mod);
+				info_frame(&mi, &control, refresh_line);
 				sound->play(mi.buffer, mi.buffer_size);
 
-				read_command(ctx, &control);
-				if (control.pause) {
-					sound->pause();
-					info_pause(&mi, control.loop);
-					while (control.pause) {
-						usleep(100000);
-						read_command(ctx, &control);
-					}
-					sound->resume();
+				read_command(handle, &control);
+
+				if (control.display) {
+					show_info(control.display, &mi);
+					control.display = 0;
+					refresh_line = 1;
 				}
 
-				new_mod = 0;
+				check_pause(handle, &control, &mi);
+
 				options.start = 0;
 			}
-			xmp_player_end(ctx);
+			xmp_player_end(handle);
 		}
 
-		xmp_release_module(ctx);
+		xmp_release_module(handle);
 		printf("\n");
 
 		if (control.skip == -1) {
@@ -182,7 +214,7 @@ int main(int argc, char **argv)
 	sound->flush();
 
 end:
-	xmp_free_context(ctx);
+	xmp_free_context(handle);
 	reset_tty();
 	sound->deinit();
 
