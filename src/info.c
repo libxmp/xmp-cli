@@ -26,20 +26,20 @@ void info_mod(struct xmp_module_info *mi)
 {
 	int i;
 
-	printf("Module name    : %s\n", mi->mod->name);
-	printf("Module type    : %s\n", mi->mod->type);
-	printf("Module length  : %d patterns\n", mi->mod->len);
-	printf("Stored patterns: %d\n", mi->mod->pat);
-	printf("Instruments    : %d\n", mi->mod->ins);
-	printf("Samples        : %d\n", mi->mod->smp);
-	printf("Channels       : %d [ ", mi->mod->chn);
+	printf("Module name  : %s\n", mi->mod->name);
+	printf("Module type  : %s\n", mi->mod->type);
+	printf("Module length: %d patterns\n", mi->mod->len);
+	printf("Patterns     : %d\n", mi->mod->pat);
+	printf("Instruments  : %d\n", mi->mod->ins);
+	printf("Samples      : %d\n", mi->mod->smp);
+	printf("Channels     : %d [ ", mi->mod->chn);
 
 	for (i = 0; i < mi->mod->chn; i++) {
 		printf("%x ", mi->mod->xxc[i].pan >> 4);
 	}
 	printf("]\n");
 
-	printf("Estimated time : %dmin%ds\n", (mi->total_time + 500) / 60000,
+	printf("Duration    : %dmin%ds\n", (mi->total_time + 500) / 60000,
 					((mi->total_time + 500) / 1000) % 60);
 }
 
