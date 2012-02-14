@@ -167,11 +167,14 @@ int main(int argc, char **argv)
 			optind -= optind > first ? 2 : 1;
 			skipprev = 1;
 		} else if (control.skip == -2) {
-			break;
+			goto end;
 		}
 		control.skip = 0;
 	}
 
+	sound->flush();
+
+end:
 	xmp_free_context(ctx);
 	reset_tty();
 	sound->deinit();
