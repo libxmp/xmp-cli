@@ -43,26 +43,25 @@ void info_mod(struct xmp_module_info *mi)
 					((mi->total_time + 500) / 1000) % 60);
 }
 
+void info_frame_init(struct xmp_module_info *mi)
+{
+	max_channels = 0;
+}
 
-void info_frame(struct xmp_module_info *mi, struct control *ctl, int reset)
+void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 {
 	static int ord = -1, tpo = -1, bpm = -1;
 	int time;
 
-	if (reset) {
-		ord = -1;
-		max_channels = -1;
-	}
-
 	if (mi->virt_used > max_channels)
 		max_channels = mi->virt_used;
 
-	if (!reset && mi->frame != 0)
+	if (!reprint && mi->frame != 0)
 		return;
 
 	time = mi->current_time / 100;
 
-	if (mi->order != ord || mi->bpm != bpm || mi->tempo != tpo) {
+	if (reprint || mi->order != ord || mi->bpm != bpm || mi->tempo != tpo) {
 	        printf("\rTempo[%02X] BPM[%02X] Pos[%02X/%02X] "
 			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]     0:00:00.0",
 					mi->tempo, mi->bpm,
@@ -89,7 +88,7 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reset)
 	fflush(stdout);
 }
 
-void info_instruments_compact(struct xmp_module_info *mi)
+void info_instruments(struct xmp_module_info *mi)
 {
 	int i, j;
 	struct xmp_module *mod = mi->mod;

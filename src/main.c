@@ -42,7 +42,7 @@ static void show_info(int what, struct xmp_module_info *mi)
 		info_help();
 		break;
 	case 'i':
-		info_instruments_compact(mi);
+		info_instruments(mi);
 		break;
 	case 'm':
 		info_mod(mi);
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 		skipprev = 0;
 
 		if (xmp_player_start(handle, options.start, 44100, 0) == 0) {
-			int refresh_line = 1;
+			int refresh_line;
 
 			/* Mute channels */
 
@@ -175,10 +175,13 @@ int main(int argc, char **argv)
 				info_mod(&mi);
 			}
 			if (options.verbose == 2) {
-				info_instruments_compact(&mi);
+				info_instruments(&mi);
 			}
 	
 			/* Play module */
+
+			refresh_line = 1;
+			info_frame_init(&mi);
 
 			while (!options.info && xmp_player_frame(handle) == 0) {
 				int old_loop = mi.loop_count;
@@ -188,6 +191,8 @@ int main(int argc, char **argv)
 					break;
 
 				info_frame(&mi, &control, refresh_line);
+				refresh_line = 0;
+
 				sound->play(mi.buffer, mi.buffer_size);
 
 				if (options.out_file) {
