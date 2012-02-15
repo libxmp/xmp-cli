@@ -91,6 +91,7 @@ int main(int argc, char **argv)
 	int i;
 	int first;
 	int skipprev;
+	FILE *f = NULL;
 #ifndef WIN32
 	struct timeval tv;
 	struct timezone tz;
@@ -113,6 +114,12 @@ int main(int argc, char **argv)
 
 	if (options.silent) {
 		sound = &sound_null;
+	} else if (options.out_file) {
+		f = fopen(options.out_file, "wb");
+		if (f == NULL) {
+			perror(options.out_file);
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	if (sound->init(44100, 2) < 0) {
@@ -184,6 +191,10 @@ int main(int argc, char **argv)
 				info_frame(&mi, &control, refresh_line);
 				sound->play(mi.buffer, mi.buffer_size);
 
+				if (options.out_file) {
+					fwrite(mi.buffer, mi.buffer_size, 1, f);
+				}
+
 				read_command(handle, &control);
 
 				if (control.display) {
@@ -217,6 +228,10 @@ end:
 	xmp_free_context(handle);
 	reset_tty();
 	sound->deinit();
+
+	if (options.out_file) {
+		fclose(f);
+	}
 
 	exit(EXIT_SUCCESS);
 }
