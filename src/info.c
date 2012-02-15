@@ -39,7 +39,7 @@ void info_mod(struct xmp_module_info *mi)
 	}
 	printf("]\n");
 
-	printf("Duration    : %dmin%ds\n", (mi->total_time + 500) / 60000,
+	printf("Duration     : %dmin%ds\n", (mi->total_time + 500) / 60000,
 					((mi->total_time + 500) / 1000) % 60);
 }
 
@@ -95,7 +95,7 @@ void info_instruments_compact(struct xmp_module_info *mi)
 	struct xmp_module *mod = mi->mod;
 
 	printf("Instruments:\n");
-	printf("   Instrument name                  Size  Loop  End    Vol Fine Pan\n");
+	printf("   Instrument name                  Smp  Size  Loop  End    Vol Fine Pan\n");
 	for (i = 0; i < mod->ins; i++) {
 		struct xmp_instrument *ins = &mod->xxi[i];
 
@@ -116,7 +116,8 @@ void info_instruments_compact(struct xmp_module_info *mi)
 				printf("%36.36s", " ");
 			}
 
-			printf("%05x%c%05x %05x%c V%02x %+04d P%02x\n",
+			printf("[%02x] %05x%c%05x %05x%c V%02x %+04d P%02x\n",
+				sub->sid,
 				smp->len,
 				smp->flg & XMP_SAMPLE_16BIT ? '+' : ' ',
 				smp->lps,
@@ -130,7 +131,7 @@ void info_instruments_compact(struct xmp_module_info *mi)
 		}
 
 		if (j == 0) {
-			printf("----- ----- -----  --- ---- ---\n");
+			printf("[  ] ----- ----- -----  --- ---- ---\n");
 		}
 
 	}
