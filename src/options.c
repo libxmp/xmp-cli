@@ -21,7 +21,6 @@ static int o, i;
 static char *token;
 
 extern int probeonly;
-extern int loadonly;
 extern int randomize;
 extern int nocmd;
 #ifdef HAVE_SYS_RTPRIO_H
@@ -80,37 +79,37 @@ static void usage(char *s)
 #endif
 
 	printf("\nPlayer control options:\n"
-	       "   -D parameter[=val]     Pass configuration parameter to the output driver\n"
-	       "   -d --driver name       Force output to the specified device\n"
-	       "   --offset-bug-emulation Emulate Protracker 2.x bug in effect 9\n"
-	       "   -l --loop              Enable module looping\n"
-	       "   -M --mute ch-list      Mute the specified channels\n"
-	       "   -R --random            Random order playing\n"
-	       "   -S --solo ch-list      Set channels to solo mode\n"
-	       "   -s --start num         Start from the specified order\n"
-	       "   -t --time num          Maximum playing time in seconds\n"
-	       "\nPlayer sound options:\n"
-	       "   -8 --8bit              Convert 16 bit samples to 8 bit\n"
-	       "   -m --mono              Mono output\n"
-	       "   -P --pan pan           Percentual pan amplitude\n"
-	       "\nSoftware mixer options:\n"
-	       "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
-	       "   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
-	       "   -c --stdout            Mix the module to stdout\n"
-	       "   -F --click-filter      Apply low pass filter to reduce clicks\n"
-	       "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
-	       "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
-	       "   -u --unsigned          Set the mixer to use unsigned samples\n"
-	       "\nEnvironment options:\n"
-	       "   -I --instrument-path   Set pathname to external samples\n"
-	       "\nInformation options:\n"
-	       "   -h --help              Print a summary of the command line options\n"
-	       "   --load-only            Load module and exit\n"
-	       "   --probe-only           Probe audio device and exit\n"
-	       "   -q --quiet             Quiet mode (verbosity level = 0)\n"
-	       "   --show-time            Display elapsed and remaining time\n"
-	       "   -V --version           Print version information\n"
-	       "   -v --verbose           Verbose mode (incremental)\n");
+"   -D parameter[=val]     Pass configuration parameter to the output driver\n"
+"   -d --driver name       Force output to the specified device\n"
+"   --offset-bug-emulation Emulate Protracker 2.x bug in effect 9\n"
+"   -l --loop              Enable module looping\n"
+"   -M --mute ch-list      Mute the specified channels\n"
+"   -R --random            Random order playing\n"
+"   -S --solo ch-list      Set channels to solo mode\n"
+"   -s --start num         Start from the specified order\n"
+"   -t --time num          Maximum playing time in seconds\n"
+"\nPlayer sound options:\n"
+"   -8 --8bit              Convert 16 bit samples to 8 bit\n"
+"   -m --mono              Mono output\n"
+"   -P --pan pan           Percentual pan amplitude\n"
+"\nSoftware mixer options:\n"
+"   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
+"   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
+"   -c --stdout            Mix the module to stdout\n"
+"   -F --click-filter      Apply low pass filter to reduce clicks\n"
+"   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
+"   -o --output-file name  Mix the module to file ('-' for stdout)\n"
+"   -u --unsigned          Set the mixer to use unsigned samples\n"
+"\nEnvironment options:\n"
+"   -I --instrument-path   Set pathname to external samples\n"
+"\nInformation options:\n"
+"   -h --help              Display a summary of the command line options\n"
+"   -i --info              Display module information and exit\n"
+"   --probe-only           Probe audio device and exit\n"
+"   -q --quiet             Quiet mode (verbosity level = 0)\n"
+"   --show-time            Display elapsed and remaining time\n"
+"   -V --version           Print version information\n"
+"   -v --verbose           Verbose mode (incremental)\n");
 }
 
 static struct option lopt[] = {
@@ -120,8 +119,8 @@ static struct option lopt[] = {
 	{ "frequency",		1, 0, 'f' },
 	{ "offset-bug-emulation", 0, 0, OPT_FX9BUG },
 	{ "help",		0, 0, 'h' },
-	{ "instrument-path", 1, 0, 'I' },
-	{ "load-only",		0, 0, OPT_LOADONLY },
+	{ "instrument-path",	1, 0, 'I' },
+	{ "info",		0, 0, 'i' },
 	{ "loop",		0, 0, 'l' },
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
@@ -143,7 +142,7 @@ static struct option lopt[] = {
 void get_options(int argc, char **argv, struct options *options)
 {
 	int optidx = 0;
-#define OPTIONS "a:b:cD:d:f:hI:lM:mno:qRS:s:T:t:uVv"
+#define OPTIONS "a:b:cD:d:f:hI:ilM:mno:qRS:s:T:t:uVv"
 	i = 0;
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
@@ -174,6 +173,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'I':
 			options->ins_path = optarg;
+			break;
+		case 'i':
+			options->info = 1;
 			break;
 		case 'l':
 			options->loop = 1;

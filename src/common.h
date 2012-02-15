@@ -11,6 +11,7 @@ struct options {
 	int load_only;		/* load module and exit */
 	int verbose;
 	int silent;		/* silent output */
+	int info;		/* display information and exit */
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */
 	char mute[XMP_MAX_CHANNELS];

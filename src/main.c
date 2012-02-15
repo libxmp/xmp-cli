@@ -178,10 +178,9 @@ int main(int argc, char **argv)
 				info_instruments_compact(&mi);
 			}
 	
-
 			/* Play module */
 
-			while (xmp_player_frame(handle) == 0) {
+			while (!options.info && xmp_player_frame(handle) == 0) {
 				int old_loop = mi.loop_count;
 				
 				xmp_player_get_info(handle, &mi);
@@ -207,11 +206,15 @@ int main(int argc, char **argv)
 
 				options.start = 0;
 			}
+
 			xmp_player_end(handle);
 		}
 
 		xmp_release_module(handle);
-		printf("\n");
+
+		if (!options.info) {
+			printf("\n");
+		}
 
 		if (control.skip == -1) {
 			optind -= optind > first ? 2 : 1;
