@@ -59,7 +59,7 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 	if (!reprint && mi->frame != 0)
 		return;
 
-	time = mi->current_time / 100;
+	time = ctl->time / 100;
 
 	if (reprint || mi->order != ord || mi->bpm != bpm || mi->tempo != tpo) {
 	        printf("\rTempo[%02X] BPM[%02X] Pos[%02X/%02X] "

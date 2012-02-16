@@ -240,7 +240,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->start = strtoul(optarg, NULL, 0);
 			break;
 		case 't':
-			options->time = strtoul(optarg, NULL, 0);
+			options->max_time = strtoul(optarg, NULL, 0);
 			break;
 		case 'u':
 			options->format |= XMP_FORMAT_UNSIGNED;

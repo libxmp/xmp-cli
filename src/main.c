@@ -157,7 +157,8 @@ int main(int argc, char **argv)
 			continue;
 		}
 		skipprev = 0;
-
+		control.time = 0.0;
+		
 		if (xmp_player_start(handle, options.start, 44100, 0) == 0) {
 			int refresh_line;
 
@@ -192,6 +193,7 @@ int main(int argc, char **argv)
 
 				info_frame(&mi, &control, refresh_line);
 				refresh_line = 0;
+				control.time += 1.0 * mi.frame_time / 1000;
 
 				sound->play(mi.buffer, mi.buffer_size);
 

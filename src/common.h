@@ -4,7 +4,7 @@ struct options {
 	int amplify;		/* amplification factor */
 	int freq;		/* sampling rate */
 	int format;		/* sample format */
-	int time;		/* max. replay time */
+	int max_time;		/* max. replay time */
 	int mix;		/* channel separation */
 	int loop;		/* loop module */
 	int random;		/* play in random order */
@@ -18,10 +18,11 @@ struct options {
 };
 
 struct control {
-	int skip;
-	int loop;
-	int pause;
-	int display;
+	double time;		/* Replay time in ms */
+	int skip;		/* Skip to next module */
+	int loop;		/* Module is looped */
+	int pause;		/* Replay paused */
+	int display;		/* Info display flag */
 };
 
 
