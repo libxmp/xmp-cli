@@ -44,12 +44,7 @@ install: install-xmp install-docs
 
 depend:
 	@echo Building dependencies...
-	@echo > $@
-	@for i in $(OBJS) do \
-	    c="$${i%.o}.c"; l="$${i%.o}.lo"; \
-	    $(CC) $(CFLAGS) -MM $$c | \
-		sed "s!^.*\.o:!$$i $$l:!" >> $@ ; \
-	done
+	@$(CC) $(CFLAGS) -MM $(OBJS:.o=.c) > $@
 	    
 dist: dist-prepare dist-subdirs
 
