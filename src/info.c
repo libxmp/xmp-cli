@@ -35,7 +35,11 @@ void info_mod(struct xmp_module_info *mi)
 	printf("Channels     : %d [ ", mi->mod->chn);
 
 	for (i = 0; i < mi->mod->chn; i++) {
-		printf("%x ", mi->mod->xxc[i].pan >> 4);
+		if (mi->mod->xxc[i].flg & XMP_CHANNEL_SYNTH) {
+			printf("S ");
+		} else {
+			printf("%x ", mi->mod->xxc[i].pan >> 4);
+		}
 	}
 	printf("]\n");
 
