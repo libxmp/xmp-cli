@@ -124,6 +124,9 @@ int main(int argc, char **argv)
 
 	if (sound->init(44100, 2) < 0) {
 		fprintf(stderr, "%s: can't initialize sound\n", argv[0]);
+		if (f != NULL) {
+			fclose(f);
+		}
 		exit(EXIT_FAILURE);
 	}
 
@@ -234,7 +237,7 @@ int main(int argc, char **argv)
 
 	sound->flush();
 
-end:
+    end:
 	xmp_free_context(handle);
 	reset_tty();
 	sound->deinit();

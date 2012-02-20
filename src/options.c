@@ -96,7 +96,6 @@ static void usage(char *s)
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
 "   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
 "   -c --stdout            Mix the module to stdout\n"
-"   -F --click-filter      Apply low pass filter to reduce clicks\n"
 "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
 "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
@@ -105,6 +104,7 @@ static void usage(char *s)
 "\nInformation options:\n"
 "   -h --help              Display a summary of the command line options\n"
 "   -i --info              Display module information and exit\n"
+"   -L --list-formats      List supported module formats\n"
 "   --probe-only           Probe audio device and exit\n"
 "   -q --quiet             Quiet mode (verbosity level = 0)\n"
 "   --show-time            Display elapsed and remaining time\n"
@@ -121,6 +121,7 @@ static struct option lopt[] = {
 	{ "help",		0, 0, 'h' },
 	{ "instrument-path",	1, 0, 'I' },
 	{ "info",		0, 0, 'i' },
+	{ "list-formats",	0, 0, 'L' },
 	{ "loop",		0, 0, 'l' },
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
@@ -142,7 +143,7 @@ static struct option lopt[] = {
 void get_options(int argc, char **argv, struct options *options)
 {
 	int optidx = 0;
-#define OPTIONS "a:b:cD:d:f:hI:ilM:mno:qRS:s:T:t:uVv"
+#define OPTIONS "a:b:cD:d:f:hI:iLlM:mno:qRS:s:T:t:uVv"
 	i = 0;
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
@@ -177,6 +178,15 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'i':
 			options->info = 1;
 			break;
+		case 'L': {
+			char **list;
+			int i;
+			xmp_get_format_list(&list);
+			for (i = 0; list[i] != NULL; i++) {
+				printf("%d:%s\n", i, list[i]);
+			}
+			exit(EXIT_SUCCESS);
+			break; }
 		case 'l':
 			options->loop = 1;
 			break;
