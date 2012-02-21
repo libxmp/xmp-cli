@@ -181,7 +181,7 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'L': {
 			char **list;
 			int i;
-			xmp_get_format_list(&list);
+			list = xmp_get_format_list();
 			for (i = 0; list[i] != NULL; i++) {
 				printf("%d:%s\n", i + 1, list[i]);
 			}
