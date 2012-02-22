@@ -183,7 +183,7 @@ void get_options(int argc, char **argv, struct options *options)
 			int i;
 			xmp_get_format_list(&list);
 			for (i = 0; list[i] != NULL; i++) {
-				printf("%d:%s\n", i, list[i]);
+				printf("%d:%s\n", i + 1, list[i]);
 			}
 			exit(EXIT_SUCCESS);
 			break; }
