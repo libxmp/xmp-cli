@@ -133,6 +133,7 @@ int main(int argc, char **argv)
 	memset(&options, 0, sizeof (struct options));
 	memset(&control, 0, sizeof (struct control));
 	options.verbose = 1;
+	options.freq = 44100;
 
 	get_options(argc, argv, &options);
 
@@ -157,7 +158,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if (sound->init(44100, 2) < 0) {
+	if (sound->init(&options.freq, &options.format) < 0) {
 		fprintf(stderr, "%s: can't initialize sound\n", argv[0]);
 		if (f != NULL) {
 			fclose(f);
@@ -205,7 +206,7 @@ int main(int argc, char **argv)
 		skipprev = 0;
 		control.time = 0.0;
 		
-		if (xmp_player_start(handle, options.start, 44100, 0) == 0) {
+		if (xmp_player_start(handle, options.start, options.freq, options.format) == 0) {
 			/* Mute channels */
 
 			for (i = 0; i < XMP_MAX_CHANNELS; i++) {

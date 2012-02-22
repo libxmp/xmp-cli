@@ -6,11 +6,11 @@
 static snd_pcm_t *pcm_handle;
 
 
-static int init(int sampling_rate, int channels)
+static int init(int *rate, int *format)
 {
 	snd_pcm_hw_params_t *hwparams;
 	int ret;
-	unsigned int chan, rate;
+	unsigned int channels, fmt;
 	unsigned int btime = 250000;	/* 250ms */
 	unsigned int ptime = 50000;	/* 50ms */
 	char *card_name = "default";
@@ -22,20 +22,27 @@ static int init(int sampling_rate, int channels)
 		return -1;
 	}
 
-	chan = channels;
-	rate = sampling_rate;
+	channels = *format & XMP_FORMAT_MONO ? 1 : 2;
+	if (*format & XMP_FORMAT_UNSIGNED) {
+		fmt = *format & XMP_FORMAT_8BIT ?
+				SND_PCM_FORMAT_U8 : SND_PCM_FORMAT_U16;
+	} else {
+		fmt = *format & XMP_FORMAT_8BIT ?
+				SND_PCM_FORMAT_S8 : SND_PCM_FORMAT_S16;
+	}
 
 	snd_pcm_hw_params_alloca(&hwparams);
 	snd_pcm_hw_params_any(pcm_handle, hwparams);
 	snd_pcm_hw_params_set_access(pcm_handle, hwparams,
 				SND_PCM_ACCESS_RW_INTERLEAVED);
-	snd_pcm_hw_params_set_format(pcm_handle, hwparams, SND_PCM_FORMAT_S16);
-	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &rate, 0);
-	snd_pcm_hw_params_set_channels_near(pcm_handle, hwparams, &chan);
+	snd_pcm_hw_params_set_format(pcm_handle, hwparams, fmt);
+	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams,
+				(unsigned int *)rate, 0);
+	snd_pcm_hw_params_set_channels_near(pcm_handle, hwparams, &channels);
 	snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &btime, 0);
 	snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &ptime, 0);
 	snd_pcm_nonblock(pcm_handle, 0);
-	
+
 	if ((ret = snd_pcm_hw_params(pcm_handle, hwparams)) < 0) {
 		fprintf(stderr, "Unable to set ALSA output parameters: %s\n",
 					snd_strerror(ret));
@@ -48,6 +55,12 @@ static int init(int sampling_rate, int channels)
 		return -1;
 	}
   
+	if (channels == 1) {
+		*format |= XMP_FORMAT_MONO;
+	} else {
+		*format &= ~XMP_FORMAT_MONO;
+	}
+	
 	return 0;
 }
 
