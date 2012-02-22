@@ -3,15 +3,11 @@
 #include <xmp.h>
 #include "common.h"
 
-static int background = 0;
 static struct termios term;
 
 int set_tty()
 {
 	struct termios t;
-
-	if (background)
-		return -1;
 
 	if (tcgetattr(0, &term) < 0)
 		return -1;
@@ -28,9 +24,6 @@ int set_tty()
 
 int reset_tty()
 {
-	if (background)
-		return -1;
-
 	if (tcsetattr(0, TCSAFLUSH, &term) < 0) {
 		fprintf(stderr, "can't reset terminal!\n");
 		return -1;

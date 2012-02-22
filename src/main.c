@@ -17,6 +17,9 @@ extern struct sound_driver sound_null;
 
 struct sound_driver *sound = &sound_alsa;
 
+static int background = 0;
+static int refresh_status;
+
 #ifdef HAVE_SIGNAL_H
 static void cleanup(int sig)
 {
@@ -30,7 +33,32 @@ static void cleanup(int sig)
 	reset_tty();
 
 	signal(sig, SIG_DFL);
-	kill(getpid (), sig);
+	kill(getpid(), sig);
+}
+#endif
+
+#ifdef SIGTSTP
+static void sigtstp_handler(int n)
+{
+	fprintf(stderr, "\n");
+	signal(SIGTSTP, SIG_DFL);
+	kill(getpid(), SIGTSTP);
+}
+
+static void sigcont_handler(int sig)
+{
+#ifndef __AMIGA__
+	background = (tcgetpgrp(0) == getppid());
+#endif
+
+	if (!background) {
+		set_tty();
+	}
+
+	refresh_status = 1;
+
+	signal(SIGCONT, sigcont_handler);
+	signal(SIGTSTP, sigtstp_handler);
 }
 #endif
 
@@ -143,9 +171,17 @@ int main(int argc, char **argv)
 	signal(SIGFPE, cleanup);
 	signal(SIGSEGV, cleanup);
 	signal(SIGQUIT, cleanup);
+#ifdef SIGTSTP
+	signal(SIGCONT, sigcont_handler);
+	signal(SIGTSTP, sigtstp_handler);
+#endif
 #endif
 
-	set_tty();
+	background = (tcgetpgrp (0) == getppid ());
+
+	if (!background) {
+		set_tty();
+	}
 
 	handle = xmp_create_context();
 
@@ -170,8 +206,6 @@ int main(int argc, char **argv)
 		control.time = 0.0;
 		
 		if (xmp_player_start(handle, options.start, 44100, 0) == 0) {
-			int refresh_line;
-
 			/* Mute channels */
 
 			for (i = 0; i < XMP_MAX_CHANNELS; i++) {
@@ -191,7 +225,7 @@ int main(int argc, char **argv)
 	
 			/* Play module */
 
-			refresh_line = 1;
+			refresh_status = 1;
 			info_frame_init(&mi);
 
 			while (!options.info && xmp_player_frame(handle) == 0) {
@@ -201,8 +235,11 @@ int main(int argc, char **argv)
 				if (!control.loop && old_loop != mi.loop_count)
 					break;
 
-				info_frame(&mi, &control, refresh_line);
-				refresh_line = 0;
+				if (!background) {
+					info_frame(&mi, &control, refresh_status);
+					refresh_status = 0;
+				}
+
 				control.time += 1.0 * mi.frame_time / 1000;
 
 				sound->play(mi.buffer, mi.buffer_size);
@@ -211,12 +248,14 @@ int main(int argc, char **argv)
 					fwrite(mi.buffer, mi.buffer_size, 1, f);
 				}
 
-				read_command(handle, &control);
+				if (!background) {
+					read_command(handle, &control);
 
-				if (control.display) {
-					show_info(control.display, &mi);
-					control.display = 0;
-					refresh_line = 1;
+					if (control.display) {
+						show_info(control.display, &mi);
+						control.display = 0;
+						refresh_status = 1;
+					}
 				}
 
 				check_pause(handle, &control, &mi);
@@ -246,7 +285,11 @@ int main(int argc, char **argv)
 
     end:
 	xmp_free_context(handle);
-	reset_tty();
+
+	if (!background) {
+		reset_tty();
+	}
+
 	sound->deinit();
 
 	if (options.out_file) {
