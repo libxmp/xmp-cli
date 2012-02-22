@@ -108,6 +108,13 @@ int main(int argc, char **argv)
 
 	get_options(argc, argv, &options);
 
+	if (optind >= argc) {
+		fprintf (stderr, "%s: no modules to play\n"
+			"Use `%s --help' for more information.\n",
+			argv[0], argv[0]);
+		exit(EXIT_FAILURE);
+	}
+
 	if (options.random) {
 		shuffle(argc - optind + 1, &argv[optind - 1]);
 	}
