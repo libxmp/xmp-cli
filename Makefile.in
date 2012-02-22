@@ -20,6 +20,7 @@ DIST		= xmp-$(VERSION)
 DFILES		= README INSTALL configure configure.ac Makefile.in
 DDIRS		= src drivers
 V		= 0
+DRIVER		= @SOUND_DRIVER@
 
 all: binaries
 
