@@ -1,7 +1,8 @@
 
 SRC_OBJS	= sound_null.o terminal.o info.o commands.o \
 		  options.o getopt.o getopt1.o main.o
-SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h
+SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h \
+		  sound_alsa.c sound_coreaudio.c
 SRC_PATH	= src
 
 OBJS += $(addprefix $(SRC_PATH)/,$(SRC_OBJS))
