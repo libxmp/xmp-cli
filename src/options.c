@@ -27,7 +27,6 @@ extern int nocmd;
 extern int rt;
 #endif
 
-#define OPT_LOADONLY	0x103
 #define OPT_FX9BUG	0x105
 #define OPT_PROBEONLY	0x106
 #define OPT_STDOUT	0x109
@@ -177,6 +176,7 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'i':
 			options->info = 1;
+			options->silent = 1;
 			break;
 		case 'L': {
 			char **list;
@@ -189,9 +189,6 @@ void get_options(int argc, char **argv, struct options *options)
 			break; }
 		case 'l':
 			options->loop = 1;
-			break;
-		case OPT_LOADONLY:
-			options->load_only = 1;
 			break;
 		case 'm':
 			options->format |= XMP_FORMAT_MONO;

@@ -8,7 +8,6 @@ struct options {
 	int mix;		/* channel separation */
 	int loop;		/* loop module */
 	int random;		/* play in random order */
-	int load_only;		/* load module and exit */
 	int verbose;
 	int silent;		/* silent output */
 	int info;		/* display information and exit */
