@@ -173,11 +173,11 @@ void info_instruments(struct xmp_module_info *mi)
 				if (smp->len == 0) {
 					continue;
 				}
-				printf("%36.36s", " ");
+				printf("%51.51s", " ");
 			}
 
 			printf("[%02x] %02x %02x %+04d %+03d P%02x %02x\n",
-				i,
+				j,
 				sub->gvl,
 				sub->vol,
 				sub->fin,
