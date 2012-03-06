@@ -36,7 +36,9 @@ int reset_tty(void);
 void info_mod(struct xmp_module_info *);
 void info_frame_init(struct xmp_module_info *);
 void info_frame(struct xmp_module_info *, struct control *, int);
+void info_ins_smp(struct xmp_module_info *);
 void info_instruments(struct xmp_module_info *);
+void info_samples(struct xmp_module_info *);
 void info_help(void);
 
 /* commands */

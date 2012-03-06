@@ -169,6 +169,8 @@ void read_command(xmp_context handle, struct control *ctl)
 		break; }
 	case '?':
 	case 'i':
+	case 'I':
+	case 'S':
 	case 'm':
 		ctl->display = cmd;
 		break;

@@ -18,7 +18,9 @@ void info_help(void)
 "      !         Unmute all channels\n"
 "      ?         Display available commands\n"
 "      m         Display module information\n"
-"      i         Display instrument list\n"
+"      i         Display combined instrument/sample list\n"
+"      I         Display instrument list\n"
+"      S         Display sample list\n"
 );
 }
 
@@ -67,7 +69,7 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 
 	if (reprint || mi->order != ord || mi->bpm != bpm || mi->tempo != tpo) {
 	        printf("\rTempo[%02X] BPM[%02X] Pos[%02X/%02X] "
-			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]     0:00:00.0",
+			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
 					mi->tempo, mi->bpm,
 					mi->order, mi->mod->len - 1,
 					mi->pattern, mi->mod->pat - 1);
@@ -76,8 +78,8 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 		tpo = mi->tempo;
 	}
 
-	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-	       "%02X/%02X] Chn[%02X/%02X] %c ",
+	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+	       "%02X/%02X] Chn[%02X/%02X] %c  ",
 		mi->row, mi->num_rows - 1, mi->virt_used, max_channels,
 		ctl->loop ? 'L' : ' ');
 
@@ -92,13 +94,13 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 	fflush(stdout);
 }
 
-void info_instruments(struct xmp_module_info *mi)
+void info_ins_smp(struct xmp_module_info *mi)
 {
 	int i, j;
 	struct xmp_module *mod = mi->mod;
 
-	printf("Instruments:\n");
-	printf("   Instrument name                  Smp  Size  Loop  End    Vol Fine Pan\n");
+	printf("Instruments and samples:\n");
+	printf("   Instrument name                  Smp  Size  Loop  End    Vol Fine Xpo Pan\n");
 	for (i = 0; i < mod->ins; i++) {
 		struct xmp_instrument *ins = &mod->xxi[i];
 
@@ -119,7 +121,7 @@ void info_instruments(struct xmp_module_info *mi)
 				printf("%36.36s", " ");
 			}
 
-			printf("[%02x] %05x%c%05x %05x%c V%02x %+04d P%02x\n",
+			printf("[%02x] %05x%c%05x %05x%c V%02x %+04d %+03d P%02x\n",
 				sub->sid,
 				smp->len,
 				smp->flg & XMP_SAMPLE_16BIT ? '+' : ' ',
@@ -130,12 +132,89 @@ void info_instruments(struct xmp_module_info *mi)
 						'B' : 'L' : ' ',
 				sub->vol,
 				sub->fin,
-				sub->pan);
+				sub->xpo,
+				sub->pan & 0xff);
 		}
 
 		if (j == 0) {
-			printf("[  ] ----- ----- -----  --- ---- ---\n");
+			printf("[  ] ----- ----- -----  --- ---- --- ---\n");
 		}
 
 	}
 }
+
+void info_instruments(struct xmp_module_info *mi)
+{
+	int i, j;
+	struct xmp_module *mod = mi->mod;
+
+	printf("Instruments:\n");
+	printf("   Instrument name                  Vl Rls  Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
+	for (i = 0; i < mod->ins; i++) {
+		struct xmp_instrument *ins = &mod->xxi[i];
+
+		if (strlen(ins->name) == 0 && ins->nsm == 0) {
+			continue;
+		}
+
+		printf("%02x %-32.32s %02x %04x %c%c%c %02x ", i, ins->name,
+			ins->vol, ins->rls,
+			ins->aei.flg & XMP_ENVELOPE_ON ? 'A' : '-',
+			ins->fei.flg & XMP_ENVELOPE_ON ? 'F' : '-',
+			ins->pei.flg & XMP_ENVELOPE_ON ? 'P' : '-',
+			ins->nsm
+		);
+
+		for (j = 0; j < ins->nsm; j++) {
+			struct xmp_subinstrument *sub = &ins->sub[j];
+			struct xmp_sample *smp = &mod->xxs[sub->sid];
+
+			if (j > 0) {
+				if (smp->len == 0) {
+					continue;
+				}
+				printf("%36.36s", " ");
+			}
+
+			printf("[%02x] %02x %02x %+04d %+03d P%02x %02x\n",
+				i,
+				sub->gvl,
+				sub->vol,
+				sub->fin,
+				sub->xpo,
+				sub->pan,
+				sub->sid);
+		}
+
+		if (j == 0) {
+			printf("[  ] -- -- ---- --- --- --\n");
+		}
+
+	}
+}
+
+void info_samples(struct xmp_module_info *mi)
+{
+	int i;
+	struct xmp_module *mod = mi->mod;
+
+	printf("Samples:\n");
+	printf("   Sample name                      Length Start  End    Flags\n");
+	for (i = 0; i < mod->ins; i++) {
+		struct xmp_sample *smp = &mod->xxs[i];
+
+		if (strlen(smp->name) == 0 && smp->len == 0) {
+			continue;
+		}
+
+		printf("%02x %-32.32s %06x %06x %06x %s %s %s\n",
+			i, smp->name,
+			smp->len,
+			smp->lps,
+			smp->lpe,
+			smp->flg & XMP_SAMPLE_16BIT ? "16" : "--",
+			smp->flg & XMP_SAMPLE_LOOP  ? "L"  : "-",
+			smp->flg & XMP_SAMPLE_LOOP_BIDIR ? "B" : "-");
+	}
+}
+
