@@ -47,10 +47,10 @@ void info_mod(struct xmp_module_info *mi)
 
 	printf("Duration     : %dmin%02ds", (mi->total_time + 500) / 60000,
 					((mi->total_time + 500) / 1000) % 60);
-	if (mi->num_songs > 1) {
+	if (mi->num_sequences > 1) {
 		printf(" (main sequence)\n");
-		for (i = 1; i < mi->num_songs; i++) {
-			int dur = mi->subsong[i].duration;
+		for (i = 1; i < mi->num_sequences; i++) {
+			int dur = mi->sequence[i].duration;
 
 			if (dur == 0) {
 				continue;
@@ -59,7 +59,7 @@ void info_mod(struct xmp_module_info *mi)
 			printf("               %dmin%02ds "
 				"(sequence at position %d)\n",
 				(dur + 500) / 60000, ((dur + 500) / 1000) % 60,
-				mi->subsong[i].entry_point);
+				mi->sequence[i].entry_point);
 		}
 	} else {
 		printf("\n");
