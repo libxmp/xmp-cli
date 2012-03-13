@@ -156,7 +156,9 @@ int main(int argc, char **argv)
 
 	if (options.silent) {
 		sound = &sound_null;
-	} else if (options.out_file) {
+	}
+
+	if (options.out_file) {
 		f = fopen(options.out_file, "wb");
 		if (f == NULL) {
 			perror(options.out_file);
