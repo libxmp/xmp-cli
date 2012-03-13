@@ -73,7 +73,7 @@ void info_frame_init(struct xmp_module_info *mi)
 
 void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 {
-	static int ord = -1, tpo = -1, bpm = -1;
+	static int ord = -1, spd = -1, bpm = -1;
 	int time;
 
 	if (mi->virt_used > max_channels)
@@ -84,15 +84,15 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 
 	time = ctl->time / 100;
 
-	if (reprint || mi->order != ord || mi->bpm != bpm || mi->tempo != tpo) {
-	        printf("\rTempo[%02X] BPM[%02X] Pos[%02X/%02X] "
+	if (reprint || mi->order != ord || mi->bpm != bpm || mi->speed != spd) {
+	        printf("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
 			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
-					mi->tempo, mi->bpm,
+					mi->speed, mi->bpm,
 					mi->order, mi->mod->len - 1,
 					mi->pattern, mi->mod->pat - 1);
 		ord = mi->order;
 		bpm = mi->bpm;
-		tpo = mi->tempo;
+		spd = mi->speed;
 	}
 
 	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
