@@ -27,6 +27,7 @@ void info_help(void)
 void info_mod(struct xmp_module_info *mi)
 {
 	int i;
+	int num_seq;
 
 	printf("Module name  : %s\n", mi->mod->name);
 	printf("Module type  : %s\n", mi->mod->type);
@@ -47,7 +48,15 @@ void info_mod(struct xmp_module_info *mi)
 
 	printf("Duration     : %dmin%02ds", (mi->total_time + 500) / 60000,
 					((mi->total_time + 500) / 1000) % 60);
-	if (mi->num_sequences > 1) {
+
+	/* Check non-zero-length sequences */
+	num_seq = 0;
+	for (i = 0; i <  mi->num_sequences; i++) {
+		if (mi->sequence[i].duration > 0)
+			num_seq++;
+	}
+
+	if (num_seq > 1) {
 		printf(" (main sequence)\n");
 		for (i = 1; i < mi->num_sequences; i++) {
 			int dur = mi->sequence[i].duration;
