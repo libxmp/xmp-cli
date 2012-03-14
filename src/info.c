@@ -52,14 +52,14 @@ void info_mod(struct xmp_module_info *mi)
 	/* Check non-zero-length sequences */
 	num_seq = 0;
 	for (i = 0; i <  mi->num_sequences; i++) {
-		if (mi->sequence[i].duration > 0)
+		if (mi->seq_data[i].duration > 0)
 			num_seq++;
 	}
 
 	if (num_seq > 1) {
 		printf(" (main sequence)\n");
 		for (i = 1; i < mi->num_sequences; i++) {
-			int dur = mi->sequence[i].duration;
+			int dur = mi->seq_data[i].duration;
 
 			if (dur == 0) {
 				continue;
@@ -68,7 +68,7 @@ void info_mod(struct xmp_module_info *mi)
 			printf("               %dmin%02ds "
 				"(sequence at position %d)\n",
 				(dur + 500) / 60000, ((dur + 500) / 1000) % 60,
-				mi->sequence[i].entry_point);
+				mi->seq_data[i].entry_point);
 		}
 	} else {
 		printf("\n");
