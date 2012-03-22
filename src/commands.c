@@ -107,37 +107,37 @@ void read_command(xmp_context handle, struct control *ctl)
 		case 'B':
 			goto cmd_prev_mod;
 		case 'C':
-			goto cmd_next_ord;
+			goto cmd_next_pos;
 		case 'D':
-			goto cmd_prev_ord;
+			goto cmd_prev_pos;
 		}
 
 		break;
 	case 'q':		/* quit */
 	cmd_quit:
-		xmp_mod_stop(handle);
+		xmp_stop_module(handle);
 		ctl->pause = 0;
 		ctl->skip = -2;
 		break;
 	case 'f':		/* jump to next order */
-	cmd_next_ord:
-		xmp_ord_next(handle);
+	cmd_next_pos:
+		xmp_next_position(handle);
 		ctl->pause = 0;
 		break;
 	case 'b':		/* jump to previous order */
-	cmd_prev_ord:
-		xmp_ord_prev(handle);
+	cmd_prev_pos:
+		xmp_prev_position(handle);
 		ctl->pause = 0;
 		break;
 	case 'n':		/* skip to next module */
 	cmd_next_mod:
-		xmp_mod_stop(handle);
+		xmp_stop_module(handle);
 		ctl->pause = 0;
 		ctl->skip = 1;
 		break;
 	case 'p':		/* skip to previous module */
 	cmd_prev_mod:
-		xmp_mod_stop(handle);
+		xmp_stop_module(handle);
 		ctl->pause = 0;
 		ctl->skip = -1;
 		break;

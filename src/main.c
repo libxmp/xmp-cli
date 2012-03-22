@@ -216,7 +216,7 @@ int main(int argc, char **argv)
 		control.loop = options.loop;
 		
 		if (xmp_player_start(handle, options.freq, options.format) == 0) {
-			xmp_ord_set(handle, options.start);
+			xmp_set_position(handle, options.start);
 
 			/* Mute channels */
 
