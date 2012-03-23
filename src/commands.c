@@ -1,4 +1,7 @@
 #include <unistd.h>
+#ifdef WIN32
+#include <conio.h>
+#endif
 #include <xmp.h>
 #include "common.h"
 
@@ -56,7 +59,7 @@ static int read_key()
 		ret = read(0, &key, 1);
 #elif defined WIN32
 	if (kbhit()) {
-		cmd = getch();
+		key = getch();
 		ret = 1;
 	}
 #elif defined __AMIGA__

@@ -12,7 +12,12 @@ if test "$libxmp_path" != ""; then
   LIBS="${LIBS} -L${libxmp_path}/lib"
 fi
 
-AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h alsa/asoundlib.h CoreAudio/CoreAudio.h)
+AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h)
+AC_CHECK_HEADER(windows.h,,[
+  AC_CHECK_HEADER(CoreAudio/CoreAudio.h,,[
+    AC_CHECK_HEADER(alsa/asoundlib.h)
+  ])
+])
 
 if test "${ac_cv_header_xmp_h}" = "yes"; then
   AC_CHECK_LIB(xmp,xmp_player_start,,
@@ -21,18 +26,19 @@ else
   AC_MSG_ERROR(Can't find libxmp header files)
 fi
 
-if test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
+if test "${ac_cv_header_windows_h}" = "yes"; then
+  AC_SUBST(SOUND_DRIVER,sound_win32)
+  LIBS="${LIBS} -lwinmm"
+elif test "${ac_cv_header_CoreAudio_CoreAudio_h}" = "yes"; then
+  AC_SUBST(SOUND_DRIVER,sound_coreaudio)
+  LIBS="${LIBS} -framework AudioToolbox -framework AudioUnit -framework CoreServices"
+elif test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
   AC_SUBST(SOUND_DRIVER,sound_alsa)
   AC_CHECK_LIB(asound,snd_pcm_open,,
     AC_MSG_ERROR(Can't find libasound))
 fi
 
-if test "${ac_cv_header_CoreAudio_CoreAudio_h}" = "yes"; then
-  AC_SUBST(SOUND_DRIVER,sound_coreaudio)
-  LIBS="${LIBS} -framework AudioToolbox -framework AudioUnit -framework CoreServices"
-fi
-
-AC_CHECK_FUNCS(getopt_long)
+AC_CHECK_FUNCS(kill getopt_long)
 
 AC_PROG_INSTALL
 AC_CONFIG_FILES([Makefile])

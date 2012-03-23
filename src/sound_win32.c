@@ -14,12 +14,15 @@
 #endif
 
 #include <windows.h>
-#include "common.h"
-#include "driver.h"
-#include "mixer.h"
+#include <stdio.h>
+#include "sound.h"
 
 #define MAXBUFFERS	32			/* max number of buffers */
 #define BUFFERSIZE	120			/* buffer size in ms */
+
+/* frame rate = (50 * bpm / 125) Hz */
+/* frame size = (sampling rate * channels * size) / frame rate */
+#define OUT_MAXLEN 0x8000
 
 static HWAVEOUT hwaveout;
 static WAVEHDR header[MAXBUFFERS];
@@ -28,28 +31,9 @@ static WORD freebuffer;				/*  */
 static WORD nextbuffer;				/* next buffer to be mixed */
 static int num_buffers;
 
-static int init(struct context_data *);
-static void bufdump(struct context_data *, void *, int);
-static void deinit(struct context_data *);
-
-static void dummy()
-{
-}
-
 static char *help[] = {
 	"buffers=val", "Number of buffers (default 10)",
 	NULL
-};
-
-struct xmp_drv_info drv_win32 = {
-	"win32",		/* driver ID */
-	"Windows WinMM driver",	/* driver description */
-	help,			/* help */
-	init,			/* init */
-	deinit,			/* shutdown */
-	dummy,			/* starttimer */
-	dummy,			/* flush */
-	bufdump,		/* bufdump */
 };
 
 static void show_error(int res)
@@ -91,30 +75,29 @@ static void CALLBACK wave_callback(HWAVEOUT hwo, UINT uMsg, DWORD dwInstance,
 	}
 }
 
-static int init(struct context_data *ctx)
+static int init(int *sampling_rate, int *format)
 {
-	struct xmp_options *o = &ctx->o;
 	MMRESULT res;
 	WAVEFORMATEX wfe;
 	int i;
-	char *token, **parm;
+	//char *token, **parm;
 
 	num_buffers = 10;
 	
-	parm_init();
-	chkparm1("buffers", num_buffers = strtoul(token, NULL, 0));
-	parm_end();
+	//parm_init();
+	//chkparm1("buffers", num_buffers = strtoul(token, NULL, 0));
+	//parm_end();
 
 	if (num_buffers > MAXBUFFERS)
 		num_buffers = MAXBUFFERS;
 
 	if (!waveOutGetNumDevs())
-		return XMP_ERR_DINIT;
+		return -1;
 
 	wfe.wFormatTag = WAVE_FORMAT_PCM;
-	wfe.wBitsPerSample = o->resol;
-	wfe.nChannels = o->flags & XMP_FORMAT_MONO ? 1 : 2;
-	wfe.nSamplesPerSec = o->freq;
+	wfe.wBitsPerSample = *format & XMP_FORMAT_8BIT ? 8 : 16;
+	wfe.nChannels = *format & XMP_FORMAT_MONO ? 1 : 2;
+	wfe.nSamplesPerSec = *sampling_rate;
 	wfe.nAvgBytesPerSec = wfe.nSamplesPerSec * wfe.nChannels *
 	    wfe.wBitsPerSample / 8;
 	wfe.nBlockAlign = wfe.nChannels * wfe.wBitsPerSample / 8;
@@ -124,7 +107,7 @@ static int init(struct context_data *ctx)
 
 	if (res != MMSYSERR_NOERROR) {
 		show_error(res);
-		return XMP_ERR_DINIT;
+		return -1;
 	}
 
 	waveOutReset(hwaveout);
@@ -135,7 +118,7 @@ static int init(struct context_data *ctx)
 
 		if (!buffer[i] || res != MMSYSERR_NOERROR) {
 			show_error(res);
-			return XMP_ERR_DINIT;
+			return -1;
 		}
 	}
 
@@ -144,7 +127,7 @@ static int init(struct context_data *ctx)
 	return 0;
 }
 
-static void bufdump(struct context_data *ctx, void *b, int len)
+static void play(void *b, int len)
 {
 	memcpy(buffer[nextbuffer], b, len);
 
@@ -159,7 +142,7 @@ static void bufdump(struct context_data *ctx, void *b, int len)
 	nextbuffer %= num_buffers;
 }
 
-static void deinit(struct context_data *ctx)
+static void deinit()
 {
 	int i;
 
@@ -175,3 +158,28 @@ static void deinit(struct context_data *ctx)
 		hwaveout = NULL;
 	}
 }
+
+static void flush()
+{
+}
+
+static void onpause()
+{
+}
+
+static void onresume()
+{
+}
+
+struct sound_driver sound_win32 = {
+	"win32",
+	"Windows WinMM",
+	help,
+	init,
+	deinit,
+	play,
+	flush,
+	onpause,
+	onresume
+};
+

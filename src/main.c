@@ -11,11 +11,15 @@
 #include "sound.h"
 #include "common.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 extern int optind;
-extern struct sound_driver sound_alsa;
+extern struct sound_driver SOUND_DRIVER;
 extern struct sound_driver sound_null;
 
-struct sound_driver *sound = &sound_alsa;
+struct sound_driver *sound = &SOUND_DRIVER;
 
 static int background = 0;
 static int refresh_status;
@@ -25,7 +29,9 @@ static void cleanup(int sig)
 {
 	signal(SIGTERM, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
+#ifdef SIGQUIT
 	signal(SIGQUIT, SIG_DFL);
+#endif
 	signal(SIGFPE, SIG_DFL);
 	signal(SIGSEGV, SIG_DFL);
 
@@ -33,7 +39,9 @@ static void cleanup(int sig)
 	reset_tty();
 
 	signal(sig, SIG_DFL);
+#ifdef HAVE_KILL
 	kill(getpid(), sig);
+#endif
 }
 #endif
 
@@ -42,18 +50,20 @@ static void sigtstp_handler(int n)
 {
 	fprintf(stderr, "\n");
 	signal(SIGTSTP, SIG_DFL);
+#ifdef HAVE_KILL
 	kill(getpid(), SIGTSTP);
+#endif
 }
 
 static void sigcont_handler(int sig)
 {
-#ifndef __AMIGA__
+#ifdef HAVE_TERMIOS_H
 	background = (tcgetpgrp(0) == getppid());
-#endif
 
 	if (!background) {
 		set_tty();
 	}
+#endif
 
 	refresh_status = 1;
 
@@ -179,18 +189,22 @@ int main(int argc, char **argv)
 	signal(SIGINT, cleanup);
 	signal(SIGFPE, cleanup);
 	signal(SIGSEGV, cleanup);
+#ifdef SIGQUIT
 	signal(SIGQUIT, cleanup);
+#endif
 #ifdef SIGTSTP
 	signal(SIGCONT, sigcont_handler);
 	signal(SIGTSTP, sigtstp_handler);
 #endif
 #endif
 
+#ifdef HAVE_TERMIOS_H
 	background = (tcgetpgrp (0) == getppid ());
 
 	if (!background) {
 		set_tty();
 	}
+#endif
 
 	handle = xmp_create_context();
 
