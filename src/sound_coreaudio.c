@@ -123,7 +123,7 @@ OSStatus render_proc(void *inRefCon,
  */
 
 
-static int init(int *sampling_rate, int *format))
+static int init(int *sampling_rate, int *format)
 {
 	struct xmp_options *o = &ctx->o;
 	AudioStreamBasicDescription ad;
@@ -248,7 +248,7 @@ static void play(void *b, int i)
 }
 
 
-static void deint()
+static void deinit()
 {
         AudioOutputUnitStop(au);
 	AudioUnitUninitialize(au);
