@@ -102,7 +102,7 @@ static char *help[] = {
 
 struct sound_driver sound_alsa = {
 	"alsa",
-	"ALSA pcm audio",
+	"ALSA PCM audio",
 	help,
 	init,
 	deinit,
