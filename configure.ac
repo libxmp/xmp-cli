@@ -15,7 +15,7 @@ fi
 AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h)
 AC_CHECK_HEADER(windows.h,,[
   AC_CHECK_HEADER(CoreAudio/CoreAudio.h,,[
-    AC_CHECK_HEADERS(sys/soundcard.h alsa/asoundlib.h sndio.h)
+    AC_CHECK_HEADERS(sys/soundcard.h alsa/asoundlib.h sndio.h sys/audioio.h)
   ])
 ])
 
@@ -39,6 +39,10 @@ else
     AC_DEFINE(SOUND_SNDIO)
     DRIVERS="${DRIVERS} sound_sndio.o"
     LIBS="${LIBS} -lsndio"
+  fi
+  if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
+    AC_DEFINE(SOUND_BSD)
+    DRIVERS="${DRIVERS} sound_bsd.o"
   fi
   if test "${ac_cv_header_sys_soundcard_h}" = "yes"; then
     AC_DEFINE(SOUND_OSS)
