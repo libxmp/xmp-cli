@@ -225,11 +225,7 @@ int main(int argc, char **argv)
 	skipprev = 0;
 
 	for (first = optind; optind < argc; optind++) {
-		if (optind != first) {
-			printf("\n");
-		}
-
-		printf("Loading %s... (%d of %d)\n",
+		printf("\nLoading %s... (%d of %d)\n",
 			argv[optind], optind - first + 1, argc - first);
 
 		val = xmp_load_module(handle, argv[optind]);
