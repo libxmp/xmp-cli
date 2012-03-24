@@ -15,7 +15,7 @@ fi
 AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h)
 AC_CHECK_HEADER(windows.h,,[
   AC_CHECK_HEADER(CoreAudio/CoreAudio.h,,[
-    AC_CHECK_HEADER(alsa/asoundlib.h)
+    AC_CHECK_HEADERS(sys/soundcard.h alsa/asoundlib.h)
   ])
 ])
 
@@ -27,19 +27,28 @@ else
 fi
 
 if test "${ac_cv_header_windows_h}" = "yes"; then
-  AC_SUBST(SOUND_DRIVER,sound_win32)
+  AC_DEFINE(SOUND_WIN32)
+  DRIVERS="${DRIVERS} sound_win32.o"
   LIBS="${LIBS} -lwinmm"
 elif test "${ac_cv_header_CoreAudio_CoreAudio_h}" = "yes"; then
-  AC_SUBST(SOUND_DRIVER,sound_coreaudio)
+  AC_DEFINE(SOUND_COREAUDIO)
+  DRIVERS="${DRIVERS} sound_coreaudio.o"
   LIBS="${LIBS} -framework AudioToolbox -framework AudioUnit -framework CoreServices"
-elif test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
-  AC_SUBST(SOUND_DRIVER,sound_alsa)
-  AC_CHECK_LIB(asound,snd_pcm_open,,
-    AC_MSG_ERROR(Can't find libasound))
+else
+  if test "${ac_cv_header_sys_soundcard_h}" = "yes"; then
+    AC_DEFINE(SOUND_OSS)
+    DRIVERS="${DRIVERS} sound_oss.o"
+  fi
+  if test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
+    AC_DEFINE(SOUND_ALSA)
+    DRIVERS="${DRIVERS} sound_alsa.o"
+    AC_CHECK_LIB(asound,snd_pcm_open,,
+      AC_MSG_ERROR(Can't find libasound))
+  fi
 fi
 
 AC_CHECK_FUNCS(kill getopt_long)
-
 AC_PROG_INSTALL
+AC_SUBST(DRIVERS)
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

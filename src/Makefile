@@ -1,9 +1,11 @@
 
-SRC_OBJS	= sound_null.o terminal.o info.o commands.o \
+SRC_OBJS	= sound.o sound_null.o terminal.o info.o commands.o \
 		  options.o getopt.o getopt1.o main.o
 SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h \
 		  sound_alsa.c sound_coreaudio.c
 SRC_PATH	= src
+
+SRC_OBJS += $(DRIVERS)
 
 OBJS += $(addprefix $(SRC_PATH)/,$(SRC_OBJS))
 
@@ -11,8 +13,8 @@ dist-src:
 	mkdir -p $(DIST)/$(SRC_PATH)
 	cp -RPp $(addprefix $(SRC_PATH)/,$(SRC_DFILES)) $(DIST)/$(SRC_PATH)
 
-$(SRC_PATH)/xmp: $(OBJS) $(SRC_PATH)/$(DRIVER).o
-	@CMD='$(LD) -o $@ $(LDFLAGS) $(OBJS) $(SRC_PATH)/$(DRIVER).o $(LIBS)'; \
+$(SRC_PATH)/xmp: $(OBJS)
+	@CMD='$(LD) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)'; \
 	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo LD $@ ; fi; \
 	eval $$CMD
 

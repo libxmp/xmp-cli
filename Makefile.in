@@ -1,7 +1,7 @@
 VERSION	= 3.9.0
 
 CC		= @CC@
-CFLAGS		= -c -Wall @CFLAGS@ @DEFS@ @CPPFLAGS@ -DSOUND_DRIVER=$(DRIVER)
+CFLAGS		= -c -Wall @CFLAGS@ @DEFS@ @CPPFLAGS@
 LD		= @CC@
 LDFLAGS		= @LDFLAGS@
 LIBS		= @LIBS@
@@ -20,7 +20,7 @@ DIST		= xmp-$(VERSION)
 DFILES		= README INSTALL configure configure.ac Makefile.in
 DDIRS		= src
 V		= 0
-DRIVER		= @SOUND_DRIVER@
+DRIVERS		= @DRIVERS@
 
 all: binaries
 

@@ -30,18 +30,17 @@
 #include <machine/soundcard.h>
 #endif
 
-#include "driver.h"
+#include "sound.h"
+
+#ifndef AFMT_U16_NE
+#  if AFMT_S16_NE == AFMT_S16_LE
+#    define AFMT_U16_NE AFMT_U16_LE
+#  else
+#    define AFMT_U16_NE AFMT_U16_BE
+#  endif
+#endif
 
 static int audio_fd;
-
-static void from_fmt(struct xmp_options *, int);
-static int to_fmt(struct xmp_options *);
-static void setaudio(struct xmp_options *);
-static int init(struct context_data *);
-static void shutdown(struct context_data *);
-static void bufdump(struct context_data *, void *, int);
-static void resume(void);
-static void onpause(void);
 
 static char *help[] = {
 	"frag=num,size", "Set the number and size of fragments",
@@ -50,35 +49,20 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_oss = {
-	"oss",			/* driver ID */
-	"OSS PCM audio",	/* driver description */
-	help,			/* help */
-	init,			/* init */
-	shutdown,		/* shutdown */
-	resume,			/* starttimer */
-	onpause,		/* stoptimer */
-	bufdump,		/* bufdump */
-};
-
 static int fragnum, fragsize;
 static int do_sync = 1;
 
-static int to_fmt(struct xmp_options *o)
+static int to_fmt(int format)
 {
 	int fmt;
 
-	if (!o->resol)
-		return AFMT_MU_LAW;
-
-	if (o->resol == 8)
+	if (format & XMP_FORMAT_8BIT)
 		fmt = AFMT_U8 | AFMT_S8;
 	else {
-		fmt = o->big_endian ? AFMT_S16_BE | AFMT_U16_BE :
-		    AFMT_S16_LE | AFMT_U16_LE;
+		fmt = AFMT_S16_NE | AFMT_U16_NE;
 	}
 
-	if (o->outfmt & XMP_FMT_UNS)
+	if (format & XMP_FORMAT_UNSIGNED)
 		fmt &= AFMT_U8 | AFMT_U16_LE | AFMT_U16_BE;
 	else
 		fmt &= AFMT_S8 | AFMT_S16_LE | AFMT_S16_BE;
@@ -86,25 +70,22 @@ static int to_fmt(struct xmp_options *o)
 	return fmt;
 }
 
-static void from_fmt(struct xmp_options *o, int outfmt)
+static int from_fmt(int fmt)
 {
-	if (outfmt & AFMT_MU_LAW) {
-		o->resol = 0;
-		return;
+	int format = 0;
+
+	if (!(fmt & (AFMT_S16_LE | AFMT_S16_BE | AFMT_U16_LE | AFMT_U16_BE))) {
+		format |= XMP_FORMAT_8BIT;
 	}
 
-	if (outfmt & (AFMT_S16_LE | AFMT_S16_BE | AFMT_U16_LE | AFMT_U16_BE))
-		o->resol = 16;
-	else
-		o->resol = 8;
+	if (fmt & (AFMT_U8 | AFMT_U16_LE | AFMT_U16_BE)) {
+		format |= XMP_FORMAT_UNSIGNED;
+	}
 
-	if (outfmt & (AFMT_U8 | AFMT_U16_LE | AFMT_U16_BE))
-		o->outfmt |= XMP_FMT_UNS;
-	else
-		o->outfmt &= ~XMP_FMT_UNS;
+	return format;
 }
 
-static void setaudio(struct xmp_options *o)
+static void setaudio(int *rate, int *format)
 {
 	static int fragset = 0;
 	int frag = 0;
@@ -112,18 +93,19 @@ static void setaudio(struct xmp_options *o)
 
 	frag = (fragnum << 16) + fragsize;
 
-	fmt = to_fmt(o);
+	fmt = to_fmt(*format);
 	ioctl(audio_fd, SNDCTL_DSP_SETFMT, &fmt);
-	from_fmt(o, fmt);
+	*format = from_fmt(fmt);
 
-	fmt = !(o->outfmt & XMP_FORMAT_MONO);
+	fmt = !(*format & XMP_FORMAT_MONO);
 	ioctl(audio_fd, SNDCTL_DSP_STEREO, &fmt);
-	if (fmt)
-		o->outfmt &= ~XMP_FORMAT_MONO;
-	else
-		o->outfmt |= XMP_FORMAT_MONO;
+	if (fmt) {
+		*format &= ~XMP_FORMAT_MONO;
+	} else {
+		*format |= XMP_FORMAT_MONO;
+	}
 
-	ioctl(audio_fd, SNDCTL_DSP_SPEED, &o->freq);
+	ioctl(audio_fd, SNDCTL_DSP_SPEED, rate);
 
 	/* Set the fragments only once */
 	if (!fragset) {
@@ -133,23 +115,24 @@ static void setaudio(struct xmp_options *o)
 	}
 }
 
-static int init(struct context_data *ctx)
+static int init(int *rate, int *format)
 {
 	char *dev_audio[] = { "/dev/dsp", "/dev/sound/dsp" };
-	struct xmp_options *o = &ctx->o;
 	audio_buf_info info;
-	static char buf[80];
-	char *token, **parm;
+	//static char buf[80];
+	//char *token, **parm;
 	int i;
 
 	fragnum = 16;		/* default number of fragments */
 	i = 1024;		/* default size of fragment */
 	
+#if 0
 	parm_init();
 	chkparm2("frag", "%d,%d", &fragnum, &i);
 	chkparm1("dev", dev_audio[0] = token);
 	chkparm0("nosync", do_sync = 0);
 	parm_end();
+#endif
 
 	for (fragsize = 0; i >>= 1; fragsize++) ;
 	if (fragsize < 4)
@@ -159,16 +142,19 @@ static int init(struct context_data *ctx)
 		if ((audio_fd = open(dev_audio[i], O_WRONLY)) >= 0)
 			break;
 	if (audio_fd < 0)
-		return XMP_ERR_DINIT;
+		return -1;
 
-	setaudio(o);
+	setaudio(rate, format);
 
+#if 0
 	if (ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &info) == 0) {
 		snprintf(buf, 80, "%s [%d fragments of %d bytes]",
 			 drv_oss.description, info.fragstotal,
 			 info.fragsize);
 		drv_oss.description = buf;
 	}
+#endif
+	ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &info);
 
 	return 0;
 }
@@ -176,7 +162,7 @@ static int init(struct context_data *ctx)
 /* Build and write one tick (one PAL frame or 1/50 s in standard vblank
  * timed mods) of audio data to the output device.
  */
-static void bufdump(struct context_data *ctx, void *b, int i)
+static void play(void *b, int i)
 {
 	int j;
 
@@ -189,18 +175,14 @@ static void bufdump(struct context_data *ctx, void *b, int i)
 	};
 }
 
-static void shutdown(struct context_data *ctx)
+static void deinit()
 {
 	ioctl(audio_fd, SNDCTL_DSP_RESET, NULL);
 	close(audio_fd);
 }
 
-static void resume()
+static void flush()
 {
-#ifdef SNDCTL_DSP_SETTRIGGER
-	int trig = PCM_ENABLE_OUTPUT;
-	ioctl(audio_fd, SNDCTL_DSP_SETTRIGGER, &trig);
-#endif
 }
 
 static void onpause()
@@ -215,3 +197,24 @@ static void onpause()
 	if (do_sync)
 		ioctl(audio_fd, SNDCTL_DSP_SYNC, NULL);
 }
+
+static void onresume()
+{
+#ifdef SNDCTL_DSP_SETTRIGGER
+	int trig = PCM_ENABLE_OUTPUT;
+	ioctl(audio_fd, SNDCTL_DSP_SETTRIGGER, &trig);
+#endif
+}
+
+struct sound_driver sound_oss = {
+	"oss",
+	"OSS PCM audio",
+	help,
+	init,
+	deinit,
+	play,
+	flush,
+	onpause,
+	onresume
+};
+

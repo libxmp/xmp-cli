@@ -16,10 +16,9 @@
 #endif
 
 extern int optind;
-extern struct sound_driver SOUND_DRIVER;
 extern struct sound_driver sound_null;
 
-struct sound_driver *sound = &SOUND_DRIVER;
+struct sound_driver *sound;
 
 static int background = 0;
 static int refresh_status;
@@ -151,6 +150,7 @@ int main(int argc, char **argv)
 	memset(&control, 0, sizeof (struct control));
 	options.verbose = 1;
 	options.freq = 44100;
+	options.drv_id = NULL;
 
 	get_options(argc, argv, &options);
 
@@ -161,12 +161,33 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	if (options.random) {
-		shuffle(argc - optind + 1, &argv[optind - 1]);
-	}
+	init_sound_drivers();
 
 	if (options.silent) {
 		sound = &sound_null;
+	} else {
+		sound = select_sound_driver(options.drv_id,
+				&options.freq, &options.format);
+	}
+
+	if (sound == NULL) {
+		fprintf(stderr, "%s: can't initialize sound\n", argv[0]);
+		if (f != NULL) {
+			fclose(f);
+		}
+		exit(EXIT_FAILURE);
+	}
+
+	printf("Using %s\n", sound->description);
+
+	printf("Mixer set to %d Hz, %dbit, %s\n",
+			options.freq,
+			options.format & XMP_FORMAT_8BIT ? 8 : 16,
+			options.format & XMP_FORMAT_MONO ? "mono" : "stereo");
+
+
+	if (options.random) {
+		shuffle(argc - optind + 1, &argv[optind - 1]);
 	}
 
 	if (options.out_file) {
@@ -175,14 +196,6 @@ int main(int argc, char **argv)
 			perror(options.out_file);
 			exit(EXIT_FAILURE);
 		}
-	}
-
-	if (sound->init(&options.freq, &options.format) < 0) {
-		fprintf(stderr, "%s: can't initialize sound\n", argv[0]);
-		if (f != NULL) {
-			fclose(f);
-		}
-		exit(EXIT_FAILURE);
 	}
 
 #ifdef HAVE_SIGNAL_H
@@ -206,11 +219,6 @@ int main(int argc, char **argv)
 		set_tty();
 	}
 #endif
-
-	printf("Mixer set to %d Hz, %dbit, %s\n",
-			options.freq,
-			options.format & XMP_FORMAT_8BIT ? 8 : 16,
-			options.format & XMP_FORMAT_MONO ? "mono" : "stereo");
 
 	handle = xmp_create_context();
 

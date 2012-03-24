@@ -15,6 +15,8 @@
 #include <xmp.h>
 
 #include "common.h"
+#include "sound.h"
+#include "list.h"
 
 extern char *optarg;
 static int o, i;
@@ -26,6 +28,9 @@ extern int nocmd;
 #ifdef HAVE_SYS_RTPRIO_H
 extern int rt;
 #endif
+
+extern struct list_head sound_driver_list;
+
 
 #define OPT_FX9BUG	0x105
 #define OPT_PROBEONLY	0x106
@@ -42,6 +47,10 @@ extern int rt;
 
 static void usage(char *s)
 {
+	struct list_head *head;
+	struct sound_driver *sd;
+	char **hlp;
+
 	printf("Usage: %s [options] [modules]\n", s);
 
 #if 0
@@ -57,25 +66,22 @@ static void usage(char *s)
 	snprintf(buf, 80, "[%d registered loaders]", i);
 	list_wrap(buf, 3, 0, 0);
 	printf("\n");
+#endif
 
 	printf("\nAvailable drivers:\n");
 
-	xmp_get_drv_info(&drv);
-	list_wrap(NULL, 3, 78, 1);
-	for (d = drv; d; d = d->next) {
-		snprintf(buf, 80, "%s (%s)", d->id, d->description);
-		list_wrap(buf, 3, 0, 1);
+	list_for_each(head, &sound_driver_list) {
+		sd = list_entry(head, struct sound_driver, list);
+		printf("    %s (%s)\n", sd->id, sd->description);
 	}
 
-	printf("\n");
-
-	for (d = drv; d; d = d->next) {
-		if (d->help)
-			printf("\n%s options:\n", d->description);
-		for (hlp = d->help; hlp && *hlp; hlp += 2)
+	list_for_each(head, &sound_driver_list) {
+		sd = list_entry(head, struct sound_driver, list);
+		if (sd->help)
+			printf("\n%s options:\n", sd->description);
+		for (hlp = sd->help; hlp && *hlp; hlp += 2)
 			printf("   -D%-20.20s %s\n", hlp[0], hlp[1]);
 	}
-#endif
 
 	printf("\nPlayer control options:\n"
 "   -D parameter[=val]     Pass configuration parameter to the output driver\n"
@@ -161,9 +167,11 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'D':
 			xmp_set_driver_parameter(opt, optarg);
 			break;
+#endif
 		case 'd':
 			options->drv_id = optarg;
 			break;
+#if 0
 		case OPT_FX9BUG:
 			options->quirk |= XMP_QRK_FX9BUG;
 			break;
