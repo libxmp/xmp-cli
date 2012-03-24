@@ -6,6 +6,7 @@ extern struct sound_driver sound_oss;
 extern struct sound_driver sound_alsa;
 extern struct sound_driver sound_win32;
 extern struct sound_driver sound_coreaudio;
+extern struct sound_driver sound_sndio;
 
 LIST_HEAD(sound_driver_list);
 
@@ -16,6 +17,9 @@ static void register_sound_driver(struct sound_driver *sd)
 
 void init_sound_drivers()
 {
+#ifdef SOUND_SNDIO
+	register_sound_driver(&sound_sndio);
+#endif
 #ifdef SOUND_COREAUDIO
 	register_sound_driver(&sound_coreaudio);
 #endif

@@ -15,7 +15,7 @@ fi
 AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h)
 AC_CHECK_HEADER(windows.h,,[
   AC_CHECK_HEADER(CoreAudio/CoreAudio.h,,[
-    AC_CHECK_HEADERS(sys/soundcard.h alsa/asoundlib.h)
+    AC_CHECK_HEADERS(sys/soundcard.h alsa/asoundlib.h sndio.h)
   ])
 ])
 
@@ -35,6 +35,11 @@ elif test "${ac_cv_header_CoreAudio_CoreAudio_h}" = "yes"; then
   DRIVERS="${DRIVERS} sound_coreaudio.o"
   LIBS="${LIBS} -framework AudioToolbox -framework AudioUnit -framework CoreServices"
 else
+  if test "${ac_cv_header_sndio_h}" = "yes"; then
+    AC_DEFINE(SOUND_SNDIO)
+    DRIVERS="${DRIVERS} sound_sndio.o"
+    LIBS="${LIBS} -lsndio"
+  fi
   if test "${ac_cv_header_sys_soundcard_h}" = "yes"; then
     AC_DEFINE(SOUND_OSS)
     DRIVERS="${DRIVERS} sound_oss.o"
@@ -42,8 +47,7 @@ else
   if test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
     AC_DEFINE(SOUND_ALSA)
     DRIVERS="${DRIVERS} sound_alsa.o"
-    AC_CHECK_LIB(asound,snd_pcm_open,,
-      AC_MSG_ERROR(Can't find libasound))
+    LIBS="${LIBS} -lasound"
   fi
 fi
 
