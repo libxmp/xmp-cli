@@ -136,6 +136,7 @@ int main(int argc, char **argv)
 	int first;
 	int skipprev;
 	FILE *f = NULL;
+	int val;
 #ifndef WIN32
 	struct timeval tv;
 	struct timezone tz;
@@ -206,17 +207,44 @@ int main(int argc, char **argv)
 	}
 #endif
 
+	printf("Mixer set to %d Hz, %dbit, %s\n",
+			options.freq,
+			options.format & XMP_FORMAT_8BIT ? 8 : 16,
+			options.format & XMP_FORMAT_MONO ? "mono" : "stereo");
+
 	handle = xmp_create_context();
 
 	skipprev = 0;
 
 	for (first = optind; optind < argc; optind++) {
-		printf("\nLoading %s... (%d of %d)\n",
+		if (optind != first) {
+			printf("\n");
+		}
+
+		printf("Loading %s... (%d of %d)\n",
 			argv[optind], optind - first + 1, argc - first);
 
-		if (xmp_load_module(handle, argv[optind]) < 0) {
-			fprintf(stderr, "%s: error loading %s\n", argv[0],
-				argv[optind]);
+		val = xmp_load_module(handle, argv[optind]);
+		if (val < 0) {
+			char *msg;
+
+			val = -val;
+			switch (val) {
+			case XMP_ERROR_FORMAT:
+				msg = "Unrecognized file format";
+				break;
+			case XMP_ERROR_DEPACK:
+				msg = "Error depacking file";
+				break;
+			case XMP_ERROR_LOAD:
+				msg = "Error loading module";
+				break;
+			default:
+				msg = strerror(val);
+			}
+
+			fprintf(stderr, "%s: %s: %s\n", argv[0],
+						argv[optind], msg);
 			if (skipprev) {
 		        	optind -= 2;
 				if (optind < first) {
