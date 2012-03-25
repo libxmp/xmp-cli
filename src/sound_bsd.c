@@ -24,7 +24,6 @@ static int init(int *rate, int *format, char **parm)
 	audio_info_t ainfo;
 	int gain = 128;
 	int bsize = 32 * 1024;
-	char *token, **parm;
 
 	parm_init();
 	chkparm1("gain", gain = strtoul(token, NULL, 0));
