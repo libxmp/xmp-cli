@@ -1,10 +1,12 @@
+#ifndef __COMMON_H
+#define __COMMON_H
 
 #define MAX_DRV_PARM 10
 
 struct options {
 	int start;		/* start order */
 	int amplify;		/* amplification factor */
-	int freq;		/* sampling rate */
+	int rate;		/* sampling rate */
 	int format;		/* sample format */
 	int max_time;		/* max. replay time */
 	int mix;		/* channel separation */
@@ -48,3 +50,5 @@ void info_help(void);
 
 /* commands */
 void read_command(xmp_context, struct control *);
+
+#endif

@@ -70,15 +70,16 @@ static void CALLBACK wave_callback(HWAVEOUT hwo, UINT uMsg, DWORD dwInstance,
 	}
 }
 
-static int init(int *sampling_rate, int *format, char **parm)
+static int init(struct options *options)
 {
+	char **parm = options->driver_parm;
 	MMRESULT res;
 	WAVEFORMATEX wfe;
 	int i;
 
 	num_buffers = 10;
 	
-	parm_init();
+	parm_init(parm);
 	chkparm1("buffers", num_buffers = strtoul(token, NULL, 0));
 	parm_end();
 
@@ -89,9 +90,9 @@ static int init(int *sampling_rate, int *format, char **parm)
 		return -1;
 
 	wfe.wFormatTag = WAVE_FORMAT_PCM;
-	wfe.wBitsPerSample = *format & XMP_FORMAT_8BIT ? 8 : 16;
-	wfe.nChannels = *format & XMP_FORMAT_MONO ? 1 : 2;
-	wfe.nSamplesPerSec = *sampling_rate;
+	wfe.wBitsPerSample = options->format & XMP_FORMAT_8BIT ? 8 : 16;
+	wfe.nChannels = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	wfe.nSamplesPerSec = options->rate;
 	wfe.nAvgBytesPerSec = wfe.nSamplesPerSec * wfe.nChannels *
 	    wfe.wBitsPerSample / 8;
 	wfe.nBlockAlign = wfe.nChannels * wfe.wBitsPerSample / 8;

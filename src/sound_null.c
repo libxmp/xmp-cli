@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "sound.h"
 
-static int init(int *sampling_rate, int *format, char **parm)
+static int init(struct options *options)
 {
 	return 0;
 }

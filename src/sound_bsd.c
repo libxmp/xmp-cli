@@ -19,13 +19,14 @@
 
 static int audio_fd;
 
-static int init(int *rate, int *format, char **parm)
+static int init(struct options *options)
 {
+	char **parm = options->driver_parm;
 	audio_info_t ainfo;
 	int gain = 128;
 	int bsize = 32 * 1024;
 
-	parm_init();
+	parm_init(parm);
 	chkparm1("gain", gain = strtoul(token, NULL, 0));
 	chkparm1("buffer", bsize = strtoul(token, NULL, 0));
 	parm_end();
@@ -40,19 +41,19 @@ static int init(int *rate, int *format, char **parm)
 
 	AUDIO_INITINFO(&ainfo);
 
-	ainfo.play.sample_rate = *rate;
-	ainfo.play.channels = *format & XMP_FORMAT_MONO ? 1 : 2;
+	ainfo.play.sample_rate = options->rate;
+	ainfo.play.channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
 	ainfo.play.gain = gain;
 	ainfo.play.buffer_size = bsize;
 
-	if (*format & XMP_FORMAT_8BIT) {
+	if (options->format & XMP_FORMAT_8BIT) {
 		ainfo.play.precision = 8;
 		ainfo.play.encoding = AUDIO_ENCODING_ULINEAR;
-		*format |= XMP_FORMAT_UNSIGNED;
+		options->format |= XMP_FORMAT_UNSIGNED;
 	} else {
 		ainfo.play.precision = 16;
 		ainfo.play.encoding = AUDIO_ENCODING_SLINEAR;
-		*format &= ~XMP_FORMAT_UNSIGNED;
+		options->format &= ~XMP_FORMAT_UNSIGNED;
 	}
 
 	if (ioctl(audio_fd, AUDIO_SETINFO, &ainfo) == -1) {

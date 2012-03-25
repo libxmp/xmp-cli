@@ -110,8 +110,9 @@ static void setaudio(int *rate, int *format)
 	}
 }
 
-static int init(int *rate, int *format, char **parm)
+static int init(struct options *options)
 {
+	char **parm = options->driver_parm;
 	char *dev_audio[] = { "/dev/dsp", "/dev/sound/dsp" };
 	audio_buf_info info;
 	static char buf[80];
@@ -120,7 +121,7 @@ static int init(int *rate, int *format, char **parm)
 	fragnum = 16;		/* default number of fragments */
 	i = 1024;		/* default size of fragment */
 	
-	parm_init();
+	parm_init(parm);
 	chkparm2("frag", "%d,%d", &fragnum, &i);
 	chkparm1("dev", dev_audio[0] = token);
 	chkparm0("nosync", do_sync = 0);
@@ -136,7 +137,7 @@ static int init(int *rate, int *format, char **parm)
 	if (audio_fd < 0)
 		return -1;
 
-	setaudio(rate, format);
+	setaudio(&options->rate, &options->format);
 
 	if (ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &info) == 0) {
 		snprintf(buf, 80, "%s [%d fragments of %d bytes]",

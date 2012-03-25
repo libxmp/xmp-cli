@@ -22,7 +22,7 @@
 
 static struct sio_hdl *hdl;
 
-static int init(int *rate, int *format, char **parm)
+static int init(struct options *options)
 {
 	struct sio_par par, askpar;
 
@@ -33,19 +33,19 @@ static int init(int *rate, int *format, char **parm)
 	}
 
 	sio_initpar(&par);
-	par.pchan = *format & XMP_FORMAT_MONO ? 1 : 2;
-	par.rate = *rate;
+	par.pchan = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	par.rate = options->rate;
 	par.le = SIO_LE_NATIVE;
 	par.appbufsz = par.rate / 4;
 
-	if (*format & XMP_FORMAT_8BIT) {
+	if (options->format & XMP_FORMAT_8BIT) {
 		par.bits = 8;
 		par.sig = 0;
-		*format |= XMP_FORMAT_UNSIGNED;
+		options->format |= XMP_FORMAT_UNSIGNED;
 	} else {
 		par.bits = 16;
 		par.sig = 1;
-		*format &= ~XMP_FORMAT_UNSIGNED;
+		options->format &= ~XMP_FORMAT_UNSIGNED;
 	}
 
 

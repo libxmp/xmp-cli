@@ -3,13 +3,14 @@
 
 #include <xmp.h>
 #include <stdio.h>
+#include "common.h"
 #include "list.h"
 
 struct sound_driver {
 	char *id;
 	char *description;
 	char **help;
-	int (*init)(int *, int *, char **);
+	int (*init)(struct options *);
         void (*deinit)(void);
 	void (*play)(void *, int);
         void (*flush)(void);
@@ -18,8 +19,8 @@ struct sound_driver {
         struct list_head list;
 };
 
-#define parm_init() { char *token; for (; *parm; parm++) { \
-	char s[80]; strncpy(s, *parm, 80); \
+#define parm_init(p) { char *token; for (; *(p); (p)++) { \
+	char s[80]; strncpy(s, *(p), 80); \
 	token = strtok(s, ":="); token = strtok(NULL, "");
 #define parm_end() } }
 #define parm_error() do { \
@@ -35,6 +36,6 @@ struct sound_driver {
 	if (2 > sscanf(token, y, z, w)) parm_error(); } }
 
 void init_sound_drivers(void);
-struct sound_driver *select_sound_driver(char *, int *, int *, char **);
+struct sound_driver *select_sound_driver(struct options *);
 
 #endif

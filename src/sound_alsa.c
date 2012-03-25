@@ -5,16 +5,19 @@
 
 static snd_pcm_t *pcm_handle;
 
-static int init(int *rate, int *format, char **parm)
+static int init(struct options *options)
 {
+	char **parm = options->driver_parm;
 	snd_pcm_hw_params_t *hwparams;
 	int ret;
 	unsigned int channels, fmt;
 	unsigned int btime = 250000;	/* 250ms */
 	unsigned int ptime = 50000;	/* 50ms */
 	char *card_name = "default";
+	unsigned int rate = options->rate;
+	int format = options->format;
 
-	parm_init();
+	parm_init(parm);
 	chkparm1("buffer", btime = 1000 * strtoul(token, NULL, 0));
 	chkparm1("period", btime = 1000 * strtoul(token, NULL, 0));
 	chkparm1("card", card_name = token);
@@ -27,12 +30,12 @@ static int init(int *rate, int *format, char **parm)
 		return -1;
 	}
 
-	channels = *format & XMP_FORMAT_MONO ? 1 : 2;
-	if (*format & XMP_FORMAT_UNSIGNED) {
-		fmt = *format & XMP_FORMAT_8BIT ?
+	channels = format & XMP_FORMAT_MONO ? 1 : 2;
+	if (format & XMP_FORMAT_UNSIGNED) {
+		fmt = format & XMP_FORMAT_8BIT ?
 				SND_PCM_FORMAT_U8 : SND_PCM_FORMAT_U16;
 	} else {
-		fmt = *format & XMP_FORMAT_8BIT ?
+		fmt = format & XMP_FORMAT_8BIT ?
 				SND_PCM_FORMAT_S8 : SND_PCM_FORMAT_S16;
 	}
 
@@ -41,8 +44,7 @@ static int init(int *rate, int *format, char **parm)
 	snd_pcm_hw_params_set_access(pcm_handle, hwparams,
 				SND_PCM_ACCESS_RW_INTERLEAVED);
 	snd_pcm_hw_params_set_format(pcm_handle, hwparams, fmt);
-	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams,
-				(unsigned int *)rate, 0);
+	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &rate, 0);
 	snd_pcm_hw_params_set_channels_near(pcm_handle, hwparams, &channels);
 	snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &btime, 0);
 	snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &ptime, 0);
@@ -61,10 +63,13 @@ static int init(int *rate, int *format, char **parm)
 	}
   
 	if (channels == 1) {
-		*format |= XMP_FORMAT_MONO;
+		format |= XMP_FORMAT_MONO;
 	} else {
-		*format &= ~XMP_FORMAT_MONO;
+		format &= ~XMP_FORMAT_MONO;
 	}
+
+	options->rate = rate;
+	options->format = format;
 	
 	return 0;
 }

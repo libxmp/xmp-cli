@@ -14,10 +14,6 @@
 #include <unistd.h>
 #include "sound.h"
 
-
-static int init (struct context_data *ctx);
-static void bufdump (struct context_data *, void *, int);
-static void shutdown (struct context_data *);
 static AudioUnit au;
 
 /*
@@ -123,30 +119,30 @@ OSStatus render_proc(void *inRefCon,
  */
 
 
-static int init(int *sampling_rate, int *format, char **parm)
+static int init(struct options *options)
 {
-	struct xmp_options *o = &ctx->o;
 	AudioStreamBasicDescription ad;
 	Component comp;
 	ComponentDescription cd;
 	AURenderCallbackStruct rc;
 	OSStatus err;
 	UInt32 size, max_frames;
+	//char **parm = options->driver_parm;
 
-	//parm_init();
+	//parm_init(parm);
 	//parm_end();
 
-	ad.mSampleRate = *sampling_rate;
+	ad.mSampleRate = options->rate;
 	ad.mFormatID = kAudioFormatLinearPCM;
 	ad.mFormatFlags = kAudioFormatFlagIsPacked |
 			kAudioFormatFlagNativeEndian;
 
-	if (~*format & XMP_FORMAT_UNSIGNED) {
+	if (~options->format & XMP_FORMAT_UNSIGNED) {
 		ad.mFormatFlags |= kAudioFormatFlagIsSignedInteger;
 	}
 
-	ad.mChannelsPerFrame = *format & XMP_FORMAT_MONO ? 1 : 2;
-	ad.mBitsPerChannel = *format & XMP_FORMAT_8BIT ? 8 : 16;
+	ad.mChannelsPerFrame = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	ad.mBitsPerChannel = options->format & XMP_FORMAT_8BIT ? 8 : 16;
 
 	ad.mBytesPerFrame = o->resol / 8 * ad.mChannelsPerFrame;
 	ad.mBytesPerPacket = ad.mBytesPerFrame;
