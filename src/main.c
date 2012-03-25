@@ -156,7 +156,7 @@ int main(int argc, char **argv)
 
 	get_options(argc, argv, &options);
 
-	if (optind >= argc) {
+	if (!options.probeonly && optind >= argc) {
 		fprintf (stderr, "%s: no modules to play\n"
 			"Use `%s --help' for more information.\n",
 			argv[0], argv[0]);
@@ -185,6 +185,9 @@ int main(int argc, char **argv)
 			options.format & XMP_FORMAT_8BIT ? 8 : 16,
 			options.format & XMP_FORMAT_MONO ? "mono" : "stereo");
 
+	if (options.probeonly) {
+		exit(EXIT_SUCCESS);
+	}
 
 	if (options.random) {
 		shuffle(argc - optind + 1, &argv[optind - 1]);

@@ -22,9 +22,6 @@ extern char *optarg;
 static int o, i;
 static char *token;
 
-extern int probeonly;
-extern int randomize;
-extern int nocmd;
 #ifdef HAVE_SYS_RTPRIO_H
 extern int rt;
 #endif
@@ -132,6 +129,7 @@ static struct option lopt[] = {
 	{ "mute",		1, 0, 'M' },
 	{ "output-file",	1, 0, 'o' },
 	{ "pan",		1, 0, 'P' },
+	{ "probe-only",		0, 0, OPT_PROBEONLY },
 	{ "quiet",		0, 0, 'q' },
 	{ "random",		0, 0, 'R' },
 	{ "solo",		1, 0, 'S' },
@@ -217,6 +215,9 @@ void get_options(int argc, char **argv, struct options *options)
 				options->mix = 0;
 			if (options->mix > 100)
 				options->mix = 100;
+			break;
+		case OPT_PROBEONLY:
+			options->probeonly = 1;
 			break;
 		case 'q':
 			//options->verbosity = 0;
