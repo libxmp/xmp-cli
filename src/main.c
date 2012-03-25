@@ -146,6 +146,8 @@ int main(int argc, char **argv)
 	srand(GetTickCount());
 #endif
 
+	init_sound_drivers();
+
 	memset(&options, 0, sizeof (struct options));
 	memset(&control, 0, sizeof (struct control));
 	options.verbose = 1;
@@ -160,8 +162,6 @@ int main(int argc, char **argv)
 			argv[0], argv[0]);
 		exit(EXIT_FAILURE);
 	}
-
-	init_sound_drivers();
 
 	if (options.silent) {
 		sound = &sound_null;

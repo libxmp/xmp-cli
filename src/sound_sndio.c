@@ -84,7 +84,7 @@ static void deinit()
 
 static void play(void *buf, int len)
 {
-	if (b != NULL) {
+	if (buf != NULL) {
 		sio_write(hdl, buf, len);
 	}
 }

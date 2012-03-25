@@ -11,11 +11,11 @@
 #include <sys/audioio.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
-
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "sound.h"
 
 static int audio_fd;
 
@@ -66,8 +66,6 @@ static int init(int *rate, int *format)
 		close(audio_fd);
 		return -1;
 	}
-	if (setaudio(o) != 0)
-		return -1;
 
 	return 0;
 }
@@ -79,7 +77,7 @@ static void play(void *b, int i)
 	while (i) {
 		if ((j = write(audio_fd, b, i)) > 0) {
 			i -= j;
-			(char *)b += j;
+			b = (char *)b + j;
 		} else
 			break;
 	};
