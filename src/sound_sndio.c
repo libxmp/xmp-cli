@@ -14,6 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sndio.h>
@@ -24,7 +25,6 @@ static struct sio_hdl *hdl;
 static int init(int *rate, int *format)
 {
 	struct sio_par par, askpar;
-	struct xmp_options *opt = &ctx->o;
 
 	hdl = sio_open(NULL, SIO_PLAY, 0);
 	if (hdl == NULL) {
@@ -82,7 +82,7 @@ static void deinit()
 	hdl = NULL;
 }
 
-static void play(void *b, int len)
+static void play(void *buf, int len)
 {
 	if (b != NULL) {
 		sio_write(hdl, buf, len);
@@ -106,7 +106,7 @@ struct sound_driver sound_sndio = {
 	"OpenBSD sndio",
 	NULL,
 	init,
-	deint,
+	deinit,
 	play,
 	flush,
 	onpause,
