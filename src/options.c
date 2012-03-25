@@ -159,7 +159,7 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 #endif
 		case 'f':
-			options->freq = strtoul(optarg, NULL, 0);
+			options->rate = strtoul(optarg, NULL, 0);
 			break;
 		case 'I':
 			options->ins_path = optarg;
@@ -259,8 +259,8 @@ void get_options(int argc, char **argv, struct options *options)
 	}
 
 	/* Set limits */
-	if (options->freq < 1000)
-		options->freq = 1000;	/* Min. rate 1 kHz */
-	if (options->freq > 48000)
-		options->freq = 48000;	/* Max. rate 48 kHz */
+	if (options->rate < 1000)
+		options->rate = 1000;	/* Min. rate 1 kHz */
+	if (options->rate > 48000)
+		options->rate = 48000;	/* Max. rate 48 kHz */
 }

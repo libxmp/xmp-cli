@@ -151,7 +151,7 @@ int main(int argc, char **argv)
 	memset(&options, 0, sizeof (struct options));
 	memset(&control, 0, sizeof (struct control));
 	options.verbose = 1;
-	options.freq = 44100;
+	options.rate = 44100;
 	options.drv_id = NULL;
 
 	get_options(argc, argv, &options);
@@ -179,8 +179,7 @@ int main(int argc, char **argv)
 
 	printf("Using %s\n", sound->description);
 
-	printf("Mixer set to %d Hz, %dbit, %s\n",
-			options.freq,
+	printf("Mixer set to %d Hz, %dbit, %s\n", options.rate,
 			options.format & XMP_FORMAT_8BIT ? 8 : 16,
 			options.format & XMP_FORMAT_MONO ? "mono" : "stereo");
 
@@ -263,7 +262,7 @@ int main(int argc, char **argv)
 		control.time = 0.0;
 		control.loop = options.loop;
 		
-		if (xmp_player_start(handle, options.freq, options.format) == 0) {
+		if (xmp_player_start(handle, options.rate, options.format) == 0) {
 			xmp_set_position(handle, options.start);
 
 			/* Mute channels */
