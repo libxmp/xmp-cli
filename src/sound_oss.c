@@ -40,14 +40,9 @@
 #  endif
 #endif
 
-static int audio_fd;
+struct sound_driver sound_oss;
 
-static char *help[] = {
-	"frag=num,size", "Set the number and size of fragments",
-	"dev=<device_name>", "Audio device to use (default /dev/dsp)",
-	"nosync", "Don't flush OSS buffers between modules",
-	NULL
-};
+static int audio_fd;
 
 static int fragnum, fragsize;
 static int do_sync = 1;
@@ -115,24 +110,21 @@ static void setaudio(int *rate, int *format)
 	}
 }
 
-static int init(int *rate, int *format)
+static int init(int *rate, int *format, char **parm)
 {
 	char *dev_audio[] = { "/dev/dsp", "/dev/sound/dsp" };
 	audio_buf_info info;
-	//static char buf[80];
-	//char *token, **parm;
+	static char buf[80];
 	int i;
 
 	fragnum = 16;		/* default number of fragments */
 	i = 1024;		/* default size of fragment */
 	
-#if 0
 	parm_init();
 	chkparm2("frag", "%d,%d", &fragnum, &i);
 	chkparm1("dev", dev_audio[0] = token);
 	chkparm0("nosync", do_sync = 0);
 	parm_end();
-#endif
 
 	for (fragsize = 0; i >>= 1; fragsize++) ;
 	if (fragsize < 4)
@@ -146,15 +138,12 @@ static int init(int *rate, int *format)
 
 	setaudio(rate, format);
 
-#if 0
 	if (ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &info) == 0) {
 		snprintf(buf, 80, "%s [%d fragments of %d bytes]",
-			 drv_oss.description, info.fragstotal,
+			 sound_oss.description, info.fragstotal,
 			 info.fragsize);
-		drv_oss.description = buf;
+		sound_oss.description = buf;
 	}
-#endif
-	ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &info);
 
 	return 0;
 }
@@ -205,6 +194,13 @@ static void onresume()
 	ioctl(audio_fd, SNDCTL_DSP_SETTRIGGER, &trig);
 #endif
 }
+
+static char *help[] = {
+	"frag=num,size", "Set the number and size of fragments",
+	"dev=<device_name>", "Audio device to use (default /dev/dsp)",
+	"nosync", "Don't flush OSS buffers between modules",
+	NULL
+};
 
 struct sound_driver sound_oss = {
 	"oss",

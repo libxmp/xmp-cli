@@ -19,13 +19,7 @@
 
 static int audio_fd;
 
-static char *help[] = {
-	"gain=val", "Audio output gain (0 to 255)",
-	"buffer=val", "Audio buffer size (default is 32768)",
-	NULL
-};
-
-static int init(int *rate, int *format)
+static int init(int *rate, int *format, char **parm)
 {
 	audio_info_t ainfo;
 	int gain = 128;
@@ -99,6 +93,12 @@ static void onpause()
 static void onresume()
 {
 }
+
+static char *help[] = {
+	"gain=val", "Audio output gain (0 to 255)",
+	"buffer=val", "Audio buffer size (default is 32768)",
+	NULL
+};
 
 struct sound_driver sound_bsd = {
 	"bsd",

@@ -19,7 +19,6 @@
 #include "list.h"
 
 extern char *optarg;
-static int o, i;
 static char *token;
 
 #ifdef HAVE_SYS_RTPRIO_H
@@ -49,21 +48,6 @@ static void usage(char *s)
 	char **hlp;
 
 	printf("Usage: %s [options] [modules]\n", s);
-
-#if 0
-	printf("\nRegistered module loaders:\n");
-	xmp_get_fmt_info(&fmt);
-	list_wrap(NULL, 3, 78, 1);
-
-	for (i = 0, f = fmt; f; i++, f = f->next) {
-		snprintf(buf, 80, "%s (%s)", f->id, f->tracker);
-		list_wrap(buf, 3, 0, 1);
-	}
-
-	snprintf(buf, 80, "[%d registered loaders]", i);
-	list_wrap(buf, 3, 0, 0);
-	printf("\n");
-#endif
 
 	printf("\nAvailable drivers:\n");
 
@@ -146,8 +130,10 @@ static struct option lopt[] = {
 void get_options(int argc, char **argv, struct options *options)
 {
 	int optidx = 0;
+	int dparm = 0;
+	int o;
+
 #define OPTIONS "a:b:cD:d:f:hI:iLlM:mno:qRS:s:T:t:uVv"
-	i = 0;
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -161,11 +147,9 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'c':
 			options->out_file = "-";
 			break;
-#if 0
 		case 'D':
-			xmp_set_driver_parameter(opt, optarg);
+			options->driver_parm[dparm++] = optarg;
 			break;
-#endif
 		case 'd':
 			options->drv_id = optarg;
 			break;

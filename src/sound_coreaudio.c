@@ -123,14 +123,13 @@ OSStatus render_proc(void *inRefCon,
  */
 
 
-static int init(int *sampling_rate, int *format)
+static int init(int *sampling_rate, int *format, char **parm)
 {
 	struct xmp_options *o = &ctx->o;
 	AudioStreamBasicDescription ad;
 	Component comp;
 	ComponentDescription cd;
 	AURenderCallbackStruct rc;
-	//char *token, **parm;
 	OSStatus err;
 	UInt32 size, max_frames;
 

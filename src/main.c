@@ -166,8 +166,8 @@ int main(int argc, char **argv)
 	if (options.silent) {
 		sound = &sound_null;
 	} else {
-		sound = select_sound_driver(options.drv_id,
-				&options.freq, &options.format);
+		sound = select_sound_driver(options.drv_id, &options.freq,
+				&options.format, options.driver_parm);
 	}
 
 	if (sound == NULL) {

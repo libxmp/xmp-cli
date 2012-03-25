@@ -5,8 +5,7 @@
 
 static snd_pcm_t *pcm_handle;
 
-
-static int init(int *rate, int *format)
+static int init(int *rate, int *format, char **parm)
 {
 	snd_pcm_hw_params_t *hwparams;
 	int ret;
@@ -14,6 +13,12 @@ static int init(int *rate, int *format)
 	unsigned int btime = 250000;	/* 250ms */
 	unsigned int ptime = 50000;	/* 50ms */
 	char *card_name = "default";
+
+	parm_init();
+	chkparm1("buffer", btime = 1000 * strtoul(token, NULL, 0));
+	chkparm1("period", btime = 1000 * strtoul(token, NULL, 0));
+	chkparm1("card", card_name = token);
+	parm_end();
 
 	if ((ret = snd_pcm_open(&pcm_handle, card_name,
 		SND_PCM_STREAM_PLAYBACK, 0)) < 0) {

@@ -22,7 +22,7 @@
 
 static struct sio_hdl *hdl;
 
-static int init(int *rate, int *format)
+static int init(int *rate, int *format, char **parm)
 {
 	struct sio_par par, askpar;
 

@@ -38,7 +38,7 @@ void init_sound_drivers()
 #endif
 }
 
-struct sound_driver *select_sound_driver(char *pref, int *rate, int *format)
+struct sound_driver *select_sound_driver(char *pref, int *rate, int *format, char **parm)
 {
 	struct list_head *head;
 	struct sound_driver *sd;
@@ -47,7 +47,7 @@ struct sound_driver *select_sound_driver(char *pref, int *rate, int *format)
 		list_for_each(head, &sound_driver_list) {
 			sd = list_entry(head, struct sound_driver, list);
 			if (strcmp(sd->id, pref) == 0) {
-				if (sd->init(rate, format) == 0) {
+				if (sd->init(rate, format, parm) == 0) {
 					return sd;
 				}
 			}
@@ -56,7 +56,7 @@ struct sound_driver *select_sound_driver(char *pref, int *rate, int *format)
 		list_for_each(head, &sound_driver_list) {
 			sd = list_entry(head, struct sound_driver, list);
 			/* Probing */
-			if (sd->init(rate, format) == 0) {
+			if (sd->init(rate, format, parm) == 0) {
 				/* found */
 				return sd;
 			}

@@ -1,4 +1,6 @@
 
+#define MAX_DRV_PARM 10
+
 struct options {
 	int start;		/* start order */
 	int amplify;		/* amplification factor */
@@ -15,6 +17,7 @@ struct options {
 	char *drv_id;		/* sound driver ID */
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */
+	char *driver_parm[MAX_DRV_PARM]; /* driver parameters */
 	char mute[XMP_MAX_CHANNELS];
 };
 
