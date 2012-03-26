@@ -44,41 +44,12 @@
 #include <sbus/audio/audio.h>
 #endif
 
-#include "common.h"
-#include "driver.h"
-#include "mixer.h"
+#include "sound.h"
 
 static int audio_fd;
 static int audioctl_fd;
 
-static int init(struct context_data *);
-static int setaudio(struct xmp_options *);
-static void bufdump(struct context_data *, void *, int);
-static void shutdown(struct context_data *);
-
-static void dummy()
-{
-}
-
-static char *help[] = {
-	"gain=val", "Audio output gain (0 to 255)",
-	"port={s|h|l}", "Audio port (s[peaker], h[eadphones], l[ineout])",
-	"buffer=val", "Audio buffer size (default is 32768)",
-	NULL
-};
-
-struct xmp_drv_info drv_solaris = {
-	"solaris",		/* driver ID */
-	"Solaris PCM audio",	/* driver description */
-	help,			/* help */
-	init,			/* init */
-	shutdown,		/* shutdown */
-	dummy,			/* starttimer */
-	dummy,			/* flush */
-	bufdump,		/* bufdump */
-};
-
-static int setaudio(struct xmp_options *o)
+static int init(struct options *options)
 {
 	audio_info_t ainfo, ainfo2;
 	int gain;
@@ -86,6 +57,9 @@ static int setaudio(struct xmp_options *o)
 	int port;
 	char *token, **parm;
 	AUDIO_INITINFO(&ainfo);
+
+	if ((audio_fd = open("/dev/audio", O_WRONLY)) == -1)
+		return -1;
 
 	/* try to open audioctl device */
 	if ((audioctl_fd = open("/dev/audioctl", O_RDWR)) < 0) {
@@ -124,7 +98,7 @@ static int setaudio(struct xmp_options *o)
 	chkparm1("gain", gain = strtoul(token, NULL, 0));
 	chkparm1("buffer", bsize = strtoul(token, NULL, 0));
 	chkparm1("port", port = (int)*token)
-	    parm_end();
+	parm_end();
 
 	switch (port) {
 	case 'h':
@@ -145,9 +119,9 @@ static int setaudio(struct xmp_options *o)
 	AUDIO_INITINFO(&ainfo);	/* For CS4231 */
 	AUDIO_INITINFO(&ainfo2);	/* For AMD 7930 if needed */
 
-	ainfo.play.sample_rate = o->freq;
-	ainfo.play.channels = o->outfmt & XMP_FORMAT_MONO ? 1 : 2;
-	ainfo.play.precision = o->resol;
+	ainfo.play.sample_rate = options->rate;
+	ainfo.play.channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	ainfo.play.precision = options->format & XMP_FORMAT_8BIT ? 8 : 16;
 	ainfo.play.encoding = AUDIO_ENCODING_LINEAR;
 	ainfo2.play.gain = ainfo.play.gain = gain;
 	ainfo2.play.port = ainfo.play.port = port;
@@ -157,13 +131,12 @@ static int setaudio(struct xmp_options *o)
 		/* CS4231 initialization Failed, perhaps we have an AMD 7930 */
 		if (ioctl(audio_fd, AUDIO_SETINFO, &ainfo2) == -1) {
 			close(audio_fd);
-			return XMP_ERR_DINIT;
+			return -1;
 		}
 
-		o->resol = 0;
-		o->freq = 8000;
-		o->outfmt |= XMP_FORMAT_MONO;
-		drv_solaris.description = "Solaris AMD7930 PCM audio";
+		/* Sorry, AMD7930 uLaw not supported anymore */
+		/* drv_solaris.description = "Solaris AMD7930 PCM audio"; */
+		return -1;
 	} else {
 		drv_solaris.description = "Solaris CS4231 PCM audio";
 	}
@@ -171,23 +144,7 @@ static int setaudio(struct xmp_options *o)
 	return 0;
 }
 
-static int init(struct context_data *ctx)
-{
-	struct xmp_options *o = &ctx->o;
-
-	if ((audio_fd = open("/dev/audio", O_WRONLY)) == -1)
-		return XMP_ERR_DINIT;
-
-	if (setaudio(o) != 0)
-		return XMP_ERR_DINIT;
-
-	return 0;
-}
-
-/* Build and write one tick (one PAL frame or 1/50 s in standard vblank
- * timed mods) of audio data to the output device.
- */
-static void bufdump(struct context_data *ctx, void *b, int i)
+static void play(void *b, int i)
 {
 	int j;
 
@@ -200,7 +157,40 @@ static void bufdump(struct context_data *ctx, void *b, int i)
 	}
 }
 
-static void shutdown(struct context_data *ctx)
+static void deinit()
 {
 	close(audio_fd);
 }
+
+static void flush()
+{
+}
+
+static void onpause()
+{
+}
+
+static void onresume()
+{
+}
+
+
+static char *help[] = {
+	"gain=val", "Audio output gain (0 to 255)",
+	"port={s|h|l}", "Audio port (s[peaker], h[eadphones], l[ineout])",
+	"buffer=val", "Audio buffer size (default is 32768)",
+	NULL
+};
+
+struct xmp_drv_info drv_solaris = {
+	"solaris",
+	"Solaris PCM audio",
+	help,
+	init,
+	deinit,
+	play,
+	flush,
+	onpause,
+	onresume
+};
+
