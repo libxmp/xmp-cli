@@ -191,14 +191,6 @@ int main(int argc, char **argv)
 		shuffle(argc - optind + 1, &argv[optind - 1]);
 	}
 
-	if (options.out_file) {
-		f = fopen(options.out_file, "wb");
-		if (f == NULL) {
-			perror(options.out_file);
-			exit(EXIT_FAILURE);
-		}
-	}
-
 #ifdef HAVE_SIGNAL_H
 	signal(SIGTERM, cleanup);
 	signal(SIGINT, cleanup);
@@ -303,10 +295,6 @@ int main(int argc, char **argv)
 
 				sound->play(mi.buffer, mi.buffer_size);
 
-				if (options.out_file) {
-					fwrite(mi.buffer, mi.buffer_size, 1, f);
-				}
-
 				if (!background) {
 					read_command(handle, &control);
 
@@ -350,10 +338,6 @@ int main(int argc, char **argv)
 	}
 
 	sound->deinit();
-
-	if (options.out_file) {
-		fclose(f);
-	}
 
 	exit(EXIT_SUCCESS);
 }

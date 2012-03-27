@@ -6,6 +6,7 @@ AC_ARG_WITH(libxmp, [  --with-libxmp=<path>    libxmp prefix (optional)],
   libxmp_path="$withval")
 
 AC_PROG_CC
+AC_C_BIGENDIAN(AC_DEFINE(ENDIAN_BIG))
 
 if test "$libxmp_path" != ""; then
   CPPFLAGS="${CPPFLAGS} -I${libxmp_path}/include"

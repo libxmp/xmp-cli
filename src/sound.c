@@ -2,6 +2,7 @@
 #include <string.h>
 #include "sound.h"
 
+extern struct sound_driver sound_wav;
 extern struct sound_driver sound_oss;
 extern struct sound_driver sound_alsa;
 extern struct sound_driver sound_win32;
@@ -36,6 +37,7 @@ void init_sound_drivers()
 #ifdef SOUND_ALSA
 	register_sound_driver(&sound_alsa);
 #endif
+	register_sound_driver(&sound_wav);
 }
 
 struct sound_driver *select_sound_driver(struct options *options)
