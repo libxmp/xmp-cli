@@ -17,7 +17,7 @@ SYSCONFDIR	= @sysconfdir@/xmp
 SHELL		= /bin/sh
 
 DIST		= xmp-$(VERSION)
-DFILES		= README INSTALL configure configure.ac Makefile.in
+DFILES		= README INSTALL configure configure.ac Makefile.in install-sh
 DDIRS		= src
 V		= 0
 DRIVERS		= @DRIVERS@

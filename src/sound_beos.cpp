@@ -6,10 +6,6 @@
  * for more information.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <Application.h>
 #include <SoundPlayer.h>
 
@@ -19,40 +15,9 @@
 extern "C" {
 #include <string.h>
 #include <stdlib.h>
-
 #include "xmp.h"
-
-/* g++ doesn't like typedef xmp_context and struct context_data */
-#define xmp_context _xmp_context
-#include "common.h"
-
-#include "driver.h"
-#include "mixer.h"
+#include "sound.h"
 }
-
-static int init (struct context_data *ctx);
-static void bufdump (struct context_data *, void *, int);
-static void myshutdown (struct context_data *);
-
-static void dummy()
-{
-}
-
-static char *help[] = {
-	"buffer=num,size", "set the number and size of buffer fragments",
-	NULL
-};
-
-struct xmp_drv_info drv_beos = {
-	"beos",				/* driver ID */
-	"BeOS PCM audio",		/* driver description */
-	NULL,				/* help */
-	(int (*)())init,		/* init */
-	(void (*)())myshutdown,		/* shutdown */
-	dummy,				/* starttimer */
-	dummy,				/* flush */
-	(void (*)())bufdump,		/* bufdump */
-};
 
 static media_raw_audio_format fmt;
 static BSoundPlayer *player;
@@ -70,8 +35,32 @@ static int buf_write_pos;
 static int buf_read_pos;
 static int chunk_size;
 static int chunk_num;
-static int packet_size;
+/* static int packet_size; */
 
+
+static char *help[] = {
+	"buffer=num,size", "set the number and size of buffer fragments",
+	NULL
+};
+
+static int init(struct options *options);
+static void deinit();
+static void play(void *b, int i);
+static void flush();
+static void onpause();
+static void onresume();
+
+struct sound_driver sound_beos = {
+	"beos",
+	"BeOS PCM audio",
+	help,
+	init,
+	deinit,
+	play,
+	flush,
+	onpause,
+	onresume
+};
 
 /* return minimum number of free bytes in buffer, value may change between
  * two immediately following calls, and the real number of free bytes
@@ -147,7 +136,7 @@ static int read_buffer(unsigned char *data, int len)
 void render_proc(void *theCookie, void *buffer, size_t req, 
 				const media_raw_audio_format &format)
 { 
-        int amt;
+        size_t amt;
 
 	while ((amt = buf_used()) < req)
 		snooze(100000);
@@ -156,11 +145,9 @@ void render_proc(void *theCookie, void *buffer, size_t req,
 }
 
 
-static int init(struct context_data *ctx)
+static int init(struct options *options)
 {
-	struct xmp_options *o = &ctx->o;
-	char *dev;
-	char *token, **parm;
+	char **parm = options->driver_parm;
 	static char desc[80];
 
 	be_app = new BApplication("application/x-vnd.cm-xmp");
@@ -168,17 +155,18 @@ static int init(struct context_data *ctx)
 	chunk_size = 4096;
 	chunk_num = 20;
 
-	parm_init();
+	parm_init(parm);
 	chkparm2("buffer", "%d,%d", &chunk_num, &chunk_size);
 	parm_end();
 
 	snprintf(desc, 80, "%s [%d fragments of %d bytes]",
-			drv_beos.description, chunk_num, chunk_size);
-	drv_beos.description = desc;
+			sound_beos.description, chunk_num, chunk_size);
+	sound_beos.description = desc;
 
-	fmt.frame_rate = o->freq;
-	fmt.channel_count = o->outfmt & XMP_FORMAT_MONO ? 1 : 2;
-	fmt.format = o->resol > 8 ? B_AUDIO_SHORT : B_AUDIO_CHAR;
+	fmt.frame_rate = options->rate;
+	fmt.channel_count = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	fmt.format = options->format & XMP_FORMAT_8BIT ?
+				B_AUDIO_CHAR : B_AUDIO_SHORT;
 	fmt.byte_order = B_HOST_IS_LENDIAN ?
 				B_MEDIA_LITTLE_ENDIAN : B_MEDIA_BIG_ENDIAN;
 	fmt.buffer_size = chunk_size * chunk_num;
@@ -195,10 +183,7 @@ static int init(struct context_data *ctx)
 }
 
 
-/* Build and write one tick (one PAL frame or 1/50 s in standard vblank
- * timed mods) of audio data to the output device.
- */
-static void bufdump(struct context_data *ctx, void *b, int i)
+static void play(void *b, int i)
 {
 	int j = 0;
 
@@ -209,7 +194,7 @@ static void bufdump(struct context_data *ctx, void *b, int i)
 	while (i) {
         	if ((j = write_buffer((uint8 *)b, i)) > 0) {
 			i -= j;
-			b += j;
+			b = (uint8 *)b + j;
 		} else
 			break;
 	}
@@ -221,10 +206,22 @@ static void bufdump(struct context_data *ctx, void *b, int i)
 	}
 }
 
-static void myshutdown(struct context_data *ctx)
+static void deinit()
 {
 	player->Stop(); 
 	be_app->Lock();
 	be_app->Quit();
+}
+
+static void flush()
+{
+}
+
+static void onpause()
+{
+}
+
+static void onresume()
+{
 }
 

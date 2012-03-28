@@ -14,6 +14,7 @@ if test "$libxmp_path" != ""; then
 fi
 
 AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h)
+
 AC_CHECK_HEADER(windows.h,,[
   AC_CHECK_HEADER(CoreAudio/CoreAudio.h,,[
     AC_CHECK_HEADERS(sys/soundcard.h alsa/asoundlib.h sndio.h sys/audioio.h)
@@ -27,7 +28,11 @@ else
   AC_MSG_ERROR(Can't find libxmp header files)
 fi
 
-if test "${ac_cv_header_windows_h}" = "yes"; then
+if test -f /system/Tracker; then
+  AC_DEFINE(SOUND_BEOS)
+  DRIVERS="${DRIVERS} sound_beos.o"
+  LIBS="${LIBS} -lmedia -lbe"
+elif test "${ac_cv_header_windows_h}" = "yes"; then
   AC_DEFINE(SOUND_WIN32)
   DRIVERS="${DRIVERS} sound_win32.o"
   LIBS="${LIBS} -lwinmm"
@@ -54,6 +59,27 @@ else
     DRIVERS="${DRIVERS} sound_alsa.o"
     LIBS="${LIBS} -lasound"
   fi
+fi
+
+dnl XMP_TRY_COMPILE(<message>,<cache-var>,<flags>,<program>,<ifyes>,<ifno>)
+define(XMP_TRY_COMPILE,[
+  AC_CACHE_CHECK([$1],[$2],[
+    oldcflags="${CFLAGS}"
+    CFLAGS="${CFLAGS} $3"
+    AC_COMPILE_IFELSE([AC_LANG_SOURCE([[$4]])],[$2=yes],[$2=no],[true])
+    CFLAGS="${oldcflags}"])
+  if test "x$$2" = xyes; then
+    true; $5
+  else
+    true; $6
+  fi])
+
+if test "${GCC-no}" = yes; then
+  XMP_TRY_COMPILE(whether compiler understands -Wmultichar,
+    ac_cv_c_flag_w_multichar,
+    -Wmultichar,[
+    int main(){}],
+    CFLAGS="${CFLAGS} -Wno-multichar")  
 fi
 
 AC_CHECK_FUNCS(kill getopt_long)
