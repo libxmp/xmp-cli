@@ -4,7 +4,7 @@ SRC_OBJS	= sound.o sound_null.o terminal.o info.o commands.o \
 SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h list.h \
 		  sound.h sound_alsa.c sound_coreaudio.c sound_oss.c \
 		  sound_sndio.c sound_openbsd.c sound_bsd.c sound_solaris.c \
-		  sound_beos.cpp
+		  sound_beos.c
 SRC_PATH	= src
 
 SRC_OBJS += $(DRIVERS)
@@ -20,8 +20,10 @@ $(SRC_PATH)/xmp: $(OBJS)
 	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo LD $@ ; fi; \
 	eval $$CMD
 
-$(SRC_PATH)/sound_beos.o: src/sound_beos.cpp
-	g++ -c $(CFLAGS) -o $@ src/sound_beos.cpp
+$(SRC_PATH)/sound_beos.o: src/sound_beos.c
+	@CMD='g++ -c $(CFLAGS) -o $@ src/sound_beos.cpp'; \
+	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo CXX $@ ; fi; \
+	eval $$CMD
 
 install-xmp: $(SRC_PATH)/xmp
 	@echo Installing xmp in $(DESTDIR)$(BINDIR)
