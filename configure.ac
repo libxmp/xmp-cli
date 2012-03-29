@@ -76,6 +76,12 @@ openbsd*)
     DRIVERS="${DRIVERS} sound_openbsd.o"
   fi
   ;;
+solaris*)
+  if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
+    AC_DEFINE(SOUND_SOLARISD)
+    DRIVERS="${DRIVERS} sound_solaris.o"
+  fi
+  ;;
 cygwin*|mingw*)
   AC_DEFINE(SOUND_WIN32)
   DRIVERS="${DRIVERS} sound_win32.o"

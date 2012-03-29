@@ -51,11 +51,11 @@ static int audioctl_fd;
 
 static int init(struct options *options)
 {
+	char **parm = options->driver_parm;
 	audio_info_t ainfo, ainfo2;
 	int gain;
 	int bsize = 32 * 1024;
 	int port;
-	char *token, **parm;
 	AUDIO_INITINFO(&ainfo);
 
 	if ((audio_fd = open("/dev/audio", O_WRONLY)) == -1)
@@ -94,7 +94,7 @@ static int init(struct options *options)
 	gain = ainfo.play.gain;
 	port = ainfo.play.port;
 
-	parm_init();
+	parm_init(parm);
 	chkparm1("gain", gain = strtoul(token, NULL, 0));
 	chkparm1("buffer", bsize = strtoul(token, NULL, 0));
 	chkparm1("port", port = (int)*token)
@@ -182,7 +182,7 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_solaris = {
+struct sound_driver sound_solaris = {
 	"solaris",
 	"Solaris PCM audio",
 	help,
