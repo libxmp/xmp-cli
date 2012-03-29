@@ -21,7 +21,7 @@ $(SRC_PATH)/xmp: $(OBJS)
 	eval $$CMD
 
 $(SRC_PATH)/sound_beos.o: src/sound_beos.c
-	@CMD='g++ -c $(CFLAGS) -o $@ src/sound_beos.cpp'; \
+	@CMD='g++ -c $(CFLAGS) -o $@ src/sound_beos.c'; \
 	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo CXX $@ ; fi; \
 	eval $$CMD
 
