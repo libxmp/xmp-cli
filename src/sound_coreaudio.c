@@ -134,8 +134,8 @@ static int init(struct options *options)
 
 	ad.mSampleRate = options->rate;
 	ad.mFormatID = kAudioFormatLinearPCM;
-	ad.mFormatFlags = kAudioFormatFlagIsPacked |
-			kAudioFormatFlagNativeEndian;
+	ad.mFormatFlags = kAudioFormatFlagIsPacked /* |
+			kAudioFormatFlagNativeEndian */;
 
 	if (~options->format & XMP_FORMAT_UNSIGNED) {
 		ad.mFormatFlags |= kAudioFormatFlagIsSignedInteger;
@@ -144,7 +144,11 @@ static int init(struct options *options)
 	ad.mChannelsPerFrame = options->format & XMP_FORMAT_MONO ? 1 : 2;
 	ad.mBitsPerChannel = options->format & XMP_FORMAT_8BIT ? 8 : 16;
 
-	ad.mBytesPerFrame = o->resol / 8 * ad.mChannelsPerFrame;
+	if (options->format & XMP_FORMAT_8BIT) {
+		ad.mBytesPerFrame = ad.mChannelsPerFrame;
+	} else {
+		ad.mBytesPerFrame = 2 * ad.mChannelsPerFrame;
+	}
 	ad.mBytesPerPacket = ad.mBytesPerFrame;
 	ad.mFramesPerPacket = 1;
 
@@ -195,7 +199,7 @@ static int init(struct options *options)
 	}
 
 	chunk_size = max_frames;
-        num_chunks = (o->freq * ad.mBytesPerFrame + chunk_size - 1) /
+        num_chunks = (options->rate * ad.mBytesPerFrame + chunk_size - 1) /
 								chunk_size;
         buffer_len = (num_chunks + 1) * chunk_size;
         buffer = calloc(num_chunks + 1, chunk_size);
@@ -266,7 +270,7 @@ static void onresume()
 struct sound_driver sound_coreaudio = {
 	"coreaudio",
 	"CoreAudio",
-	help,
+	NULL,
 	init,
 	deinit,
 	play,
