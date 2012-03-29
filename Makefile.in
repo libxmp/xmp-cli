@@ -15,12 +15,13 @@ LIBDIR		= @libdir@
 MANDIR		= @mandir@/man1
 SYSCONFDIR	= @sysconfdir@/xmp
 SHELL		= /bin/sh
+V		= 0
 
 DIST		= xmp-$(VERSION)
 DFILES		= README INSTALL configure config.sub config.guess install-sh \
-		  configure.ac Makefile.in
+		  configure.ac Makefile.in $(MODULES)
 DDIRS		= src
-V		= 0
+MODULES		= delicate_oooz!.mod
 DRIVERS		= @DRIVERS@
 
 all: binaries
