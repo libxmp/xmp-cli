@@ -58,7 +58,7 @@ fi
 case "${host_os}" in
 amigaos*|aros)
   DRIVERS="${DRIVERS} sound_ahi.o"
-  AC_DEFINE(DRIVER_AHI)
+  AC_DEFINE(SOUND_AHI)
   ;;
 darwin*)
   AC_CHECK_HEADER(CoreAudio/CoreAudio.h)
@@ -88,14 +88,14 @@ netbsd*)
   ;;
 solaris*)
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
-    AC_DEFINE(SOUND_SOLARISD)
+    AC_DEFINE(SOUND_SOLARIS)
     DRIVERS="${DRIVERS} sound_solaris.o"
   fi
   ;;
 hpux*)
   AC_CHECK_HEADER(sys/audio.h)
   if test "${ac_cv_header_sys_audio_h}" = "yes"; then
-    AC_DEFINE(DRIVER_HPUX)
+    AC_DEFINE(SOUND_HPUX)
     DRIVERS="${DRIVERS} sound_hpux.o"
   fi
   ;;
