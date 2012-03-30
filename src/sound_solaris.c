@@ -18,10 +18,6 @@
  * Wed, 30 Jun 1999 14:23:52 -0700 (PDT)
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>

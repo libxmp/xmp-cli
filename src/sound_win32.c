@@ -9,10 +9,6 @@
 /*
  * Based on Bjornar Henden's driver for Mikmod
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <windows.h>
 #include <stdio.h>
 #include "sound.h"
