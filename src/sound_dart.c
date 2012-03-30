@@ -10,10 +10,6 @@
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -28,18 +24,11 @@
 #include <meerror.h>
 #include <os2medef.h>
 
-#include "common.h"
-#include "driver.h"
-#include "mixer.h"
+#include "sound.h"
 
 #define BUFFERCOUNT 4
 #define BUF_MIN 8
 #define BUF_MAX 32
-
-static int init(struct context_data *);
-static int setaudio(struct xmp_options *);
-static void bufdump(struct context_data *, void *, int);
-static void shutdown(struct context_data *);
 
 static MCI_MIX_BUFFER MixBuffers[BUFFERCOUNT];
 static MCI_MIXSETUP_PARMS MixSetupParms;
@@ -52,28 +41,6 @@ static short next = 2;
 static short ready = 1;
 
 static HMTX mutex;
-
-static void dummy()
-{
-}
-
-static char *help[] = {
-	"sharing={Y,N}", "Device Sharing    (default is N)",
-	"device=val", "OS/2 Audio Device (default is 0 auto-detect)",
-	"buffer=val", "Audio buffer size (default is 16)",
-	NULL
-};
-
-struct sound_driver sound_os2dart = {
-	"dart",			/* driver ID  */
-	"OS/2 Direct Audio Realtime",	/* driver description */
-	help,			/* help       */
-	init,			/* init       */
-	shutdown,		/* shutdown   */
-	dummy,			/* starttimer */
-	dummy,			/* flush  */
-	bufdump,		/* bufdump    */
-};
 
 // Buffer update thread (created and called by DART) 
 static LONG APIENTRY OS2_Dart_UpdateBuffers
@@ -90,8 +57,10 @@ static LONG APIENTRY OS2_Dart_UpdateBuffers
 	return (TRUE);
 }
 
-static int setaudio(struct xmp_options *o)
+
+static int init(struct options *options)
 {
+	char **parm = options->driver_parm;
 	char sharing = 0;
 	int device = 0;
 	int flags;
@@ -99,9 +68,7 @@ static int setaudio(struct xmp_options *o)
 	MCI_AMP_OPEN_PARMS AmpOpenParms;
 	char *token, **parm;
 
-	//printf( "In SetAudio...\n" );
-
-	parm_init();
+	parm_init(parm);
 	chkparm1("sharing", sharing = *token);
 	chkparm1("device", device = atoi(token));
 	chkparm1("buffer", bsize = strtoul(token, NULL, 0));
@@ -142,10 +109,11 @@ static int setaudio(struct xmp_options *o)
 	/* setup playback parameters */
 	memset(&MixSetupParms, 0, sizeof(MCI_MIXSETUP_PARMS));
 
-	MixSetupParms.ulBitsPerSample = o->resol;
+	MixSetupParms.ulBitsPerSample =
+			options->format & XMP_FORMAT_8BIT ? 8 : 16;
 	MixSetupParms.ulFormatTag = MCI_WAVE_FORMAT_PCM;
-	MixSetupParms.ulSamplesPerSec = o->freq;
-	MixSetupParms.ulChannels = o->outfmt & XMP_FORMAT_MONO ? 1 : 2;
+	MixSetupParms.ulSamplesPerSec = options->rate;
+	MixSetupParms.ulChannels = options->format & XMP_FORMAT_MONO ? 1 : 2;
 	MixSetupParms.ulFormatMode = MCI_PLAY;
 	MixSetupParms.ulDeviceType = MCI_DEVTYPE_WAVEFORM_AUDIO;
 	MixSetupParms.pmixEvent = OS2_Dart_UpdateBuffers;
@@ -181,23 +149,7 @@ static int setaudio(struct xmp_options *o)
 		MixBuffers[i].ulBufferLength = bsize;
 	}
 
-	//MixBuffers[0].ulBufferLength = bsize;
-	//MixBuffers[1].ulBufferLength = bsize;
-	//MixBuffers[2].ulBufferLength = bsize;
-	//MixBuffers[3].ulBufferLength = bsize;
-
-	return 0;
-}
-
-static int init(struct context_data *ctx)
-{
-	//printf( "In Init...\n" );
-
-	if (setaudio(ctl) != 0)
-		return XMP_ERR_DINIT;
-
 	/* Start Playback */
-	//printf("Starting Playback!!\n");
 	memset(MixBuffers[0].pBuffer, /*32767 */ 0, bsize);
 	memset(MixBuffers[1].pBuffer, /*32767 */ 0, bsize);
 	MixSetupParms.pmixWrite(MixSetupParms.ulMixHandle, MixBuffers, 2);
@@ -205,19 +157,11 @@ static int init(struct context_data *ctx)
 	return 0;
 }
 
-/* Build and write one tick (one PAL frame or 1/50 s in standard vblank
- * timed mods) of audio data to the output device.
- */
-static void bufdump(struct context_data *ctx, void *b, int i)
+static void play(void *b, int i)
 {
 	static int index = 0;
 
-	//printf( "In BufDump...\n" );
-
 	if (index + i > bsize) {
-
-		//printf("Next = %d, ready = %d\n", next, ready);
-
 		do {
 			DosRequestMutexSem(mutex, SEM_INDEFINITE_WAIT);
 			if (ready != 0) {
@@ -243,10 +187,8 @@ static void bufdump(struct context_data *ctx, void *b, int i)
 
 }
 
-static void shutdown(struct context_data *ctx)
+static void deinit()
 {
-	//printf( "In ShutDown...\n" );
-
 	if (MixBuffers[0].pBuffer) {
 		mciSendCommand(DeviceID, MCI_BUFFER,
 			       MCI_WAIT | MCI_DEALLOCATE_MEMORY, &BufferParms,
@@ -259,3 +201,24 @@ static void shutdown(struct context_data *ctx)
 		DeviceID = 0;
 	}
 }
+
+
+static char *help[] = {
+	"sharing={Y,N}", "Device Sharing    (default is N)",
+	"device=val", "OS/2 Audio Device (default is 0 auto-detect)",
+	"buffer=val", "Audio buffer size (default is 16)",
+	NULL
+};
+
+struct sound_driver sound_os2dart = {
+	"dart",
+	"OS/2 Direct Audio Realtime",
+	help,
+	init,
+	deinit,
+	play,
+	flush,
+	onpause,
+	onresume
+};
+
