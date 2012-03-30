@@ -102,8 +102,16 @@ hpux*)
 aix*)
   AC_CHECK_HEADER(audio.h)
   if test "${ac_cv_header_audio_h}" = "yes"; then
-    DRIVERS="${DRIVERS} sound_aix.o"
     AC_DEFINE(SOUND_AIX)
+    DRIVERS="${DRIVERS} sound_aix.o"
+  fi
+  ;;
+irix*)
+  AC_CHECK_HEADERS(dmedia/audio.h)
+  if test "${ac_cv_header_dmedia_audio_h}" = "yes"; then
+    AC_DEFINE(SOUND_SGI)
+    DRIVERS="${DRIVERS} sound_sgi.o"
+    LIBS="${LIBS} -laudio"
   fi
   ;;
 cygwin*|mingw*)

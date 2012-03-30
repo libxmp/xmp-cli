@@ -9,6 +9,7 @@ extern struct sound_driver sound_win32;
 extern struct sound_driver sound_coreaudio;
 extern struct sound_driver sound_hpux;
 extern struct sound_driver sound_sndio;
+extern struct sound_driver sound_sgi;
 extern struct sound_driver sound_solaris;
 extern struct sound_driver sound_netbsd;
 extern struct sound_driver sound_bsd;
@@ -42,6 +43,9 @@ void init_sound_drivers()
 #endif
 #ifdef SOUND_SOLARIS
 	register_sound_driver(&sound_solaris);
+#endif
+#ifdef SOUND_SGI
+	register_sound_driver(&sound_sgi);
 #endif
 #ifdef SOUND_HPUX
 	register_sound_driver(&sound_hpux);
