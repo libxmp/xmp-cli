@@ -37,7 +37,7 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_qnx = {
+struct sound_driver sound_qnx = {
 	"QNX",			/* driver ID */
 	"QNX PCM audio",	/* driver description */
 	NULL,			/* help */

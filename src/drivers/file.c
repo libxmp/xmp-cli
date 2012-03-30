@@ -24,7 +24,7 @@
 #define O_BINARY 0
 #endif
 
-#define DATA(x) (((struct data *)drv_file.data)->x)
+#define DATA(x) (((struct data *)sound_file.data)->x)
 
 struct data {
 	int fd;
@@ -45,7 +45,7 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_file = {
+struct sound_driver sound_file = {
 	"file",			/* driver ID */
 	"file",			/* driver description */
 	help,			/* help */
@@ -63,8 +63,8 @@ static int init(struct context_data *ctx)
 	int bsize;
 	char *token, **parm;
 
-	drv_file.data = malloc(sizeof (struct data));
-	if (drv_file.data == NULL)
+	sound_file.data = malloc(sizeof (struct data));
+	if (sound_file.data == NULL)
 		return -1;
 
 	DATA(endian) = 0;
@@ -86,13 +86,13 @@ static int init(struct context_data *ctx)
 	}
 
 	if (strcmp(o->outfile, "-")) {
-		bsize = strlen(drv_file.description) + strlen(o->outfile) + 8;
+		bsize = strlen(sound_file.description) + strlen(o->outfile) + 8;
 		buf = malloc(bsize);
-		snprintf(buf, bsize, "%s: %s", drv_file.description,
+		snprintf(buf, bsize, "%s: %s", sound_file.description,
 							 o->outfile);
-		drv_file.description = buf;
+		sound_file.description = buf;
 	} else {
-		drv_file.description = strdup("Output to stdout");
+		sound_file.description = strdup("Output to stdout");
 	}
 
 	return 0;
@@ -122,6 +122,6 @@ static void shutdown(struct context_data *ctx)
 	if (DATA(fd) > 0)
 		close(DATA(fd));
 
-	free(drv_file.description);
-	free(drv_file.data);
+	free(sound_file.description);
+	free(sound_file.data);
 }

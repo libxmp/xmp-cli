@@ -55,7 +55,7 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_sgi = {
+struct sound_driver sound_sgi = {
 	"sgi",			/* driver ID */
 	"SGI PCM audio",	/* driver description */
 	help,			/* help */

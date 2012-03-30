@@ -49,7 +49,7 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_bsd = {
+struct sound_driver sound_bsd = {
 	"aix",			/* driver ID */
 	"AIX PCM audio",	/* driver description */
 	help,			/* help */

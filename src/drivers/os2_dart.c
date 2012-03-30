@@ -64,7 +64,7 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_os2dart = {
+struct sound_driver sound_os2dart = {
 	"dart",			/* driver ID  */
 	"OS/2 Direct Audio Realtime",	/* driver description */
 	help,			/* help       */

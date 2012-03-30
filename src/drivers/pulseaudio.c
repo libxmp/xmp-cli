@@ -29,7 +29,7 @@ static void dummy()
 {
 }
 
-struct xmp_drv_info drv_pulseaudio = {
+struct sound_driver sound_pulseaudio = {
 	"pulseaudio",		/* driver ID */
 	"PulseAudio",		/* driver description */
 	NULL,			/* help */

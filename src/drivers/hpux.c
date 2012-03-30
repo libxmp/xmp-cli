@@ -48,7 +48,7 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_hpux = {
+struct sound_driver sound_hpux = {
 	"hpux",			/* driver ID */
 	"HP-UX PCM audio",	/* driver description */
 	help,			/* help */

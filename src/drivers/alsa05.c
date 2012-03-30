@@ -54,7 +54,7 @@ static char *help[] = {
 	NULL
 };
 
-struct xmp_drv_info drv_alsa05 = {
+struct sound_driver sound_alsa05 = {
 	"alsa05",		/* driver ID */
 	"ALSA 0.5 PCM audio",	/* driver description */
 	help,			/* help */
