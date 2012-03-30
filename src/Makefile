@@ -1,10 +1,11 @@
 
 SRC_OBJS	= sound.o sound_null.o terminal.o info.o commands.o \
-		  options.o getopt.o getopt1.o main.o sound_wav.o
+		  options.o getopt.o getopt1.o main.o sound_wav.o sound_file.o
 SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h list.h \
 		  sound.h sound_alsa.c sound_coreaudio.c sound_oss.c \
-		  sound_sndio.c sound_openbsd.c sound_bsd.c sound_solaris.c \
-		  sound_beos.c
+		  sound_sndio.c sound_netbsd.c sound_bsd.c sound_solaris.c \
+		  sound_beos.c sound_ahi.c sound_dart.c sound_hpux.c \
+		  sound_aix.c
 SRC_PATH	= src
 
 SRC_OBJS += $(DRIVERS)

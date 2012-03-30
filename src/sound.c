@@ -3,6 +3,7 @@
 #include "sound.h"
 
 extern struct sound_driver sound_wav;
+extern struct sound_driver sound_file;
 extern struct sound_driver sound_oss;
 extern struct sound_driver sound_alsa;
 extern struct sound_driver sound_win32;
@@ -66,6 +67,7 @@ void init_sound_drivers()
 	register_sound_driver(&sound_alsa);
 #endif
 	register_sound_driver(&sound_wav);
+	register_sound_driver(&sound_file);
 }
 
 struct sound_driver *select_sound_driver(struct options *options)

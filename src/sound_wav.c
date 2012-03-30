@@ -4,7 +4,6 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
-#include <limits.h>
 #include "sound.h"
 
 #ifndef O_BINARY
