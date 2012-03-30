@@ -131,10 +131,10 @@ static int init(struct options *options)
 		}
 
 		/* Sorry, AMD7930 uLaw not supported anymore */
-		/* drv_solaris.description = "Solaris AMD7930 PCM audio"; */
+		/* sound_solaris.description = "Solaris AMD7930 PCM audio"; */
 		return -1;
 	} else {
-		drv_solaris.description = "Solaris CS4231 PCM audio";
+		/* sound_solaris.description = "Solaris CS4231 PCM audio"; */
 	}
 
 	return 0;
