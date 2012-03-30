@@ -56,6 +56,10 @@ if test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
 fi
 
 case "${host_os}" in
+amigaos*|aros)
+  DRIVERS="${DRIVERS} sound_ahi.o"
+  AC_DEFINE(DRIVER_AHI)
+  ;;
 darwin*)
   AC_CHECK_HEADER(CoreAudio/CoreAudio.h)
   if test "${ac_cv_header_CoreAudio_CoreAudio_h}" = "yes"; then

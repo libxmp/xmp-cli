@@ -11,6 +11,7 @@ extern struct sound_driver sound_sndio;
 extern struct sound_driver sound_solaris;
 extern struct sound_driver sound_bsd;
 extern struct sound_driver sound_beos;
+extern struct sound_driver sound_amiga;
 
 LIST_HEAD(sound_driver_list);
 
@@ -21,6 +22,9 @@ static void register_sound_driver(struct sound_driver *sd)
 
 void init_sound_drivers()
 {
+#ifdef SOUND_AHI
+	register_sound_driver(&sound_ahi);
+#endif
 #ifdef SOUND_BEOS
 	register_sound_driver(&sound_beos);
 #endif
