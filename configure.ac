@@ -92,6 +92,13 @@ solaris*)
     DRIVERS="${DRIVERS} sound_solaris.o"
   fi
   ;;
+hpux*)
+  AC_CHECK_HEADER(sys/audio.h)
+  if test "${ac_cv_header_sys_audio_h}" = "yes"; then
+    AC_DEFINE(DRIVER_HPUX)
+    DRIVERS="${DRIVERS} sound_hpux.o"
+  fi
+  ;;
 cygwin*|mingw*)
   AC_DEFINE(SOUND_WIN32)
   DRIVERS="${DRIVERS} sound_win32.o"
