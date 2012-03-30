@@ -2,7 +2,14 @@ dnl AC_CONFIG_AUX_DIR(./scripts)
 AC_INIT
 0>confdefs.h
 
-AC_ARG_WITH(libxmp, [  --with-libxmp=<path>    libxmp prefix (optional)],
+AC_ARG_ENABLE(oss,
+  [  --disable-oss           don't compile OSS support])
+AC_ARG_ENABLE(alsa,
+  [  --disable-alsa          don't compile ALSA support])
+AC_ARG_ENABLE(pulseaudio,
+  [  --enable-pulseaudio     compile PulseAudio support])
+AC_ARG_WITH(libxmp,
+  [  --with-libxmp=<path>    libxmp prefix (optional)],
   libxmp_path="$withval")
 
 AC_CANONICAL_HOST
@@ -44,15 +51,30 @@ powerpc64)
   ;;
 esac
 
-AC_CHECK_HEADERS(sys/soundcard.h machine/soundcard.h alsa/asoundlib.h sys/audioio.h)
-if test "${ac_cv_header_sys_soundcard_h}" = "yes" -o "${ac_cv_header_machine_soundcard_h}" = "yes"; then
-  AC_DEFINE(SOUND_OSS)
-  DRIVERS="${DRIVERS} sound_oss.o"
+AC_CHECK_HEADERS(sys/audioio.h)
+
+if test "${enable_oss}" != "no"; then
+  AC_CHECK_HEADER(sys/soundcard.h machine/soundcard.h)
+  if test "${ac_cv_header_sys_soundcard_h}" = "yes" -o "${ac_cv_header_machine_soundcard_h}" = "yes"; then
+    AC_DEFINE(SOUND_OSS)
+    DRIVERS="${DRIVERS} sound_oss.o"
+  fi
 fi
-if test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
-  AC_DEFINE(SOUND_ALSA)
-  DRIVERS="${DRIVERS} sound_alsa.o"
-  LIBS="${LIBS} -lasound"
+if test "${enable_alsa}" != "no"; then
+  AC_CHECK_HEADER(alsa/asoundlib.h)
+  if test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
+    AC_DEFINE(SOUND_ALSA)
+    DRIVERS="${DRIVERS} sound_alsa.o"
+    LIBS="${LIBS} -lasound"
+  fi
+fi
+if test "${enable_pulseaudio}" = "yes"; then
+  AC_CHECK_HEADER(pulse/simple.h)
+  if test "${ac_cv_header_pulse_simple_h}" = "yes"; then
+    AC_DEFINE(SOUND_PULSEAUDIO)
+    DRIVERS="${DRIVERS} pulseaudio.o"
+    LIBS="${LIBS} -lpulse-simple -lpulse"
+  fi
 fi
 
 case "${host_os}" in
