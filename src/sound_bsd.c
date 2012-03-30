@@ -74,7 +74,7 @@ static void play(void *b, int i)
 			b = (char *)b + j;
 		} else
 			break;
-	};
+	}
 }
 
 static void deinit()

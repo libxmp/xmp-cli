@@ -72,8 +72,8 @@ openbsd*)
     LIBS="${LIBS} -lsndio"
   fi
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
-    AC_DEFINE(SOUND_OPENBSD)
-    DRIVERS="${DRIVERS} sound_openbsd.o"
+    AC_DEFINE(SOUND_BSD)
+    DRIVERS="${DRIVERS} sound_bsd.o"
   fi
   ;;
 solaris*)
