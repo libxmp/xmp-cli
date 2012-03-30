@@ -1,12 +1,3 @@
-/* Extended Module Player
- * Copyright (C) 1996-2012 Claudio Matsuoka and Hipolito Carraro Jr
- * CoreAudio helpers (C) 2000 Timothy J. Wood
- *
- * This file is part of the Extended Module Player and is distributed
- * under the terms of the GNU General Public License. See doc/COPYING
- * for more information.
- */
-
 #include <CoreAudio/CoreAudio.h>
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
@@ -17,7 +8,7 @@
 static AudioUnit au;
 
 /*
- * CoreAudio helpers from mplayer/libao
+ * CoreAudio helpers by Timothy J. Wood from mplayer/libao
  * The player fills a ring buffer, OSX retrieves data from the buffer
  */
 

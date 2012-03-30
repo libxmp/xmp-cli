@@ -1,14 +1,4 @@
-/* Extended Module Player
- * Copyright (C) 1996-2012 Claudio Matsuoka and Hipolito Carraro Jr
- *
- * This file is part of the Extended Module Player and is distributed
- * under the terms of the GNU General Public License. See doc/COPYING
- * for more information.
- */
-
-/* This code was tested on a 9000/710 running HP-UX 9.05 with 8 kHz,
- * 16 bit mono output.
- */
+/* Tested on a 9000/710 running HP-UX 9.05 with 8 kHz, 16 bit mono output.  */
 
 #include <unistd.h>
 #include <stdlib.h>

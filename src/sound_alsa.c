@@ -1,4 +1,3 @@
-
 #include <alsa/asoundlib.h>
 #include <alsa/pcm.h>
 #include "sound.h"
