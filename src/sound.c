@@ -14,6 +14,7 @@ extern struct sound_driver sound_netbsd;
 extern struct sound_driver sound_bsd;
 extern struct sound_driver sound_beos;
 extern struct sound_driver sound_amiga;
+extern struct sound_driver sound_aix;
 
 LIST_HEAD(sound_driver_list);
 
@@ -44,6 +45,9 @@ void init_sound_drivers()
 #endif
 #ifdef SOUND_HPUX
 	register_sound_driver(&sound_hpux);
+#endif
+#ifdef SOUND_AIX
+	register_sound_driver(&sound_aix);
 #endif
 #ifdef SOUND_COREAUDIO
 	register_sound_driver(&sound_coreaudio);

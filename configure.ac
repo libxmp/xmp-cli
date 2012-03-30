@@ -99,6 +99,13 @@ hpux*)
     DRIVERS="${DRIVERS} sound_hpux.o"
   fi
   ;;
+aix*)
+  AC_CHECK_HEADER(audio.h)
+  if test "${ac_cv_header_audio_h}" = "yes"; then
+    DRIVERS="${DRIVERS} sound_aix.o"
+    AC_DEFINE(SOUND_AIX)
+  fi
+  ;;
 cygwin*|mingw*)
   AC_DEFINE(SOUND_WIN32)
   DRIVERS="${DRIVERS} sound_win32.o"
