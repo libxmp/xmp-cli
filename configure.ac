@@ -80,6 +80,12 @@ openbsd*)
     DRIVERS="${DRIVERS} sound_bsd.o"
   fi
   ;;
+netbsd*)
+  if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
+    AC_DEFINE(SOUND_NETBSD)
+    DRIVERS="${DRIVERS} sound_netbsd.o"
+  fi
+  ;;
 solaris*)
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
     AC_DEFINE(SOUND_SOLARISD)

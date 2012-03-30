@@ -9,6 +9,7 @@ extern struct sound_driver sound_win32;
 extern struct sound_driver sound_coreaudio;
 extern struct sound_driver sound_sndio;
 extern struct sound_driver sound_solaris;
+extern struct sound_driver sound_netbsd;
 extern struct sound_driver sound_bsd;
 extern struct sound_driver sound_beos;
 extern struct sound_driver sound_amiga;
@@ -30,6 +31,9 @@ void init_sound_drivers()
 #endif
 #ifdef SOUND_SNDIO
 	register_sound_driver(&sound_sndio);
+#endif
+#ifdef SOUND_NETBSD
+	register_sound_driver(&sound_netbsd);
 #endif
 #ifdef SOUND_BSD
 	register_sound_driver(&sound_bsd);
