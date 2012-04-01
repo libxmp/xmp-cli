@@ -2,6 +2,7 @@
 #include <string.h>
 #include "sound.h"
 
+extern struct sound_driver sound_null;
 extern struct sound_driver sound_wav;
 extern struct sound_driver sound_file;
 extern struct sound_driver sound_oss;
@@ -72,13 +73,14 @@ void init_sound_drivers()
 #endif
 	register_sound_driver(&sound_wav);
 	register_sound_driver(&sound_file);
+	register_sound_driver(&sound_null);
 }
 
 struct sound_driver *select_sound_driver(struct options *options)
 {
 	struct list_head *head;
 	struct sound_driver *sd;
-	char *pref = options->drv_id;
+	char *pref = options->driver_id;
 
 	if (pref) {
 		list_for_each(head, &sound_driver_list) {

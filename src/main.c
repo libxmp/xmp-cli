@@ -16,10 +16,8 @@
 #endif
 
 extern int optind;
-extern struct sound_driver sound_null;
 
-struct sound_driver *sound;
-
+static struct sound_driver *sound;
 static int background = 0;
 static int refresh_status;
 
@@ -152,7 +150,7 @@ int main(int argc, char **argv)
 	memset(&control, 0, sizeof (struct control));
 	options.verbose = 1;
 	options.rate = 44100;
-	options.drv_id = NULL;
+	options.driver_id = NULL;
 
 	get_options(argc, argv, &options);
 
@@ -164,10 +162,10 @@ int main(int argc, char **argv)
 	}
 
 	if (options.silent) {
-		sound = &sound_null;
-	} else {
-		sound = select_sound_driver(&options);
+		options.driver_id = "null";
 	}
+
+	sound = select_sound_driver(&options);
 
 	if (sound == NULL) {
 		fprintf(stderr, "%s: can't initialize sound\n", argv[0]);

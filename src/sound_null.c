@@ -29,7 +29,7 @@ static void onresume()
 
 struct sound_driver sound_null = {
 	"null",
-	"No output",
+	"null output",
 	NULL,
 	init,
 	deinit,

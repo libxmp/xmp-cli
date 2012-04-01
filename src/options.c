@@ -151,7 +151,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->driver_parm[dparm++] = optarg;
 			break;
 		case 'd':
-			options->drv_id = optarg;
+			options->driver_id = optarg;
 			break;
 #if 0
 		case OPT_FX9BUG:
@@ -190,7 +190,9 @@ void get_options(int argc, char **argv, struct options *options)
 			options->out_file = optarg;
 			if (strlen(optarg) >= 4 &&
 			    !strcasecmp(optarg + strlen(optarg) - 4, ".wav")) {
-				//options->drv_id = "wav";
+				options->driver_id = "wav";
+			} else {
+				options->driver_id = "file";
 			}
 			break;
 		case 'P':
