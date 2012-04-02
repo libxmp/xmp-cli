@@ -12,12 +12,21 @@
 
 static int fd;
 static long size;
+static int swap_endian;
 
 struct sound_driver sound_file;
 
 static int init(struct options *options)
 {
+	char **parm = options->driver_parm;
 	char *buf;
+
+	swap_endian = 0;
+
+	parm_init(parm);
+	chkparm1("endian",
+		swap_endian = (is_big_endian() ^ strcmp(token, "big")));
+	parm_end();
 
 	if (options->out_file == NULL) {
 		options->out_file = "out.raw";
@@ -49,6 +58,9 @@ static int init(struct options *options)
 
 static void play(void *b, int len)
 {
+	if (swap_endian) {
+		convert_endian(b, len);
+	}
 	write(fd, b, len);
 	size += len;
 }
@@ -70,11 +82,16 @@ static void onresume()
 {
 }
 
+static char *help[] = {
+	"big-endian", "Force big-endian 16-bit samples",
+	"little-endian", "Force little-endian 16-bit samples",
+	NULL
+};
 
 struct sound_driver sound_file = {
 	"file",
 	"Raw file writer",
-	NULL,
+	help,
 	init,
 	deinit,
 	play,
