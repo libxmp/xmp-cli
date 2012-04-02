@@ -12,25 +12,10 @@
 
 static int fd;
 static int format_16bit;
+static int swap_endian;
 static long size;
 
 struct sound_driver sound_wav;
-
-#ifdef ENDIAN_BIG
-/* Convert little-endian 16 bit samples to big-endian */
-static void convert_endian(int l, unsigned char *p)
-{
-	unsigned char b;
-	int i;
-
-	for (i = 0; i < l; i++) {
-		b = p[0];
-		p[0] = p[1];
-		p[1] = b;
-		p += 2;
-	}
-}
-#endif
 
 static void write_16l(int fd, unsigned short v)
 {
@@ -67,6 +52,8 @@ static int init(struct options *options)
 	unsigned short chan;
 	unsigned int sampling_rate, bytes_per_second;
 	unsigned short bytes_per_frame, bits_per_sample;
+
+	swap_endian = is_big_endian();
 
 	if (options->out_file == NULL) {
 		options->out_file = "out.wav";
@@ -132,11 +119,9 @@ static int init(struct options *options)
 
 static void play(void *b, int len)
 {
-#ifdef ENDIAN_BIG
-	if (format_16bit) {
+	if (swap_endian && format_16bit) {
 		convert_endian(b, len);
 	}
-#endif
 	write(fd, b, len);
 	size += len;
 }

@@ -104,3 +104,17 @@ struct sound_driver *select_sound_driver(struct options *options)
 
 	return NULL;
 }
+
+/* Convert little-endian 16 bit samples to big-endian */
+void convert_endian(unsigned char *p, int l)
+{
+	unsigned char b;
+	int i;
+
+	for (i = 0; i < l; i++) {
+		b = p[0];
+		p[0] = p[1];
+		p[1] = b;
+		p += 2;
+	}
+}
