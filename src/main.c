@@ -303,6 +303,10 @@ int main(int argc, char **argv)
 					}
 				}
 
+				if (control.time > options.max_time) {
+					break;
+				}
+
 				check_pause(handle, &control, &mi);
 
 				options.start = 0;

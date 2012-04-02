@@ -75,9 +75,8 @@ static void usage(char *s)
 "   -s --start num         Start from the specified order\n"
 "   -t --time num          Maximum playing time in seconds\n"
 "\nPlayer sound options:\n"
-"   -8 --8bit              Convert 16 bit samples to 8 bit\n"
 "   -m --mono              Mono output\n"
-"   -P --pan pan           Percentual pan amplitude\n"
+"   -P --pan pan           Percentual pan separation\n"
 "\nSoftware mixer options:\n"
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
 "   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
@@ -242,7 +241,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->start = strtoul(optarg, NULL, 0);
 			break;
 		case 't':
-			options->max_time = strtoul(optarg, NULL, 0);
+			options->max_time = strtoul(optarg, NULL, 0) * 1000;
 			break;
 		case 'u':
 			options->format |= XMP_FORMAT_UNSIGNED;
