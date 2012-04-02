@@ -206,7 +206,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->probeonly = 1;
 			break;
 		case 'q':
-			//options->verbosity = 0;
+			options->verbose = 0;
 			break;
 		case 'R':
 			options->random = 1;
