@@ -303,7 +303,8 @@ int main(int argc, char **argv)
 					}
 				}
 
-				if (control.time > options.max_time) {
+				if (options.max_time > 0 &&
+				    control.time > options.max_time) {
 					break;
 				}
 
