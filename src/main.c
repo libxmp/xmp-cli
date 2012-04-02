@@ -284,7 +284,7 @@ int main(int argc, char **argv)
 				if (!control.loop && old_loop != mi.loop_count)
 					break;
 
-				if (!background) {
+				if (!background && options.verbose > 0) {
 					info_frame(&mi, &control, refresh_status);
 					refresh_status = 0;
 				}
