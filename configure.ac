@@ -135,6 +135,21 @@ irix*)
     LIBS="${LIBS} -laudio"
   fi
   ;;
+qnx*)
+  AC_CHECK_HEADERS(sys/audio.h)
+  if test "${ac_cv_header_sys_audio_h}" = "yes"; then
+    AC_DEFINE(DRIVER_QNX)
+    DRIVERS="${DRIVERS} sound_qnx.o"
+  fi
+  ;;
+nto-qnx*)
+  AC_CHECK_HEADERS(sys/asoundlib.h)
+  if test "${ac_cv_header_sys_asoundlib_h}" = "yes"; then
+    AC_DEFINE(DRIVER_ALSA05)
+    DRIVERS="${DRIVERS} alsa05.o"
+    LIBS="${LIBS} -lasound"
+  fi
+  ;;
 cygwin*|mingw*)
   AC_DEFINE(SOUND_WIN32)
   DRIVERS="${DRIVERS} sound_win32.o"

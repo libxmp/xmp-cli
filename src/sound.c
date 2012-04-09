@@ -5,6 +5,8 @@
 extern struct sound_driver sound_null;
 extern struct sound_driver sound_wav;
 extern struct sound_driver sound_file;
+extern struct sound_driver sound_qnx;
+extern struct sound_driver sound_alsa05;
 extern struct sound_driver sound_oss;
 extern struct sound_driver sound_alsa;
 extern struct sound_driver sound_win32;
@@ -67,6 +69,12 @@ void init_sound_drivers()
 #endif
 #ifdef SOUND_ALSA
 	register_sound_driver(&sound_alsa);
+#endif
+#ifdef SOUND_ALSA05
+	register_sound_driver(&sound_alsa05);
+#endif
+#ifdef SOUND_QNX
+	register_sound_driver(&sound_qnx);
 #endif
 #ifdef SOUND_PULSEAUDIO
 	register_sound_driver(&sound_pulseaudio);
