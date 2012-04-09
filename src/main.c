@@ -231,6 +231,10 @@ int main(int argc, char **argv)
 
 	skipprev = 0;
 
+	if (options.ins_path) {
+		setenv("XMP_INSTRUMENT_PATH", options.ins_path, 1);
+	}
+
 	for (first = optind; optind < argc; optind++) {
 		if (options.verbose > 0) {
 			report("\nLoading %s... (%d of %d)\n",
