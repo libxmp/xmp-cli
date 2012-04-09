@@ -7,7 +7,7 @@ static int max_channels = -1;
 
 void info_help(void)
 {
-	printf(
+	report(
 "COMMAND KEYS SUMMARY\n"
 "     Space      Pause/unpause\n"
 "    q, Esc      Stop module and quit the player\n"
@@ -30,24 +30,24 @@ void info_mod(struct xmp_module_info *mi)
 	int i;
 	int num_seq;
 
-	printf("Module name  : %s\n", mi->mod->name);
-	printf("Module type  : %s\n", mi->mod->type);
-	printf("Module length: %d patterns\n", mi->mod->len);
-	printf("Patterns     : %d\n", mi->mod->pat);
-	printf("Instruments  : %d\n", mi->mod->ins);
-	printf("Samples      : %d\n", mi->mod->smp);
-	printf("Channels     : %d [ ", mi->mod->chn);
+	report("Module name  : %s\n", mi->mod->name);
+	report("Module type  : %s\n", mi->mod->type);
+	report("Module length: %d patterns\n", mi->mod->len);
+	report("Patterns     : %d\n", mi->mod->pat);
+	report("Instruments  : %d\n", mi->mod->ins);
+	report("Samples      : %d\n", mi->mod->smp);
+	report("Channels     : %d [ ", mi->mod->chn);
 
 	for (i = 0; i < mi->mod->chn; i++) {
 		if (mi->mod->xxc[i].flg & XMP_CHANNEL_SYNTH) {
-			printf("S ");
+			report("S ");
 		} else {
-			printf("%x ", mi->mod->xxc[i].pan >> 4);
+			report("%x ", mi->mod->xxc[i].pan >> 4);
 		}
 	}
-	printf("]\n");
+	report("]\n");
 
-	printf("Duration     : %dmin%02ds", (mi->total_time + 500) / 60000,
+	report("Duration     : %dmin%02ds", (mi->total_time + 500) / 60000,
 					((mi->total_time + 500) / 1000) % 60);
 
 	/* Check non-zero-length sequences */
@@ -58,7 +58,7 @@ void info_mod(struct xmp_module_info *mi)
 	}
 
 	if (num_seq > 1) {
-		printf(" (main sequence)\n");
+		report(" (main sequence)\n");
 		for (i = 1; i < mi->num_sequences; i++) {
 			int dur = mi->seq_data[i].duration;
 
@@ -66,13 +66,13 @@ void info_mod(struct xmp_module_info *mi)
 				continue;
 			}
 
-			printf("               %dmin%02ds "
+			report("               %dmin%02ds "
 				"(sequence at position %d)\n",
 				(dur + 500) / 60000, ((dur + 500) / 1000) % 60,
 				mi->seq_data[i].entry_point);
 		}
 	} else {
-		printf("\n");
+		report("\n");
 	}
 }
 
@@ -95,7 +95,7 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 	time = ctl->time / 100;
 
 	if (reprint || mi->order != ord || mi->bpm != bpm || mi->speed != spd) {
-	        printf("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
+	        report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
 			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
 					mi->speed, mi->bpm,
 					mi->order, mi->mod->len - 1,
@@ -105,15 +105,15 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 		spd = mi->speed;
 	}
 
-	printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+	report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
 	       "%02X/%02X] Chn[%02X/%02X] %c  ",
 		mi->row, mi->num_rows - 1, mi->virt_used, max_channels,
 		ctl->loop ? 'L' : ' ');
 
 	if (ctl->pause) {
-		printf(" - PAUSED -");
+		report(" - PAUSED -");
 	} else {
-		printf("%3d:%02d:%02d.%d",
+		report("%3d:%02d:%02d.%d",
 			(int)(time / (60 * 600)), (int)((time / 600) % 60),
 			(int)((time / 10) % 60), (int)(time % 10));
 	}
@@ -126,8 +126,8 @@ void info_ins_smp(struct xmp_module_info *mi)
 	int i, j;
 	struct xmp_module *mod = mi->mod;
 
-	printf("Instruments and samples:\n");
-	printf("   Instrument name                  Smp  Size  Loop  End    Vol Fine Xpo Pan\n");
+	report("Instruments and samples:\n");
+	report("   Instrument name                  Smp  Size  Loop  End    Vol Fine Xpo Pan\n");
 	for (i = 0; i < mod->ins; i++) {
 		struct xmp_instrument *ins = &mod->xxi[i];
 
@@ -135,7 +135,7 @@ void info_ins_smp(struct xmp_module_info *mi)
 			continue;
 		}
 
-		printf("%02x %-32.32s ", i, ins->name);
+		report("%02x %-32.32s ", i, ins->name);
 
 		for (j = 0; j < ins->nsm; j++) {
 			struct xmp_subinstrument *sub = &ins->sub[j];
@@ -145,10 +145,10 @@ void info_ins_smp(struct xmp_module_info *mi)
 				if (smp->len == 0) {
 					continue;
 				}
-				printf("%36.36s", " ");
+				report("%36.36s", " ");
 			}
 
-			printf("[%02x] %05x%c%05x %05x%c V%02x %+04d %+03d P%02x\n",
+			report("[%02x] %05x%c%05x %05x%c V%02x %+04d %+03d P%02x\n",
 				sub->sid,
 				smp->len,
 				smp->flg & XMP_SAMPLE_16BIT ? '+' : ' ',
@@ -164,7 +164,7 @@ void info_ins_smp(struct xmp_module_info *mi)
 		}
 
 		if (j == 0) {
-			printf("[  ] ----- ----- -----  --- ---- --- ---\n");
+			report("[  ] ----- ----- -----  --- ---- --- ---\n");
 		}
 
 	}
@@ -175,8 +175,8 @@ void info_instruments(struct xmp_module_info *mi)
 	int i, j;
 	struct xmp_module *mod = mi->mod;
 
-	printf("Instruments:\n");
-	printf("   Instrument name                  Vl Rls  Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
+	report("Instruments:\n");
+	report("   Instrument name                  Vl Rls  Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
 	for (i = 0; i < mod->ins; i++) {
 		struct xmp_instrument *ins = &mod->xxi[i];
 
@@ -184,7 +184,7 @@ void info_instruments(struct xmp_module_info *mi)
 			continue;
 		}
 
-		printf("%02x %-32.32s %02x %04x %c%c%c %02x ", i, ins->name,
+		report("%02x %-32.32s %02x %04x %c%c%c %02x ", i, ins->name,
 			ins->vol, ins->rls,
 			ins->aei.flg & XMP_ENVELOPE_ON ? 'A' : '-',
 			ins->fei.flg & XMP_ENVELOPE_ON ? 'F' : '-',
@@ -200,10 +200,10 @@ void info_instruments(struct xmp_module_info *mi)
 				if (smp->len == 0) {
 					continue;
 				}
-				printf("%51.51s", " ");
+				report("%51.51s", " ");
 			}
 
-			printf("[%02x] %02x %02x %+04d %+03d P%02x %02x\n",
+			report("[%02x] %02x %02x %+04d %+03d P%02x %02x\n",
 				j,
 				sub->gvl,
 				sub->vol,
@@ -214,7 +214,7 @@ void info_instruments(struct xmp_module_info *mi)
 		}
 
 		if (j == 0) {
-			printf("[  ] -- -- ---- --- --- --\n");
+			report("[  ] -- -- ---- --- --- --\n");
 		}
 
 	}
@@ -225,8 +225,8 @@ void info_samples(struct xmp_module_info *mi)
 	int i;
 	struct xmp_module *mod = mi->mod;
 
-	printf("Samples:\n");
-	printf("   Sample name                      Length Start  End    Flags\n");
+	report("Samples:\n");
+	report("   Sample name                      Length Start  End    Flags\n");
 	for (i = 0; i < mod->ins; i++) {
 		struct xmp_sample *smp = &mod->xxs[i];
 
@@ -234,7 +234,7 @@ void info_samples(struct xmp_module_info *mi)
 			continue;
 		}
 
-		printf("%02x %-32.32s %06x %06x %06x %s %s %s\n",
+		report("%02x %-32.32s %06x %06x %06x %s %s %s\n",
 			i, smp->name,
 			smp->len,
 			smp->lps,

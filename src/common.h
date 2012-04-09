@@ -32,6 +32,8 @@ struct control {
 };
 
 
+int report(char *, ...);
+
 /* option */
 void get_options(int, char **, struct options *);
 
