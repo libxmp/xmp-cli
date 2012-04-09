@@ -144,6 +144,7 @@ void get_options(int argc, char **argv, struct options *options)
 			}
 			break;
 		case 'c':
+			options->driver_id = "file";
 			options->out_file = "-";
 			break;
 		case 'D':
