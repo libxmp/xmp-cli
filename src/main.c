@@ -311,7 +311,7 @@ int main(int argc, char **argv)
 
 				sound->play(mi.buffer, mi.buffer_size);
 
-				if (!background) {
+				if (!background && !options.nocmd) {
 					read_command(handle, &control);
 
 					if (control.display) {

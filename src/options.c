@@ -67,22 +67,21 @@ static void usage(char *s)
 	printf("\nPlayer control options:\n"
 "   -D parameter[=val]     Pass configuration parameter to the output driver\n"
 "   -d --driver name       Force output to the specified device\n"
-"   --offset-bug-emulation Emulate Protracker 2.x bug in effect 9\n"
 "   -l --loop              Enable module looping\n"
 "   -M --mute ch-list      Mute the specified channels\n"
+"   --nocmd                Disable interactive commands\n"
 "   -R --random            Random order playing\n"
 "   -S --solo ch-list      Set channels to solo mode\n"
 "   -s --start num         Start from the specified order\n"
 "   -t --time num          Maximum playing time in seconds\n"
-"\nPlayer sound options:\n"
-"   -m --mono              Mono output\n"
-"   -P --pan pan           Percentual pan separation\n"
-"\nSoftware mixer options:\n"
+"\nMixer options:\n"
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
 "   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
 "   -c --stdout            Mix the module to stdout\n"
 "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
+"   -m --mono              Mono output\n"
 "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
+"   -P --pan pan           Percentual pan separation\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
 "\nEnvironment options:\n"
 "   -I --instrument-path   Set pathname to external samples\n"
@@ -92,7 +91,6 @@ static void usage(char *s)
 "   -L --list-formats      List supported module formats\n"
 "   --probe-only           Probe audio device and exit\n"
 "   -q --quiet             Quiet mode (verbosity level = 0)\n"
-"   --show-time            Display elapsed and remaining time\n"
 "   -V --version           Print version information\n"
 "   -v --verbose           Verbose mode (incremental)\n");
 }
@@ -102,7 +100,6 @@ static struct option lopt[] = {
 	{ "bits",		1, 0, 'b' },
 	{ "driver",		1, 0, 'd' },
 	{ "frequency",		1, 0, 'f' },
-	{ "offset-bug-emulation", 0, 0, OPT_FX9BUG },
 	{ "help",		0, 0, 'h' },
 	{ "instrument-path",	1, 0, 'I' },
 	{ "info",		0, 0, 'i' },
@@ -110,6 +107,7 @@ static struct option lopt[] = {
 	{ "loop",		0, 0, 'l' },
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
+	{ "nocmd",		0, 0, OPT_NOCMD },
 	{ "output-file",	1, 0, 'o' },
 	{ "pan",		1, 0, 'P' },
 	{ "probe-only",		0, 0, OPT_PROBEONLY },
@@ -185,6 +183,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'n':
 			options->silent = 1;
+			break;
+		case OPT_NOCMD:
+			options->nocmd = 1;
 			break;
 		case 'o':
 			options->out_file = optarg;
