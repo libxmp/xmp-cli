@@ -130,7 +130,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int dparm = 0;
 	int o;
 
-#define OPTIONS "a:b:cD:d:f:hI:iLlM:mno:qRS:s:T:t:uVv"
+#define OPTIONS "a:b:cD:d:f:hI:iLlM:mno:P:qRS:s:T:t:uVv"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':

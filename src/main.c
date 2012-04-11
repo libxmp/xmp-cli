@@ -164,6 +164,7 @@ int main(int argc, char **argv)
 	memset(&control, 0, sizeof (struct control));
 	options.verbose = 1;
 	options.rate = 44100;
+	options.mix = -1;
 	options.driver_id = NULL;
 
 	get_options(argc, argv, &options);
@@ -233,6 +234,10 @@ int main(int argc, char **argv)
 
 	if (options.ins_path) {
 		setenv("XMP_INSTRUMENT_PATH", options.ins_path, 1);
+	}
+
+	if (options.mix >= 0) {
+		xmp_mixer_mix(handle, options.mix);
 	}
 
 	for (first = optind; optind < argc; optind++) {
