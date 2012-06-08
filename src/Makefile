@@ -29,5 +29,5 @@ $(SRC_PATH)/sound_beos.o: src/sound_beos.c
 install-xmp: $(SRC_PATH)/xmp
 	@echo Installing xmp in $(DESTDIR)$(BINDIR)
 	@[ -d $(DESTDIR)$(BINDIR) ] || mkdir -p $(DESTDIR)$(BINDIR)
-	@$(INSTALL_PROGRAM) $+ $(DESTDIR)$(BINDIR)
+	@$(INSTALL) $+ $(DESTDIR)$(BINDIR)
 
