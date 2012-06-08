@@ -295,7 +295,7 @@ int main(int argc, char **argv)
 			if (options.verbose > 0) {
 				info_mod(&mi);
 			}
-			if (options.verbose == 2) {
+			if (options.verbose > 1) {
 				info_instruments(&mi);
 			}
 	
