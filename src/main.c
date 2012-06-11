@@ -119,17 +119,21 @@ static void shuffle(int argc, char **argv)
 }
 
 static void check_pause(xmp_context handle, struct control *ctl,
-                        struct xmp_module_info *mi)
+                        struct xmp_module_info *mi, int verbose)
 {
 	if (ctl->pause) {
 		sound->pause();
-		info_frame(mi, ctl, 1);
+		if (verbose) {
+			info_frame(mi, ctl, 1);
+		}
 		while (ctl->pause) {
 			usleep(100000);
 			read_command(handle, ctl);
 			if (ctl->display) {
 				show_info(ctl->display, mi);
-				info_frame(mi, ctl, 1);
+				if (verbose) {
+					info_frame(mi, ctl, 1);
+				}
 				ctl->display = 0;
 			}
 		}
@@ -295,7 +299,7 @@ int main(int argc, char **argv)
 			if (options.verbose > 0) {
 				info_mod(&mi);
 			}
-			if (options.verbose == 2) {
+			if (options.verbose > 1) {
 				info_instruments(&mi);
 			}
 	
@@ -335,7 +339,8 @@ int main(int argc, char **argv)
 					break;
 				}
 
-				check_pause(handle, &control, &mi);
+				check_pause(handle, &control, &mi,
+							options.verbose);
 
 				options.start = 0;
 			}
