@@ -197,9 +197,11 @@ int main(int argc, char **argv)
 	if (options.verbose > 0) {
 		report("Using %s\n", sound->description);
 
-		report("Mixer set to %d Hz, %dbit, %s\n", options.rate,
-			options.format & XMP_FORMAT_8BIT ? 8 : 16,
-			options.format & XMP_FORMAT_MONO ? "mono" : "stereo");
+		report("Mixer set to %d Hz, %dbit, %s%s%s\n", options.rate,
+		    options.format & XMP_FORMAT_8BIT ? 8 : 16,
+		    options.format & XMP_FORMAT_NEAREST ? "" : "interpolated ",
+		    options.format & XMP_FORMAT_MONO ? "mono" : "stereo",
+		    options.format & XMP_FORMAT_NOFILTER ? " (no filter)" : "");
 	}
 
 	if (options.probeonly) {

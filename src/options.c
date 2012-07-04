@@ -40,6 +40,7 @@ extern struct list_head sound_driver_list;
 #define OPT_VBLANK	0x110
 #define OPT_SHOWTIME	0x111
 #define OPT_DUMP	0x112
+#define OPT_NEAREST	0x113
 
 static void usage(char *s)
 {
@@ -80,6 +81,8 @@ static void usage(char *s)
 "   -c --stdout            Mix the module to stdout\n"
 "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
 "   -m --mono              Mono output\n"
+"   --nearest              Use nearest neighbor interpolation (no filter)\n"
+"   --nofilter             Disable IT lowpass filters\n"
 "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
 "   -P --pan pan           Percentual pan separation\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
@@ -107,7 +110,9 @@ static struct option lopt[] = {
 	{ "loop",		0, 0, 'l' },
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
+	{ "nearest",		0, 0, OPT_NEAREST },
 	{ "nocmd",		0, 0, OPT_NOCMD },
+	{ "nofilter",		0, 0, OPT_NOFILTER },
 	{ "output-file",	1, 0, 'o' },
 	{ "pan",		1, 0, 'P' },
 	{ "probe-only",		0, 0, OPT_PROBEONLY },
@@ -184,8 +189,14 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'n':
 			options->silent = 1;
 			break;
+		case OPT_NEAREST:
+			options->format |= XMP_FORMAT_NEAREST;
+			break;
 		case OPT_NOCMD:
 			options->nocmd = 1;
+			break;
+		case OPT_NOFILTER:
+			options->format |= XMP_FORMAT_NOFILTER;
 			break;
 		case 'o':
 			options->out_file = optarg;
