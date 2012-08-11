@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <xmp.h>
+#include "errno.h"
 #include "sound.h"
 #include "common.h"
 
@@ -267,8 +268,11 @@ int main(int argc, char **argv)
 			case XMP_ERROR_LOAD:
 				msg = "Error loading module";
 				break;
+			case XMP_ERROR_SYSTEM:
+				msg = strerror(errno);
+				break;
 			default:
-				msg = strerror(val);
+				msg = "Unknown error";
 			}
 
 			fprintf(stderr, "%s: %s: %s\n", argv[0],
