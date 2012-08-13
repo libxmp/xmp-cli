@@ -180,13 +180,11 @@ define(XMP_TRY_COMPILE,[
     true; $6
   fi])
 
-if test "${GCC-no}" = yes; then
-  XMP_TRY_COMPILE(whether compiler understands -Wmultichar,
-    ac_cv_c_flag_w_multichar,
-    -Wmultichar,[
-    int main(){}],
-    CFLAGS="${CFLAGS} -Wno-multichar")  
-fi
+XMP_TRY_COMPILE(whether compiler understands -Wunused-result,
+  ac_cv_c_flag_w_unused_result,
+  -Wunused-result,[
+  int main(){}],
+  CFLAGS="${CFLAGS} -Wno-unused-result")  
 
 AC_CHECK_FUNCS(kill getopt_long)
 AC_PROG_INSTALL
