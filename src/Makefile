@@ -30,9 +30,9 @@ $(SRC_PATH)/sound_beos.o: src/sound_beos.c
 install-xmp: $(SRC_PATH)/xmp
 	@echo Installing xmp in $(DESTDIR)$(BINDIR)
 	@[ -d $(DESTDIR)$(BINDIR) ] || mkdir -p $(DESTDIR)$(BINDIR)
-	@$(INSTALL) $+ $(DESTDIR)$(BINDIR)
+	@$(INSTALL) -m755 $+ $(DESTDIR)$(BINDIR)
 
 install-docs: $(SRC_PATH)/xmp.1
 	@echo Installing manpage in $(DESTDIR)$(MANDIR)
 	@[ -d $(DESTDIR)$(MANDIR) ] || mkdir -p $(DESTDIR)$(MANDIR)
-	@$(INSTALL) $+ $(DESTDIR)$(MANDIR)
+	@$(INSTALL) -m644 $+ $(DESTDIR)$(MANDIR)
