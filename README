@@ -1,0 +1,67 @@
+
+
+
+                         ___  ___ ____________  
+                         \  \/  //      ____  \ 
+                          >    <|  Y Y  \ |_>  >
+                         /__/\   __|_|  /  ___/ 
+                              \_/     \/|_|    
+                E x t e n d e d   M o d u l e   P l a y e r
+
+			       Version 3.9
+
+
+OVERVIEW
+
+This is the Extended Module Player, a portable module player that plays
+over 90 mainstream and obscure module formats, including Protracker MOD,
+Fasttracker II XM, Scream Tracker 3 S3M and Impulse Tracker IT files.
+
+Run xmp --help for a list of available options, or xmp -L to list the
+supported module formats.
+
+
+INTERACTIVE COMMANDS
+
+The following single key commands can be used during the playback:
+
+         q, ESC       =>  quit the player
+     f, Right-arrow   =>  jump to next pattern
+      b, Left-arrow   =>  jump to previous pattern
+       n, Up-arrow    =>  jump to next module
+      p, Down-arrow   =>  jump to previous module
+           Space      =>  pause/unpause
+          1 to 0      =>  mute/unmute channels 1 to 10
+            !         =>  unmute all channels
+            ?         =>  display available commands
+            l         =>  toggle loop mode
+            m         =>  display module information
+            i         =>  display combined instrument/sample list
+            I         =>  display instrument list
+            S         =>  display sample list
+
+Interactive mode can be disabled using the --nocmd command line option.
+
+
+FEEDBACK
+
+Send your comments and bug reports to xmp-devel@lists.sourceforge.net, or
+directly to cmatsuoka@gmail.com.
+
+
+LICENSE
+
+Extended Module Player (C) 1996-2012 Claudio Matsuoka and Hipolito Carraro Jr
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version. This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
