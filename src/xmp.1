@@ -1,4 +1,4 @@
-.TH "XMP" "1" "Version 3\&.9\&.0" "Apr 2012" "Extended Module Player" 
+.TH "XMP" "1" "Version 3\&.9\&.1" "Ago 2012" "Extended Module Player" 
 .PP 
 .SH "NAME" 
 xmp - Extended Module Player
@@ -18,6 +18,8 @@ xmp - Extended Module Player
 [\fB-l, --loop\fP]
 [\fB-M, --mute\fP \fIchannel-list\fP]
 [\fB-m, --mono\fP]
+[\fB-N, --null\fP]
+[\fB-n, --nearest\fP]
 [\fB--nocmd\fP]
 [\fB-o, --output-file\fP \fIfilename\fP]
 [\fB-P, --pan\fP \fIpan\fP]
@@ -58,9 +60,6 @@ list of known parameters\&.
 .IP "\fB-d, --driver\fP \fIdriver\fP" 
 Select the output driver\&. If not specified, \fBxmp\fP will try to
 probe each available driver\&.
-.IP "\fB--fix-sample-loop\fP" 
-Force sample loop start in samples instead of 16-bit words\&. This
-option affects only MOD files\&.
 .IP "\fB-f, --frequency\fP \fIrate\fP" 
 Set the software mixer sampling rate in hertz\&.
 .IP "\fB-h, --help\fP" 
@@ -76,6 +75,11 @@ Mute the specified channels\&. \fIchannel-list\fP is a comma-separated
 list of decimal channel ranges\&. Example: 0,2-4,8-16\&.
 .IP "\fB-m, --mono\fP" 
 Force mono output (default is stereo in stereo-capable devices)\&.
+.IP "\fB-N, --null\fP" 
+Load and mix module, but discard output data (same as --device=null)\&.
+.IP "\fB-n, --nearest\fP" 
+Use nearest-neighbor interpolation\&. This option also disables lowpass
+filtering\&.
 .IP "\fB--nocmd\fP" 
 Disable interactive commands\&.
 .IP "\fB-o, --output-file\fP \fIfilename\fP" 
@@ -108,7 +112,21 @@ when the player runs in background)\&.
 Use the option \fB-D\fP to send parameters directly to the device
 drivers\&. Multiple \fB-D\fP options can be specified in the command line\&.
 .PP 
-OSS software mixing:
+File output options:
+.IP "\fB-D\fP \fIendian=big\fP" 
+Generate big-endian 16-bit samples (default is the machine byte ordering)\&.
+.IP "\fB-D\fP \fIendian=little\fP" 
+Generate little-endian 16-bit samples (default is the machine byte ordering)\&.
+.PP 
+ALSA driver options:
+.IP "\fB-D\fP \fIbuffer=value\fP" 
+Set buffer size in ms\&. Default value is 250.
+.IP "\fB-D\fP \fIperiod=value\fP" 
+Set period time in ms\&. Default value is 50.
+.IP "\fB-D\fP \fIcard=name\fP" 
+Choose the ALSA device to use\&. Default value is "default"\&.
+.PP 
+OSS driver options:
 .IP "\fB-D\fP \fIfrag=num,size\fP" 
 Set the maximum number of fragments to \fInum\fP and the size of
 each fragment to \fIsize\fP bytes (must be a power of two)\&.
@@ -121,7 +139,14 @@ Set the audio device to open\&. Default is /dev/dsp\&.
 .IP "\fB-D\fP \fInosync\fP" 
 Don\'t sync the OSS audio device between modules\&.
 .PP 
-HP-UX and Solaris audio:
+BSD driver options:
+.IP "\fB-D\fP \fIgain=value\fP" 
+Set the audio gain\&. Valid \fIvalue\fP goes from 0 to 255\&.
+The default is 128\&.
+.IP "\fB-D\fP \fIbuffer=size\fP" 
+Set the size in bytes of the audio buffer\&. Default value is 32 Kb\&.
+.PP
+HP-UX and Solaris driver options:
 .IP "\fB-D\fP \fIgain=value\fP" 
 Set the audio gain\&. Valid \fIvalue\fP goes from 0 to 255\&.
 The default is 128\&.
@@ -131,12 +156,6 @@ speaker, \fIh\fP for headphones and \fIl\fP for line out\&. The default
 is the internal speaker\&.
 .IP "\fB-D\fP \fIbuffer=size\fP" 
 Set the size in bytes of the audio buffer\&. The default value is 32 Kb\&.
-.PP 
-File output:
-.IP "\fB-D\fP \fIendian=big\fP" 
-Generate big-endian 16-bit samples (default is the machine byte ordering)\&.
-.IP "\fB-D\fP \fIendian=little\fP" 
-Generate little-endian 16-bit samples (default is the machine byte ordering)\&.
 .PP
 .SH "INTERACTIVE COMMANDS" 
 The following single key commands can be used when playing modules:
@@ -158,6 +177,8 @@ Mute/unmute channels 1 to 10\&.
 Unmute all channels\&.
 .IP "\fB?\fP" 
 Display available commands\&.
+.IP "\fBl\fP" 
+Toggle module looping\&.
 .IP "\fBm\fP" 
 Display module information\&.
 .IP "\fBi\fP" 
@@ -170,11 +191,11 @@ Display sample list\&.
 Interactive mode can be disabled using the \fB--nocmd\fP command
 line option\&.
 .PP 
-.SH "NOTES" 
-When using the OSS sequencer with an AWE card, xmp will wipe out any
-soundfonts already loaded in the card\&.
-.PP
 .SH "EXAMPLES" 
+Play module and save output in a .wav file\&:
+.IP "" 
+\f(CWxmp -ofilename.wav module\&.mod\fP
+.PP 
 Play module muting channels 0 to 3 and 6\&:
 .IP "" 
 \f(CWxmp --mute=0-3,6 module\&.mod\&.gz\fP
@@ -188,9 +209,6 @@ Play all XM modules in the /mod directory and all subdirectories in
 random order\&:
 .IP "" 
 \f(CWxmp -R `find /mod -name "*\&.xm*" -print`\fP
-.PP 
-.SH "FILES" 
-\f(CW/etc/xmp/xmp\&.conf\&, $HOME/\&.xmp/xmp\&.conf\&, /etc/xmp/modules\&.conf\&, $HOME/\&.xmp/modules\&.conf\fP
 .PP 
 .SH "AUTHOR" 
 Claudio Matsuoka and Hipolito Carraro Jr\&.

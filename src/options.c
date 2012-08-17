@@ -36,11 +36,9 @@ extern struct list_head sound_driver_list;
 #define OPT_REALTIME	0x10c
 #define OPT_FIXLOOP	0x10d
 #define OPT_CRUNCH	0x10e
-#define OPT_NOFILTER	0x10f
-#define OPT_VBLANK	0x110
-#define OPT_SHOWTIME	0x111
-#define OPT_DUMP	0x112
-#define OPT_NEAREST	0x113
+#define OPT_VBLANK	0x10f
+#define OPT_SHOWTIME	0x110
+#define OPT_DUMP	0x111
 
 static void usage(char *s)
 {
@@ -81,8 +79,9 @@ static void usage(char *s)
 "   -c --stdout            Mix the module to stdout\n"
 "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
 "   -m --mono              Mono output\n"
-"   --nearest              Use nearest neighbor interpolation (no filter)\n"
-"   --nofilter             Disable IT lowpass filters\n"
+"   -N --null              Use null output driver (same as --driver=null)\n"
+"   -n --nearest           Use nearest neighbor interpolation (no filter)\n"
+"   -F --nofilter          Disable IT lowpass filters\n"
 "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
 "   -P --pan pan           Percentual pan separation\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
@@ -110,9 +109,10 @@ static struct option lopt[] = {
 	{ "loop",		0, 0, 'l' },
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
-	{ "nearest",		0, 0, OPT_NEAREST },
+	{ "null",		0, 0, 'N' },
+	{ "nearest",		0, 0, 'n' },
 	{ "nocmd",		0, 0, OPT_NOCMD },
-	{ "nofilter",		0, 0, OPT_NOFILTER },
+	{ "nofilter",		0, 0, 'F' },
 	{ "output-file",	1, 0, 'o' },
 	{ "pan",		1, 0, 'P' },
 	{ "probe-only",		0, 0, OPT_PROBEONLY },
@@ -135,7 +135,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int dparm = 0;
 	int o;
 
-#define OPTIONS "a:b:cD:d:f:hI:iLlM:mno:P:qRS:s:T:t:uVv"
+#define OPTIONS "a:b:cD:d:Ff:hI:iLlM:mNno:P:qRS:s:T:t:uVv"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -156,11 +156,9 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'd':
 			options->driver_id = optarg;
 			break;
-#if 0
-		case OPT_FX9BUG:
-			options->quirk |= XMP_QRK_FX9BUG;
+		case 'F':
+			options->format |= XMP_FORMAT_NOFILTER;
 			break;
-#endif
 		case 'f':
 			options->rate = strtoul(optarg, NULL, 0);
 			break;
@@ -186,17 +184,14 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'm':
 			options->format |= XMP_FORMAT_MONO;
 			break;
-		case 'n':
+		case 'N':
 			options->silent = 1;
 			break;
-		case OPT_NEAREST:
+		case 'n':
 			options->format |= XMP_FORMAT_NEAREST;
 			break;
 		case OPT_NOCMD:
 			options->nocmd = 1;
-			break;
-		case OPT_NOFILTER:
-			options->format |= XMP_FORMAT_NOFILTER;
 			break;
 		case 'o':
 			options->out_file = optarg;
