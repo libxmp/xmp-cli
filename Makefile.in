@@ -1,4 +1,4 @@
-VERSION	= 3.9.0
+VERSION	= 3.9.1
 
 CC		= @CC@
 CFLAGS		= -c -Wall @CFLAGS@ @DEFS@ @CPPFLAGS@
@@ -18,7 +18,7 @@ SHELL		= /bin/sh
 V		= 0
 
 DIST		= xmp-$(VERSION)
-DFILES		= README INSTALL configure config.sub config.guess install-sh \
+DFILES		= README configure config.sub config.guess install-sh \
 		  configure.ac Makefile.in $(MODULES)
 DDIRS		= src
 MODULES		= delicate_oooz!.mod
@@ -51,6 +51,7 @@ depend:
 dist: dist-prepare dist-subdirs
 
 dist-prepare:
+	./config.status
 	rm -Rf $(DIST) $(DIST).tar.gz
 	mkdir -p $(DIST)
 	cp -RPp $(DFILES) $(DIST)/
