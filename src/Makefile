@@ -32,3 +32,7 @@ install-xmp: $(SRC_PATH)/xmp
 	@[ -d $(DESTDIR)$(BINDIR) ] || mkdir -p $(DESTDIR)$(BINDIR)
 	@$(INSTALL) $+ $(DESTDIR)$(BINDIR)
 
+install-docs: $(SRC_PATH)/xmp.1
+	@echo Installing manpage in $(DESTDIR)$(MANDIR)
+	@[ -d $(DESTDIR)$(MANDIR) ] || mkdir -p $(DESTDIR)$(MANDIR)
+	@$(INSTALL) $+ $(DESTDIR)$(MANDIR)
