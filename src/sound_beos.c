@@ -156,8 +156,8 @@ static int init(struct options *options)
 	sound_beos.description = desc;
 
 	fmt.frame_rate = options->rate;
-	fmt.channel_count = options->format & XMP_FORMAT_MONO ? 1 : 2;
-	fmt.format = options->format & XMP_FORMAT_8BIT ?
+	fmt.channel_count = options->format & XMP_MIX_MONO ? 1 : 2;
+	fmt.format = options->format & XMP_MIX_8BIT ?
 				B_AUDIO_CHAR : B_AUDIO_SHORT;
 	fmt.byte_order = B_HOST_IS_LENDIAN ?
 				B_MEDIA_LITTLE_ENDIAN : B_MEDIA_BIG_ENDIAN;

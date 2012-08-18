@@ -199,10 +199,10 @@ int main(int argc, char **argv)
 		report("Using %s\n", sound->description);
 
 		report("Mixer set to %d Hz, %dbit, %s%s%s\n", options.rate,
-		    options.format & XMP_FORMAT_8BIT ? 8 : 16,
-		    options.format & XMP_FORMAT_NEAREST ? "" : "interpolated ",
-		    options.format & XMP_FORMAT_MONO ? "mono" : "stereo",
-		    options.format & XMP_FORMAT_NOFILTER ? " (no filter)" : "");
+		    options.format & XMP_MIX_8BIT ? 8 : 16,
+		    options.format & XMP_MIX_NEAREST ? "" : "interpolated ",
+		    options.format & XMP_MIX_MONO ? "mono" : "stereo",
+		    options.format & XMP_MIX_NOFILTER ? " (no filter)" : "");
 	}
 
 	if (options.probeonly) {

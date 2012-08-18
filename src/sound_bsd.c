@@ -34,18 +34,18 @@ static int init(struct options *options)
 	AUDIO_INITINFO(&ainfo);
 
 	ainfo.play.sample_rate = options->rate;
-	ainfo.play.channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	ainfo.play.channels = options->format & XMP_MIX_MONO ? 1 : 2;
 	ainfo.play.gain = gain;
 	ainfo.play.buffer_size = bsize;
 
-	if (options->format & XMP_FORMAT_8BIT) {
+	if (options->format & XMP_MIX_8BIT) {
 		ainfo.play.precision = 8;
 		ainfo.play.encoding = AUDIO_ENCODING_ULINEAR;
-		options->format |= XMP_FORMAT_UNSIGNED;
+		options->format |= XMP_MIX_UNSIGNED;
 	} else {
 		ainfo.play.precision = 16;
 		ainfo.play.encoding = AUDIO_ENCODING_SLINEAR;
-		options->format &= ~XMP_FORMAT_UNSIGNED;
+		options->format &= ~XMP_MIX_UNSIGNED;
 	}
 
 	if (ioctl(audio_fd, AUDIO_SETINFO, &ainfo) == -1) {

@@ -128,14 +128,14 @@ static int init(struct options *options)
 	ad.mFormatFlags = kAudioFormatFlagIsPacked /* |
 			kAudioFormatFlagNativeEndian */;
 
-	if (~options->format & XMP_FORMAT_UNSIGNED) {
+	if (~options->format & XMP_MIX_UNSIGNED) {
 		ad.mFormatFlags |= kAudioFormatFlagIsSignedInteger;
 	}
 
-	ad.mChannelsPerFrame = options->format & XMP_FORMAT_MONO ? 1 : 2;
-	ad.mBitsPerChannel = options->format & XMP_FORMAT_8BIT ? 8 : 16;
+	ad.mChannelsPerFrame = options->format & XMP_MIX_MONO ? 1 : 2;
+	ad.mBitsPerChannel = options->format & XMP_MIX_8BIT ? 8 : 16;
 
-	if (options->format & XMP_FORMAT_8BIT) {
+	if (options->format & XMP_MIX_8BIT) {
 		ad.mBytesPerFrame = ad.mChannelsPerFrame;
 	} else {
 		ad.mBytesPerFrame = 2 * ad.mChannelsPerFrame;
