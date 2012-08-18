@@ -10,11 +10,11 @@ xmp - Extended Module Player
 [\fB-c, --stdout\fP]
 [\fB-D\fP \fIdevice-specific parameters\fP]
 [\fB-d, --driver\fP \fIdriver\fP]
-[\fB--fix-sample-loop\fP]
 [\fB-f, --frequency\fP \fIrate\fP]
 [\fB-h, --help\fP]
 [\fB-I, --instrument-path\fP]
 [\fB-i, --info\fP]
+[\fB-L, --list-formats\fP]
 [\fB-l, --loop\fP]
 [\fB-M, --mute\fP \fIchannel-list\fP]
 [\fB-m, --mono\fP]
@@ -24,7 +24,8 @@ xmp - Extended Module Player
 [\fB-o, --output-file\fP \fIfilename\fP]
 [\fB-P, --pan\fP \fIpan\fP]
 [\fB--probe-only\fP]
-[\fB-R --random\fP]
+[\fB-q, --quiet\fP]
+[\fB-R, --random\fP]
 [\fB-S, --solo\fP \fIchannel-list\fP]
 [\fB-s, --start\fP \fIpos\fP]
 [\fB-t, --time\fP \fItime\fP]
@@ -36,12 +37,8 @@ xmp - Extended Module Player
 .SH "DESCRIPTION" 
 \fBxmp\fP is a tracked music module player\&. It plays many
 module formats including Fasttracker II (XM), Noise/Fast/Protracker (MOD),
-Scream Tracker 3 (S3M) and Impulse Tracker (IT)\&. Use \f(CWxmp --help\fP
-for a complete list of supported formats\&.
-.PP 
-\fBxmp\fP can play through several output devices including the Open
-Sound System sequencer, linear and ulaw PCM audio devices or mixing
-to a raw or WAV file\&.
+Scream Tracker 3 (S3M) and Impulse Tracker (IT)\&. Run
+\f(CWxmp --list-formats\fP for a complete list of supported formats\&.
 .PP 
 .SH "OPTIONS" 
 .IP "\fB-a, --amplify\fP \fIfactor\fP" 
@@ -141,14 +138,14 @@ Don\'t sync the OSS audio device between modules\&.
 .PP 
 BSD driver options:
 .IP "\fB-D\fP \fIgain=value\fP" 
-Set the audio gain\&. Valid \fIvalue\fP goes from 0 to 255\&.
+Set the audio gain\&. Valid values range from 0 to 255\&.
 The default is 128\&.
 .IP "\fB-D\fP \fIbuffer=size\fP" 
 Set the size in bytes of the audio buffer\&. Default value is 32 Kb\&.
 .PP
 HP-UX and Solaris driver options:
 .IP "\fB-D\fP \fIgain=value\fP" 
-Set the audio gain\&. Valid \fIvalue\fP goes from 0 to 255\&.
+Set the audio gain\&. Valid values range from 0 to 255\&.
 The default is 128\&.
 .IP "\fB-D\fP \fIport={s|h|l}\fP" 
 Set the audio port\&. Valid arguments are \fIs\fP for the internal
@@ -210,6 +207,6 @@ random order\&:
 .IP "" 
 \f(CWxmp -R `find /mod -name "*\&.xm*" -print`\fP
 .PP 
-.SH "AUTHOR" 
+.SH "AUTHORS" 
 Claudio Matsuoka and Hipolito Carraro Jr\&.
 .PP 
