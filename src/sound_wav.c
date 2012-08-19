@@ -85,15 +85,15 @@ static int init(struct options *options)
 	write_32l(fd, len);
 	write(fd, "WAVE", 4);
 
-	chan = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	chan = options->format & XMP_MIX_MONO ? 1 : 2;
 	sampling_rate = options->rate;
 
-	bits_per_sample = options->format & XMP_FORMAT_8BIT ? 8 : 16;
+	bits_per_sample = options->format & XMP_MIX_8BIT ? 8 : 16;
 	if (bits_per_sample == 8) {
-		options->format |= XMP_FORMAT_UNSIGNED;
+		options->format |= XMP_MIX_UNSIGNED;
 		format_16bit = 0;
 	} else {
-		options->format &= ~XMP_FORMAT_UNSIGNED;
+		options->format &= ~XMP_MIX_UNSIGNED;
 		format_16bit = 1;
 	}
 

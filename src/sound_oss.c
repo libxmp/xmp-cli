@@ -39,13 +39,13 @@ static int to_fmt(int format)
 {
 	int fmt;
 
-	if (format & XMP_FORMAT_8BIT)
+	if (format & XMP_MIX_8BIT)
 		fmt = AFMT_U8 | AFMT_S8;
 	else {
 		fmt = AFMT_S16_NE | AFMT_U16_NE;
 	}
 
-	if (format & XMP_FORMAT_UNSIGNED)
+	if (format & XMP_MIX_UNSIGNED)
 		fmt &= AFMT_U8 | AFMT_U16_LE | AFMT_U16_BE;
 	else
 		fmt &= AFMT_S8 | AFMT_S16_LE | AFMT_S16_BE;
@@ -58,11 +58,11 @@ static int from_fmt(int fmt)
 	int format = 0;
 
 	if (!(fmt & (AFMT_S16_LE | AFMT_S16_BE | AFMT_U16_LE | AFMT_U16_BE))) {
-		format |= XMP_FORMAT_8BIT;
+		format |= XMP_MIX_8BIT;
 	}
 
 	if (fmt & (AFMT_U8 | AFMT_U16_LE | AFMT_U16_BE)) {
-		format |= XMP_FORMAT_UNSIGNED;
+		format |= XMP_MIX_UNSIGNED;
 	}
 
 	return format;
@@ -80,12 +80,12 @@ static void setaudio(int *rate, int *format)
 	ioctl(audio_fd, SNDCTL_DSP_SETFMT, &fmt);
 	*format = from_fmt(fmt);
 
-	fmt = !(*format & XMP_FORMAT_MONO);
+	fmt = !(*format & XMP_MIX_MONO);
 	ioctl(audio_fd, SNDCTL_DSP_STEREO, &fmt);
 	if (fmt) {
-		*format &= ~XMP_FORMAT_MONO;
+		*format &= ~XMP_MIX_MONO;
 	} else {
-		*format |= XMP_FORMAT_MONO;
+		*format |= XMP_MIX_MONO;
 	}
 
 	ioctl(audio_fd, SNDCTL_DSP_SPEED, rate);

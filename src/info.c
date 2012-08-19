@@ -227,7 +227,7 @@ void info_samples(struct xmp_module_info *mi)
 
 	report("Samples:\n");
 	report("   Sample name                      Length Start  End    Flags\n");
-	for (i = 0; i < mod->ins; i++) {
+	for (i = 0; i < mod->smp; i++) {
 		struct xmp_sample *smp = &mod->xxs[i];
 
 		if (strlen(smp->name) == 0 && smp->len == 0) {

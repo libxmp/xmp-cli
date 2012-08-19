@@ -33,19 +33,19 @@ static int init(struct options *options)
 	}
 
 	sio_initpar(&par);
-	par.pchan = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	par.pchan = options->format & XMP_MIX_MONO ? 1 : 2;
 	par.rate = options->rate;
 	par.le = SIO_LE_NATIVE;
 	par.appbufsz = par.rate / 4;
 
-	if (options->format & XMP_FORMAT_8BIT) {
+	if (options->format & XMP_MIX_8BIT) {
 		par.bits = 8;
 		par.sig = 0;
-		options->format |= XMP_FORMAT_UNSIGNED;
+		options->format |= XMP_MIX_UNSIGNED;
 	} else {
 		par.bits = 16;
 		par.sig = 1;
-		options->format &= ~XMP_FORMAT_UNSIGNED;
+		options->format &= ~XMP_MIX_UNSIGNED;
 	}
 
 

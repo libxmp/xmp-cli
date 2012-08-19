@@ -45,8 +45,8 @@ static int init(struct options *options)
 	init.mode = PCM;		/* audio format */
 	init.srate = options->rate;	/* sample rate */
 	init.operation = PLAY;		/* PLAY or RECORD */
-	init.channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
-	init.bits_per_sample = options->format & XMP_FORMAT_8BIT ? 8 : 16;
+	init.channels = options->format & XMP_MIX_MONO ? 1 : 2;
+	init.bits_per_sample = options->format & XMP_MIX_8BIT ? 8 : 16;
 	init.flags = BIG_ENDIAN | TWOS_COMPLEMENT;
 
 	if (ioctl(audio_fd, AUDIO_INIT, &init) < 0) {

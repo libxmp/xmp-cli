@@ -20,7 +20,7 @@ static int init(struct options *options)
 	parm_end();
 
 	rate = options->rate;
-	bits = options->format & XMP_FORMAT_8BIT ? 8 : 16;
+	bits = options->format & XMP_MIX_8BIT ? 8 : 16;
 	stereo = 1;
 	bufsize = 32 * 1024;
 
@@ -30,7 +30,7 @@ static int init(struct options *options)
 		return -1;
 	}
 
-	if (options->outfmt & XMP_FORMAT_MONO)
+	if (options->outfmt & XMP_MIX_MONO)
 		stereo = 0;
 
 	if (ioctl(fd_audio, SOUND_PCM_WRITE_BITS, &bits) < 0) {

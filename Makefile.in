@@ -18,7 +18,7 @@ SHELL		= /bin/sh
 V		= 0
 
 DIST		= xmp-$(VERSION)
-DFILES		= README configure config.sub config.guess install-sh \
+DFILES		= README INSTALL configure config.sub config.guess install-sh \
 		  configure.ac Makefile.in $(MODULES)
 DDIRS		= src
 MODULES		= delicate_oooz!.mod

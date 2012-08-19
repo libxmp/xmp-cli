@@ -74,11 +74,11 @@ static int init(struct options *options)
 	 * Set sample width; 24 bit samples are not currently supported by xmp
 	 */
 
-	if (options->format & XMP_FORMAT_8BIT) {
+	if (options->format & XMP_MIX_8BIT) {
 		if (ALsetwidth(config, AL_SAMPLE_8) < 0) {
 			if (ALsetwidth(config, AL_SAMPLE_16) < 0)
 				return -1;
-			options->format &= ~XMP_FORMAT_8BIT;
+			options->format &= ~XMP_MIX_8BIT;
 		} else {
 			al_sample_16 = 0;
 		}
@@ -86,7 +86,7 @@ static int init(struct options *options)
 		if (ALsetwidth(config, AL_SAMPLE_16) < 0) {
 			if (ALsetwidth(config, AL_SAMPLE_8) < 0)
 				return -1;
-			options->format |= XMP_FORMAT_8BIT;
+			options->format |= XMP_MIX_8BIT;
 		} else {
 			al_sample_16 = 1;
 		}
@@ -96,17 +96,17 @@ static int init(struct options *options)
 	 * Set number of channels; 4 channel output is not currently supported
 	 */
 
-	if (options->format & XMP_FORMAT_MONO) {
+	if (options->format & XMP_MIX_MONO) {
 		if (ALsetchannels(config, AL_MONO) < 0) {
 			if (ALsetchannels(config, AL_STEREO) < 0)
 				return -1;
-			options->format &= ~XMP_FORMAT_MONO;
+			options->format &= ~XMP_MIX_MONO;
 		}
 	} else {
 		if (ALsetchannels(config, AL_STEREO) < 0) {
 			if (ALsetchannels(config, AL_MONO) < 0)
 				return -1;
-			options->format |= XMP_FORMAT_MONO;
+			options->format |= XMP_MIX_MONO;
 		}
 	}
 

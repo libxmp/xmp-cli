@@ -23,7 +23,7 @@ static int init(struct options *options)
 	int gain = 128;
 	int bsize = 32 * 1024;
 	int port = AUDIO_OUT_SPEAKER;
-	int nch = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	int nch = options->format & XMP_MIX_MONO ? 1 : 2;
 	struct audio_gains agains;
 	struct audio_describe adescribe;
 	int i;
@@ -55,13 +55,13 @@ static int init(struct options *options)
 	if ((flags = fcntl(audio_fd, F_SETFL, flags)) < 0)
 		goto err1;
 
-	options->format &= ~XMP_FORMAT_8BIT;
+	options->format &= ~XMP_MIX_8BIT;
 	if (ioctl(audio_fd, AUDIO_SET_DATA_FORMAT, AUDIO_FORMAT_LINEAR16BIT) == -1)
 		goto err1;
 
 	if (ioctl(audio_fd, AUDIO_SET_CHANNELS, nch) == -1) {
-		options->format ^= XMP_FORMAT_MONO;
-		nch = options->format & XMP_FORMAT_MONO ? 1 : 2;
+		options->format ^= XMP_MIX_MONO;
+		nch = options->format & XMP_MIX_MONO ? 1 : 2;
 
 		if (ioctl(audio_fd, AUDIO_SET_CHANNELS, nch) == -1) {
 			goto err1;
