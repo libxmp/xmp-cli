@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 	int first;
 	int skipprev;
 	FILE *f = NULL;
-	int val;
+	int val, lf_flag;
 #ifndef WIN32
 	struct timeval tv;
 	struct timezone tz;
@@ -196,6 +196,9 @@ int main(int argc, char **argv)
 	}
 
 	if (options.verbose > 0) {
+		report("Extended Module Player " VERSION "\n"
+			"Copyright (C) 1996-2012 Claudio Matsuoka and Hipolito Carraro Jr\n");
+
 		report("Using %s\n", sound->description);
 
 		report("Mixer set to %d Hz, %dbit, %s%s%s\n", options.rate,
@@ -247,9 +250,13 @@ int main(int argc, char **argv)
 		xmp_mixer_mix(handle, options.mix);
 	}
 
+	lf_flag = 0;
 	for (first = optind; optind < argc; optind++) {
 		if (options.verbose > 0) {
-			report("\nLoading %s... (%d of %d)\n",
+			if (lf_flag)
+				report("\n");
+			lf_flag = 1;
+			report("Loading %s... (%d of %d)\n",
 				argv[optind], optind - first + 1, argc - first);
 		}
 
