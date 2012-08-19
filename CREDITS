@@ -1,0 +1,61 @@
+The Authors
+
+- Rob Adamson <R.Adamson@fitz.cam.ac.uk>
+  * ALSA 0.5 driver fixes
+
+- Tijs van Bakel <smoke@casema.net>
+  * ALSA 0.5 driver fixes
+
+- Marc R. Boyns <boyns@sdsu.edu>
+  * --nocmd command line option
+
+- Douglas Carmichael <dcarmich@dcarmichael.net>
+  * OSX portability fixes
+
+- Hipolito Carraro Jr <hipolito.carraro@gmail.com>
+  * main player coding
+
+- Chris Cox <cox.christopher@gmail.com>
+  * fixes for OpenBSD 2.8
+  * option parsing fixes
+
+- Brian Downing <bdowning@wolfram.com>
+  * SGI and endianism fixes
+
+- Rune Elvemo <relvemo@grm.hia.no>
+  * fixes for endianism problems in Linux/PPC
+
+- Mike Gorchak <mike@malva.ua>
+  * QNX6 portability fix
+
+- Keith Hargrove <Keith.Hargrove@Eng.Sun.COM>
+  * Solaris driver fixes
+
+- Dirk Jagdmann <doj@users.sourceforge.net>
+  * devfs sound device support
+
+- Lorence Lombardo <lombi@iprimus.com.au>
+  * Amiga AHI driver
+
+- Kevin Langman <langman@earthling.net>
+  * OS/2 port and OS/2 DART drivers
+
+- Andrew "Alf" Leahy <a.leahy@cit.nepean.uws.edu.au>
+  * fixes for Digital UNIX
+
+- Claudio Matsuoka <cmatsuoka@gmail.com>
+  * main player coding
+  * sound drivers
+
+- Michael <skumle@grin.dk>
+  * NetBSD port fixes
+  * NetBSD and OpenBSD enhanced drivers
+
+- Thomas Pfaff <tpfaff@tp76.info>
+  * OpenBSD sndio driver
+
+- Johan Samuelsson <spot@triad.se>
+  * Amiga port and fixes
+
+- Chris Young <cdyoung@ntlworld.com>
+  * Amiga port and fixes
