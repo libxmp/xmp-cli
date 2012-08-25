@@ -10,6 +10,7 @@ struct options {
 	int format;		/* sample format */
 	int max_time;		/* max. replay time */
 	int mix;		/* channel separation */
+	int interp;		/* interpolation type */
 	int loop;		/* loop module */
 	int random;		/* play in random order */
 	int verbose;

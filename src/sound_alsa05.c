@@ -54,7 +54,7 @@ static int to_fmt(struct options *options)
 {
 	int fmt;
 
-	if (options->format & XMP_MIX_8BIT) {
+	if (options->format & XMP_FORMAT_8BIT) {
 		fmt = SND_PCM_SFMT_U8 | SND_PCM_SFMT_S8;
 	} else {
 		fmt = SND_PCM_SFMT_S16_LE | SND_PCM_SFMT_S16_BE |
@@ -67,7 +67,7 @@ static int to_fmt(struct options *options)
 		}
 	}
 
-	if (options->format & XMP_MIX_UNSIGNED) {
+	if (options->format & XMP_FORMAT_UNSIGNED) {
 		fmt &= SND_PCM_SFMT_U8|SND_PCM_SFMT_U16_LE|SND_PCM_SFMT_U16_BE;
 	} else {
 		fmt &= SND_PCM_SFMT_S8|SND_PCM_SFMT_S16_LE|SND_PCM_SFMT_S16_BE;
@@ -134,7 +134,7 @@ static int init(struct options *options)
 	params.format.interleave = 1;
 	params.format.format = to_fmt(o);
 	params.format.rate = options->rate;
-	params.format.voices = (o->outfmt & XMP_MIX_MONO) ? 1 : 2;
+	params.format.voices = (o->outfmt & XMP_FORMAT_MONO) ? 1 : 2;
 
 	if ((rc = snd_pcm_plugin_params(pcm_handle, &params)) < 0) {
 		printf("Unable to set output parameters: %s\n",

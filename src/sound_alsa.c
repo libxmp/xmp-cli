@@ -29,12 +29,12 @@ static int init(struct options *options)
 		return -1;
 	}
 
-	channels = format & XMP_MIX_MONO ? 1 : 2;
-	if (format & XMP_MIX_UNSIGNED) {
-		fmt = format & XMP_MIX_8BIT ?
+	channels = format & XMP_FORMAT_MONO ? 1 : 2;
+	if (format & XMP_FORMAT_UNSIGNED) {
+		fmt = format & XMP_FORMAT_8BIT ?
 				SND_PCM_FORMAT_U8 : SND_PCM_FORMAT_U16;
 	} else {
-		fmt = format & XMP_MIX_8BIT ?
+		fmt = format & XMP_FORMAT_8BIT ?
 				SND_PCM_FORMAT_S8 : SND_PCM_FORMAT_S16;
 	}
 
@@ -62,9 +62,9 @@ static int init(struct options *options)
 	}
   
 	if (channels == 1) {
-		format |= XMP_MIX_MONO;
+		format |= XMP_FORMAT_MONO;
 	} else {
-		format &= ~XMP_MIX_MONO;
+		format &= ~XMP_FORMAT_MONO;
 	}
 
 	options->rate = rate;

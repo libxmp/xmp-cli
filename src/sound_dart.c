@@ -110,10 +110,10 @@ static int init(struct options *options)
 	memset(&MixSetupParms, 0, sizeof(MCI_MIXSETUP_PARMS));
 
 	MixSetupParms.ulBitsPerSample =
-			options->format & XMP_MIX_8BIT ? 8 : 16;
+			options->format & XMP_FORMAT_8BIT ? 8 : 16;
 	MixSetupParms.ulFormatTag = MCI_WAVE_FORMAT_PCM;
 	MixSetupParms.ulSamplesPerSec = options->rate;
-	MixSetupParms.ulChannels = options->format & XMP_MIX_MONO ? 1 : 2;
+	MixSetupParms.ulChannels = options->format & XMP_FORMAT_MONO ? 1 : 2;
 	MixSetupParms.ulFormatMode = MCI_PLAY;
 	MixSetupParms.ulDeviceType = MCI_DEVTYPE_WAVEFORM_AUDIO;
 	MixSetupParms.pmixEvent = OS2_Dart_UpdateBuffers;

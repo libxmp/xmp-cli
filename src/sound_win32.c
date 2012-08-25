@@ -78,8 +78,8 @@ static int init(struct options *options)
 		return -1;
 
 	wfe.wFormatTag = WAVE_FORMAT_PCM;
-	wfe.wBitsPerSample = options->format & XMP_MIX_8BIT ? 8 : 16;
-	wfe.nChannels = options->format & XMP_MIX_MONO ? 1 : 2;
+	wfe.wBitsPerSample = options->format & XMP_FORMAT_8BIT ? 8 : 16;
+	wfe.nChannels = options->format & XMP_FORMAT_MONO ? 1 : 2;
 	wfe.nSamplesPerSec = options->rate;
 	wfe.nAvgBytesPerSec = wfe.nSamplesPerSec * wfe.nChannels *
 	    wfe.wBitsPerSample / 8;

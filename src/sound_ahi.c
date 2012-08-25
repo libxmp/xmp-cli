@@ -16,8 +16,8 @@ static int init(struct options *options)
 {
 	char **parm = options->driver_parm;
 	char outfile[256];
-	int nch = options->format & XMP_MIX_MONO ? 1 : 2;
-	int res = options->format & XMP_MIX_8BIT ? 8 : 16;
+	int nch = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	int res = options->format & XMP_FORMAT_8BIT ? 8 : 16;
 	int bsize = options->rate * nch * res / 4;
 	
 	parm_init(parm);

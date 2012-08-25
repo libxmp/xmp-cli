@@ -108,8 +108,8 @@ static int init(struct options *options)
 	AUDIO_INITINFO(&ainfo2);	/* For AMD 7930 if needed */
 
 	ainfo.play.sample_rate = options->rate;
-	ainfo.play.channels = options->format & XMP_MIX_MONO ? 1 : 2;
-	ainfo.play.precision = options->format & XMP_MIX_8BIT ? 8 : 16;
+	ainfo.play.channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	ainfo.play.precision = options->format & XMP_FORMAT_8BIT ? 8 : 16;
 	ainfo.play.encoding = AUDIO_ENCODING_LINEAR;
 	ainfo2.play.gain = ainfo.play.gain = gain;
 	ainfo2.play.port = ainfo.play.port = port;

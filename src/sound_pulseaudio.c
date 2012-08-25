@@ -11,10 +11,10 @@ static int init(struct options *options)
 	pa_sample_spec ss;
 	int error;
 
-	options->format &= ~(XMP_MIX_UNSIGNED | XMP_MIX_8BIT);
+	options->format &= ~(XMP_FORMAT_UNSIGNED | XMP_FORMAT_8BIT);
 
 	ss.format = PA_SAMPLE_S16NE;
-	ss.channels = options->format & XMP_MIX_MONO ? 1 : 2;
+	ss.channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
 	ss.rate = options->rate;
 
 	s = pa_simple_new(NULL,		/* Use the default server */

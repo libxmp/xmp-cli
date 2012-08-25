@@ -143,7 +143,7 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'b':
 			if (atoi(optarg) == 8) {
-				options->format |= XMP_MIX_8BIT;
+				options->format |= XMP_FORMAT_8BIT;
 			}
 			break;
 		case 'c':
@@ -157,8 +157,11 @@ void get_options(int argc, char **argv, struct options *options)
 			options->driver_id = optarg;
 			break;
 		case 'F':
-			options->format |= XMP_MIX_NOFILTER;
+/* FIXME */
+#if 0
+			options->format |= XMP_FORMAT_NOFILTER;
 			break;
+#endif
 		case 'f':
 			options->rate = strtoul(optarg, NULL, 0);
 			break;
@@ -182,13 +185,13 @@ void get_options(int argc, char **argv, struct options *options)
 			options->loop = 1;
 			break;
 		case 'm':
-			options->format |= XMP_MIX_MONO;
+			options->format |= XMP_FORMAT_MONO;
 			break;
 		case 'N':
 			options->silent = 1;
 			break;
 		case 'n':
-			options->format |= XMP_MIX_NEAREST;
+			options->interp = XMP_INTERP_NEAREST;
 			break;
 		case OPT_NOCMD:
 			options->nocmd = 1;
@@ -252,7 +255,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->max_time = strtoul(optarg, NULL, 0) * 1000;
 			break;
 		case 'u':
-			options->format |= XMP_MIX_UNSIGNED;
+			options->format |= XMP_FORMAT_UNSIGNED;
 			break;
 		case 'V':
 			puts("Extended Module Player " VERSION);
