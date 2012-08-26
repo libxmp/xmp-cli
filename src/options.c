@@ -157,11 +157,8 @@ void get_options(int argc, char **argv, struct options *options)
 			options->driver_id = optarg;
 			break;
 		case 'F':
-/* FIXME */
-#if 0
-			options->format |= XMP_FORMAT_NOFILTER;
+			options->dsp &= ~XMP_DSP_LOWPASS;;
 			break;
-#endif
 		case 'f':
 			options->rate = strtoul(optarg, NULL, 0);
 			break;

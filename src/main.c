@@ -174,6 +174,7 @@ int main(int argc, char **argv)
 	options.mix = -1;
 	options.driver_id = NULL;
 	options.interp = XMP_INTERP_LINEAR;
+	options.dsp = XMP_DSP_LOWPASS;
 
 	get_options(argc, argv, &options);
 
@@ -301,6 +302,7 @@ int main(int argc, char **argv)
 		
 		if (xmp_player_start(handle, options.rate, options.format) == 0) {
 			xmp_mixer_set(handle, XMP_MIXER_INTERP, options.interp);
+			xmp_mixer_set(handle, XMP_MIXER_DSP, options.dsp);
 
 			xmp_set_position(handle, options.start);
 
