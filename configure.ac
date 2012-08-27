@@ -37,8 +37,8 @@ AC_DEFUN([AC_CHECK_DEFINED],[
 AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h)
 
 if test "${ac_cv_header_xmp_h}" = "yes"; then
-  AC_CHECK_LIB(xmp,xmp_player_start,,
-    AC_MSG_ERROR(Can't find libxmp))
+  AC_CHECK_LIB(xmp,xmp_set_position,,
+    AC_MSG_ERROR(Can't find libxmp >= 4.0))
 else
   AC_MSG_ERROR(Can't find libxmp header files)
 fi
