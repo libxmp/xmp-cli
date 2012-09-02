@@ -159,10 +159,11 @@ void read_command(xmp_context handle, struct control *ctl)
 	case '7':
 	case '8':
 	case '9':
-		xmp_channel_mute(handle, cmd - '1', -1);
+		/* toggle mute */
+		xmp_channel_mute(handle, cmd - '1', 2);
 		break;
 	case '0':
-		xmp_channel_mute(handle, 9, -1);
+		xmp_channel_mute(handle, 9, 2);
 		break;
 	case '!': {
 		int i;
