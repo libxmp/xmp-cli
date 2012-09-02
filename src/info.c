@@ -94,13 +94,13 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 
 	time = ctl->time / 100;
 
-	if (reprint || mi->order != ord || mi->bpm != bpm || mi->speed != spd) {
+	if (reprint || mi->pos != ord || mi->bpm != bpm || mi->speed != spd) {
 	        report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
 			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
 					mi->speed, mi->bpm,
-					mi->order, mi->mod->len - 1,
+					mi->pos, mi->mod->len - 1,
 					mi->pattern, mi->mod->pat - 1);
-		ord = mi->order;
+		ord = mi->pos;
 		bpm = mi->bpm;
 		spd = mi->speed;
 	}
