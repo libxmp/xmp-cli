@@ -34,14 +34,31 @@ AC_DEFUN([AC_CHECK_DEFINED],[
   AS_VAR_POPDEF([ac_var])dnl
 ])
 
+AC_DEFUN([XMP_CHECK_LIBVERSION],[
+  AS_VAR_PUSHDEF([ac_var],[xmp_cv_libversion_$1])dnl
+  AC_CACHE_CHECK([for libxmp 4], ac_var,
+  AC_TRY_COMPILE([#include <xmp.h>],[
+    #if XMP_VERCODE >= $1
+    int ok;
+    #else
+    choke me
+    #endif
+  ],AS_VAR_SET(ac_var, yes),AS_VAR_SET(ac_var, no)))
+  AS_IF([test AS_VAR_GET(ac_var) != "no"], [$2], [$3])dnl
+  AS_VAR_POPDEF([ac_var])dnl
+])
+
 AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h)
 
 if test "${ac_cv_header_xmp_h}" = "yes"; then
-  AC_CHECK_LIB(xmp,xmp_set_position,,
-    AC_MSG_ERROR(Can't find libxmp >= 4.0))
+  AC_CHECK_LIB(xmp,xmp_create_context,,
+    AC_MSG_ERROR(Can't find libxmp))
 else
   AC_MSG_ERROR(Can't find libxmp header files)
 fi
+
+XMP_CHECK_LIBVERSION(0x040000,,
+  AC_MSG_ERROR(Can't find libxmp 4))
 
 case "$host_cpu" in
 powerpc64)
