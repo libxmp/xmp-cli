@@ -207,9 +207,9 @@ int main(int argc, char **argv)
 
 		report("Mixer set to %d Hz, %dbit, %s%s%s\n", options.rate,
 		    options.format & XMP_FORMAT_8BIT ? 8 : 16,
-		    /*options.format & XMP_FORMAT_NEAREST ? "" : "interpolated ",*/"FIXME",
+		    options.interp == XMP_INTERP_NEAREST ? "" : "interpolated ",
 		    options.format & XMP_FORMAT_MONO ? "mono" : "stereo",
-		    /*options.format & XMP_FORMAT_NOFILTER ? " (no filter)" :*/ "");
+		    options.dsp & XMP_DSP_LOWPASS ? "" : " (no filter)");
 	}
 
 	if (options.probeonly) {
