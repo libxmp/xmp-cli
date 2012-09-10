@@ -27,18 +27,16 @@ extern int rt;
 
 extern struct list_head sound_driver_list;
 
-
-#define OPT_FX9BUG	0x105
-#define OPT_PROBEONLY	0x106
-#define OPT_STDOUT	0x109
-#define OPT_STEREO	0x10a
-#define OPT_NOCMD	0x10b
-#define OPT_REALTIME	0x10c
-#define OPT_FIXLOOP	0x10d
-#define OPT_CRUNCH	0x10e
-#define OPT_VBLANK	0x10f
-#define OPT_SHOWTIME	0x110
-#define OPT_DUMP	0x111
+enum {
+	OPT_FX9BUG = 0x105,
+	OPT_PROBEONLY,
+	OPT_LOADONLY,
+	OPT_STDOUT,
+	OPT_STEREO,
+	OPT_NOCMD,
+	OPT_FIXLOOP,
+	OPT_SHOWTIME,
+};
 
 static void usage(char *s)
 {
@@ -89,9 +87,9 @@ static void usage(char *s)
 "   -I --instrument-path   Set pathname to external samples\n"
 "\nInformation options:\n"
 "   -h --help              Display a summary of the command line options\n"
-"   -i --info              Display module information and exit\n"
 "   -L --list-formats      List supported module formats\n"
 "   --probe-only           Probe audio device and exit\n"
+"   --load-only            Load module and exit\n"
 "   -q --quiet             Quiet mode (verbosity level = 0)\n"
 "   -V --version           Print version information\n"
 "   -v --verbose           Verbose mode (incremental)\n");
@@ -104,7 +102,6 @@ static struct option lopt[] = {
 	{ "frequency",		1, 0, 'f' },
 	{ "help",		0, 0, 'h' },
 	{ "instrument-path",	1, 0, 'I' },
-	{ "info",		0, 0, 'i' },
 	{ "list-formats",	0, 0, 'L' },
 	{ "loop",		0, 0, 'l' },
 	{ "mono",		0, 0, 'm' },
@@ -116,6 +113,7 @@ static struct option lopt[] = {
 	{ "output-file",	1, 0, 'o' },
 	{ "pan",		1, 0, 'P' },
 	{ "probe-only",		0, 0, OPT_PROBEONLY },
+	{ "load-only",		0, 0, OPT_LOADONLY },
 	{ "quiet",		0, 0, 'q' },
 	{ "random",		0, 0, 'R' },
 	{ "solo",		1, 0, 'S' },
@@ -135,7 +133,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int dparm = 0;
 	int o;
 
-#define OPTIONS "a:b:cD:d:Ff:hI:iLlM:mNno:P:qRS:s:T:t:uVv"
+#define OPTIONS "a:b:cD:d:Ff:hI:LlM:mNno:P:qRS:s:T:t:uVv"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -165,7 +163,7 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'I':
 			options->ins_path = optarg;
 			break;
-		case 'i':
+		case OPT_LOADONLY:
 			options->info = 1;
 			options->silent = 1;
 			break;
