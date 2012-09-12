@@ -76,6 +76,8 @@ static void usage(char *s)
 "   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
 "   -c --stdout            Mix the module to stdout\n"
 "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
+"   -i --interpolation {nearest|linear|spline}\n"
+"                          Select interpolation type (default linear)\n"
 "   -m --mono              Mono output\n"
 "   -N --null              Use null output driver (same as --driver=null)\n"
 "   -n --nearest           Use nearest neighbor interpolation (no filter)\n"
@@ -102,6 +104,7 @@ static struct option lopt[] = {
 	{ "frequency",		1, 0, 'f' },
 	{ "help",		0, 0, 'h' },
 	{ "instrument-path",	1, 0, 'I' },
+	{ "interpolation",	1, 0, 'i' },
 	{ "list-formats",	0, 0, 'L' },
 	{ "loop",		0, 0, 'l' },
 	{ "mono",		0, 0, 'm' },
@@ -133,7 +136,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int dparm = 0;
 	int o;
 
-#define OPTIONS "a:b:cD:d:Ff:hI:LlM:mNno:P:qRS:s:T:t:uVv"
+#define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNno:P:qRS:s:T:t:uVv"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -162,6 +165,17 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'I':
 			options->ins_path = optarg;
+			break;
+		case 'i':
+			if (!strcmp(optarg, "nearest")) {
+				options->interp = XMP_INTERP_NEAREST;
+			} else if (!strcmp(optarg, "linear")) {
+				options->interp = XMP_INTERP_LINEAR;
+			} else if (!strcmp(optarg, "spline")) {
+				options->interp = XMP_INTERP_SPLINE;
+			} else {
+				options->interp = -1;
+			}
 			break;
 		case OPT_LOADONLY:
 			options->info = 1;

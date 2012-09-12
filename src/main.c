@@ -185,6 +185,13 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
+	if (options.interp < 0) {
+		fprintf(stderr, "%s: unknown interpolation type\n"
+			"Use `%s --help' for more information.\n",
+			argv[0], argv[0]);
+		exit(EXIT_FAILURE);
+	}
+
 	if (options.silent) {
 		options.driver_id = "null";
 	}
@@ -207,7 +214,8 @@ int main(int argc, char **argv)
 
 		report("Mixer set to %d Hz, %dbit, %s%s%s\n", options.rate,
 		    options.format & XMP_FORMAT_8BIT ? 8 : 16,
-		    options.interp == XMP_INTERP_NEAREST ? "" : "interpolated ",
+		    options.interp == XMP_INTERP_LINEAR ? "linear interpolated " :
+		    options.interp == XMP_INTERP_SPLINE ? "cubic spline interpolated " : "",
 		    options.format & XMP_FORMAT_MONO ? "mono" : "stereo",
 		    options.dsp & XMP_DSP_LOWPASS ? "" : " (no filter)");
 	}
