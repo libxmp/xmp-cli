@@ -1,7 +1,7 @@
 #ifndef __COMMON_H
 #define __COMMON_H
 
-#define MAX_DRV_PARM 10
+#define MAX_DRV_PARM 20
 
 struct options {
 	int start;		/* start order */
@@ -19,6 +19,7 @@ struct options {
 	int info;		/* display information and exit */
 	int probeonly;		/* probe sound driver and exit */
 	int nocmd;		/* disable interactive commands */
+	int dparm;		/* driver parameter index */
 	char *driver_id;	/* sound driver ID */
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */
@@ -39,6 +40,7 @@ int report(char *, ...);
 
 /* option */
 void get_options(int, char **, struct options *);
+int read_config(struct options *);
 
 /* terminal */
 int set_tty(void);

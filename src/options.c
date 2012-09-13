@@ -131,7 +131,6 @@ static struct option lopt[] = {
 void get_options(int argc, char **argv, struct options *options)
 {
 	int optidx = 0;
-	int dparm = 0;
 	int o;
 
 #define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNo:P:qRS:s:T:t:uVv"
@@ -150,13 +149,14 @@ void get_options(int argc, char **argv, struct options *options)
 			options->out_file = "-";
 			break;
 		case 'D':
-			options->driver_parm[dparm++] = optarg;
+			if (options->dparm < MAX_DRV_PARM)
+				options->driver_parm[options->dparm++] = optarg;
 			break;
 		case 'd':
 			options->driver_id = optarg;
 			break;
 		case 'F':
-			options->dsp &= ~XMP_DSP_LOWPASS;;
+			options->dsp &= ~XMP_DSP_LOWPASS;
 			break;
 		case 'f':
 			options->rate = strtoul(optarg, NULL, 0);

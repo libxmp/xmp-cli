@@ -1,6 +1,7 @@
 
 SRC_OBJS	= sound.o sound_null.o terminal.o info.o commands.o \
-		  options.o getopt.o getopt1.o main.o sound_wav.o sound_file.o
+		  options.o getopt.o getopt1.o main.o sound_wav.o \
+		  sound_file.o read_config.o
 SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h list.h \
 		  sound.h sound_alsa.c sound_coreaudio.c sound_oss.c \
 		  sound_sndio.c sound_netbsd.c sound_bsd.c sound_solaris.c \

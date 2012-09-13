@@ -176,6 +176,9 @@ int main(int argc, char **argv)
 	options.interp = XMP_INTERP_SPLINE;
 	options.dsp = XMP_DSP_LOWPASS;
 
+	/* read configuration file */
+	read_config(&options);
+
 	get_options(argc, argv, &options);
 
 	if (!options.probeonly && optind >= argc) {
