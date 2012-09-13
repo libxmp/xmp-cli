@@ -77,10 +77,9 @@ static void usage(char *s)
 "   -c --stdout            Mix the module to stdout\n"
 "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
 "   -i --interpolation {nearest|linear|spline}\n"
-"                          Select interpolation type (default linear)\n"
+"                          Select interpolation type (default spline)\n"
 "   -m --mono              Mono output\n"
-"   -N --null              Use null output driver (same as --driver=null)\n"
-"   -n --nearest           Use nearest neighbor interpolation (no filter)\n"
+"   -n --null              Use null output driver (same as --driver=null)\n"
 "   -F --nofilter          Disable IT lowpass filters\n"
 "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
 "   -P --pan pan           Percentual pan separation\n"
@@ -110,7 +109,6 @@ static struct option lopt[] = {
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
 	{ "null",		0, 0, 'N' },
-	{ "nearest",		0, 0, 'n' },
 	{ "nocmd",		0, 0, OPT_NOCMD },
 	{ "nofilter",		0, 0, 'F' },
 	{ "output-file",	1, 0, 'o' },
@@ -136,7 +134,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int dparm = 0;
 	int o;
 
-#define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNno:P:qRS:s:T:t:uVv"
+#define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNo:P:qRS:s:T:t:uVv"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -198,9 +196,6 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'N':
 			options->silent = 1;
-			break;
-		case 'n':
-			options->interp = XMP_INTERP_NEAREST;
 			break;
 		case OPT_NOCMD:
 			options->nocmd = 1;

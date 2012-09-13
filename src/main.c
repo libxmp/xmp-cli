@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 	options.rate = 44100;
 	options.mix = -1;
 	options.driver_id = NULL;
-	options.interp = XMP_INTERP_LINEAR;
+	options.interp = XMP_INTERP_SPLINE;
 	options.dsp = XMP_DSP_LOWPASS;
 
 	get_options(argc, argv, &options);
