@@ -261,10 +261,6 @@ int main(int argc, char **argv)
 		setenv("XMP_INSTRUMENT_PATH", options.ins_path, 1);
 	}
 
-	if (options.mix >= 0) {
-		xmp_mixer_set(handle, XMP_MIXER_MIX, options.mix);
-	}
-
 	lf_flag = 0;
 	for (first = optind; optind < argc; optind++) {
 		if (options.verbose > 0) {
@@ -314,6 +310,15 @@ int main(int argc, char **argv)
 		if (xmp_player_start(handle, options.rate, options.format) == 0) {
 			xmp_mixer_set(handle, XMP_MIXER_INTERP, options.interp);
 			xmp_mixer_set(handle, XMP_MIXER_DSP, options.dsp);
+
+			if (options.mix >= 0) {
+				xmp_mixer_set(handle, XMP_MIXER_MIX, options.mix);
+			}
+
+			if (options.reverse) {
+				int mix = xmp_mixer_get(handle, XMP_MIXER_MIX);
+				xmp_mixer_set(handle, XMP_MIXER_MIX, -mix);
+			}
 
 			xmp_set_position(handle, options.start);
 

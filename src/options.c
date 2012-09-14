@@ -83,6 +83,7 @@ static void usage(char *s)
 "   -F --nofilter          Disable IT lowpass filters\n"
 "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
 "   -P --pan pan           Percentual pan separation\n"
+"   -r --reverse           Reverse left/right stereo channels\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
 "\nEnvironment options:\n"
 "   -I --instrument-path   Set pathname to external samples\n"
@@ -117,6 +118,7 @@ static struct option lopt[] = {
 	{ "load-only",		0, 0, OPT_LOADONLY },
 	{ "quiet",		0, 0, 'q' },
 	{ "random",		0, 0, 'R' },
+	{ "reverse",		0, 0, 'r' },
 	{ "solo",		1, 0, 'S' },
 	{ "start",		1, 0, 's' },
 	{ "stdout",		0, 0, 'c' },
@@ -133,7 +135,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int optidx = 0;
 	int o;
 
-#define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNo:P:qRS:s:T:t:uVv"
+#define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNo:P:qRrS:s:T:t:uVv"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -224,6 +226,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'R':
 			options->random = 1;
+			break;
+		case 'r':
+			options->reverse = 1;
 			break;
 		case 'M':
 		case 'S':

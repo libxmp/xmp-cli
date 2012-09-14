@@ -14,6 +14,7 @@ struct options {
 	int dsp;		/* dsp effects */
 	int loop;		/* loop module */
 	int random;		/* play in random order */
+	int reverse;		/* reverse stereo channels */
 	int verbose;
 	int silent;		/* silent output */
 	int info;		/* display information and exit */
