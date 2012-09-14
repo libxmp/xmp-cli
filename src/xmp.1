@@ -1,4 +1,4 @@
-.TH "XMP" "1" "Version 3\&.9\&.1" "Ago 2012" "Extended Module Player" 
+.TH "XMP" "1" "Version 4\&.0\&.0" "Sep 2012" "Extended Module Player" 
 .PP 
 .SH "NAME" 
 xmp - Extended Module Player
@@ -10,16 +10,17 @@ xmp - Extended Module Player
 [\fB-c, --stdout\fP]
 [\fB-D\fP \fIdevice-specific parameters\fP]
 [\fB-d, --driver\fP \fIdriver\fP]
+[\fB-F, --nofilter\fP]
 [\fB-f, --frequency\fP \fIrate\fP]
 [\fB-h, --help\fP]
 [\fB-I, --instrument-path\fP]
+[\fB-i, --interpolation \fItype\fP]
 [\fB--load-only\fP]
 [\fB-L, --list-formats\fP]
 [\fB-l, --loop\fP]
 [\fB-M, --mute\fP \fIchannel-list\fP]
 [\fB-m, --mono\fP]
 [\fB-N, --null\fP]
-[\fB-n, --nearest\fP]
 [\fB--nocmd\fP]
 [\fB-o, --output-file\fP \fIfilename\fP]
 [\fB-P, --pan\fP \fIpan\fP]
@@ -57,14 +58,22 @@ list of known parameters\&.
 .IP "\fB-d, --driver\fP \fIdriver\fP" 
 Select the output driver\&. If not specified, \fBxmp\fP will try to
 probe each available driver\&.
+.IP "\fB-F, --nofilter\fP" 
+Disable IT lowpass filter effect and envelopes.
 .IP "\fB-f, --frequency\fP \fIrate\fP" 
 Set the software mixer sampling rate in hertz\&.
 .IP "\fB-h, --help\fP" 
 Show a short summary of command-line options\&.
 .IP "\fB-I, --instrument-path\fP \fIpath\fP" 
 Set the pathname to the directory containing external samples\&.
+.IP "\fB-i, --interpolation\fP \fItype\fP" 
+Select interpolation type. Available types are \fInearest\fP for
+nearest-neighbor interpolation\&, \fIlinear\fI for linear interpolation\&, and
+\fIspline\fI for cubic spline interpolation\&. Default is cubic spline\&.
 .IP "\fB--load-only\fP" 
 Load module and exit\&.
+.IP "\fB-L, --list-formats\fP" 
+List supported module formats\&.
 .IP "\fB-l, --loop\fP" 
 Enable module looping\&.
 .IP "\fB-M, --mute\fP \fIchannel-list\fP" 
@@ -74,9 +83,6 @@ list of decimal channel ranges\&. Example: 0,2-4,8-16\&.
 Force mono output (default is stereo in stereo-capable devices)\&.
 .IP "\fB-N, --null\fP" 
 Load and mix module, but discard output data (same as --device=null)\&.
-.IP "\fB-n, --nearest\fP" 
-Use nearest-neighbor interpolation\&. This option also disables lowpass
-filtering\&.
 .IP "\fB--nocmd\fP" 
 Disable interactive commands\&.
 .IP "\fB-o, --output-file\fP \fIfilename\fP" 
