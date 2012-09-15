@@ -176,7 +176,7 @@ void info_instruments(struct xmp_module_info *mi)
 	struct xmp_module *mod = mi->mod;
 
 	report("Instruments:\n");
-	report("   Instrument name                  Vl Rls  Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
+	report("   Instrument name                  Vl Fade Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
 	for (i = 0; i < mod->ins; i++) {
 		struct xmp_instrument *ins = &mod->xxi[i];
 
