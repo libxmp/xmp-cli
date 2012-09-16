@@ -25,42 +25,45 @@ void info_help(void)
 );
 }
 
-void info_mod(struct xmp_frame_info *fi)
+void info_mod(struct xmp_module_info *mi)
 {
 	int i;
 	int num_seq;
+	int total_time;
 
-	report("Module name  : %s\n", fi->mod->name);
-	report("Module type  : %s\n", fi->mod->type);
-	report("Module length: %d patterns\n", fi->mod->len);
-	report("Patterns     : %d\n", fi->mod->pat);
-	report("Instruments  : %d\n", fi->mod->ins);
-	report("Samples      : %d\n", fi->mod->smp);
-	report("Channels     : %d [ ", fi->mod->chn);
+	report("Module name  : %s\n", mi->mod->name);
+	report("Module type  : %s\n", mi->mod->type);
+	report("Module length: %d patterns\n", mi->mod->len);
+	report("Patterns     : %d\n", mi->mod->pat);
+	report("Instruments  : %d\n", mi->mod->ins);
+	report("Samples      : %d\n", mi->mod->smp);
+	report("Channels     : %d [ ", mi->mod->chn);
 
-	for (i = 0; i < fi->mod->chn; i++) {
-		if (fi->mod->xxc[i].flg & XMP_CHANNEL_SYNTH) {
+	for (i = 0; i < mi->mod->chn; i++) {
+		if (mi->mod->xxc[i].flg & XMP_CHANNEL_SYNTH) {
 			report("S ");
 		} else {
-			report("%x ", fi->mod->xxc[i].pan >> 4);
+			report("%x ", mi->mod->xxc[i].pan >> 4);
 		}
 	}
 	report("]\n");
 
-	report("Duration     : %dmin%02ds", (fi->total_time + 500) / 60000,
-					((fi->total_time + 500) / 1000) % 60);
+	total_time = mi->seq_data[0].duration;
+
+	report("Duration     : %dmin%02ds", (total_time + 500) / 60000,
+					((total_time + 500) / 1000) % 60);
 
 	/* Check non-zero-length sequences */
 	num_seq = 0;
-	for (i = 0; i <  fi->num_sequences; i++) {
-		if (fi->seq_data[i].duration > 0)
+	for (i = 0; i <  mi->num_sequences; i++) {
+		if (mi->seq_data[i].duration > 0)
 			num_seq++;
 	}
 
 	if (num_seq > 1) {
 		report(" (main sequence)\n");
-		for (i = 1; i < fi->num_sequences; i++) {
-			int dur = fi->seq_data[i].duration;
+		for (i = 1; i < mi->num_sequences; i++) {
+			int dur = mi->seq_data[i].duration;
 
 			if (dur == 0) {
 				continue;
@@ -69,19 +72,19 @@ void info_mod(struct xmp_frame_info *fi)
 			report("               %dmin%02ds "
 				"(sequence at position %d)\n",
 				(dur + 500) / 60000, ((dur + 500) / 1000) % 60,
-				fi->seq_data[i].entry_point);
+				mi->seq_data[i].entry_point);
 		}
 	} else {
 		report("\n");
 	}
 }
 
-void info_frame_init(struct xmp_frame_info *fi)
+void info_frame_init()
 {
 	max_channels = 0;
 }
 
-void info_frame(struct xmp_frame_info *fi, struct control *ctl, int reprint)
+void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct control *ctl, int reprint)
 {
 	static int ord = -1, spd = -1, bpm = -1;
 	int time;
@@ -98,8 +101,8 @@ void info_frame(struct xmp_frame_info *fi, struct control *ctl, int reprint)
 	        report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
 			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
 					fi->speed, fi->bpm,
-					fi->pos, fi->mod->len - 1,
-					fi->pattern, fi->mod->pat - 1);
+					fi->pos, mi->mod->len - 1,
+					fi->pattern, mi->mod->pat - 1);
 		ord = fi->pos;
 		bpm = fi->bpm;
 		spd = fi->speed;
@@ -121,10 +124,10 @@ void info_frame(struct xmp_frame_info *fi, struct control *ctl, int reprint)
 	fflush(stdout);
 }
 
-void info_ins_smp(struct xmp_frame_info *fi)
+void info_ins_smp(struct xmp_module_info *mi)
 {
 	int i, j;
-	struct xmp_module *mod = fi->mod;
+	struct xmp_module *mod = mi->mod;
 
 	report("Instruments and samples:\n");
 	report("   Instrument name                  Smp  Size  Loop  End    Vol Fine Xpo Pan\n");
@@ -170,10 +173,10 @@ void info_ins_smp(struct xmp_frame_info *fi)
 	}
 }
 
-void info_instruments(struct xmp_frame_info *fi)
+void info_instruments(struct xmp_module_info *mi)
 {
 	int i, j;
-	struct xmp_module *mod = fi->mod;
+	struct xmp_module *mod = mi->mod;
 
 	report("Instruments:\n");
 	report("   Instrument name                  Vl Fade Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
@@ -220,10 +223,10 @@ void info_instruments(struct xmp_frame_info *fi)
 	}
 }
 
-void info_samples(struct xmp_frame_info *fi)
+void info_samples(struct xmp_module_info *mi)
 {
 	int i;
-	struct xmp_module *mod = fi->mod;
+	struct xmp_module *mod = mi->mod;
 
 	report("Samples:\n");
 	report("   Sample name                      Length Start  End    Flags\n");

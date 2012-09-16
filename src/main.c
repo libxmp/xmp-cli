@@ -84,7 +84,7 @@ static void sigcont_handler(int sig)
 }
 #endif
 
-static void show_info(int what, struct xmp_frame_info *fi)
+static void show_info(int what, struct xmp_module_info *mi)
 {
 	report("\r%78.78s\n", " ");
 	switch (what) {
@@ -92,16 +92,16 @@ static void show_info(int what, struct xmp_frame_info *fi)
 		info_help();
 		break;
 	case 'i':
-		info_ins_smp(fi);
+		info_ins_smp(mi);
 		break;
 	case 'I':
-		info_instruments(fi);
+		info_instruments(mi);
 		break;
 	case 'S':
-		info_samples(fi);
+		info_samples(mi);
 		break;
 	case 'm':
-		info_mod(fi);
+		info_mod(mi);
 		break;
 	}
 }
@@ -120,20 +120,20 @@ static void shuffle(int argc, char **argv)
 }
 
 static void check_pause(xmp_context handle, struct control *ctl,
-                        struct xmp_frame_info *fi, int verbose)
+	struct xmp_module_info *mi, struct xmp_frame_info *fi, int verbose)
 {
 	if (ctl->pause) {
 		sound->pause();
 		if (verbose) {
-			info_frame(fi, ctl, 1);
+			info_frame(mi, fi, ctl, 1);
 		}
 		while (ctl->pause) {
 			usleep(100000);
 			read_command(handle, ctl);
 			if (ctl->display) {
-				show_info(ctl->display, fi);
+				show_info(ctl->display, mi);
 				if (verbose) {
-					info_frame(fi, ctl, 1);
+					info_frame(mi, fi, ctl, 1);
 				}
 				ctl->display = 0;
 			}
@@ -145,6 +145,7 @@ static void check_pause(xmp_context handle, struct control *ctl,
 int main(int argc, char **argv)
 {
 	xmp_context handle;
+	struct xmp_module_info mi;
 	struct xmp_frame_info fi;
 	struct options options;
 	struct control control;
@@ -330,20 +331,21 @@ int main(int argc, char **argv)
 
 			/* Show module data */
 
-			xmp_get_frame_info(handle, &fi);
+			xmp_get_module_info(handle, &mi);
 
 			if (options.verbose > 0) {
-				info_mod(&fi);
+				info_mod(&mi);
 			}
 			if (options.verbose > 1) {
-				info_instruments(&fi);
+				info_instruments(&mi);
 			}
 	
 			/* Play module */
 
 			refresh_status = 1;
-			info_frame_init(&fi);
+			info_frame_init();
 
+			fi.loop_count = 0;
 			while (!options.info && xmp_play_frame(handle) == 0) {
 				int old_loop = fi.loop_count;
 				
@@ -352,7 +354,7 @@ int main(int argc, char **argv)
 					break;
 
 				if (!background && options.verbose > 0) {
-					info_frame(&fi, &control, refresh_status);
+					info_frame(&mi, &fi, &control, refresh_status);
 					refresh_status = 0;
 				}
 
@@ -364,7 +366,7 @@ int main(int argc, char **argv)
 					read_command(handle, &control);
 
 					if (control.display) {
-						show_info(control.display, &fi);
+						show_info(control.display, &mi);
 						control.display = 0;
 						refresh_status = 1;
 					}
@@ -375,7 +377,7 @@ int main(int argc, char **argv)
 					break;
 				}
 
-				check_pause(handle, &control, &fi,
+				check_pause(handle, &control, &mi, &fi,
 							options.verbose);
 
 				options.start = 0;
