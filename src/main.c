@@ -84,7 +84,7 @@ static void sigcont_handler(int sig)
 }
 #endif
 
-static void show_info(int what, struct xmp_module_info *mi)
+static void show_info(int what, struct xmp_frame_info *fi)
 {
 	report("\r%78.78s\n", " ");
 	switch (what) {
@@ -92,16 +92,16 @@ static void show_info(int what, struct xmp_module_info *mi)
 		info_help();
 		break;
 	case 'i':
-		info_ins_smp(mi);
+		info_ins_smp(fi);
 		break;
 	case 'I':
-		info_instruments(mi);
+		info_instruments(fi);
 		break;
 	case 'S':
-		info_samples(mi);
+		info_samples(fi);
 		break;
 	case 'm':
-		info_mod(mi);
+		info_mod(fi);
 		break;
 	}
 }
@@ -120,20 +120,20 @@ static void shuffle(int argc, char **argv)
 }
 
 static void check_pause(xmp_context handle, struct control *ctl,
-                        struct xmp_module_info *mi, int verbose)
+                        struct xmp_frame_info *fi, int verbose)
 {
 	if (ctl->pause) {
 		sound->pause();
 		if (verbose) {
-			info_frame(mi, ctl, 1);
+			info_frame(fi, ctl, 1);
 		}
 		while (ctl->pause) {
 			usleep(100000);
 			read_command(handle, ctl);
 			if (ctl->display) {
-				show_info(ctl->display, mi);
+				show_info(ctl->display, fi);
 				if (verbose) {
-					info_frame(mi, ctl, 1);
+					info_frame(fi, ctl, 1);
 				}
 				ctl->display = 0;
 			}
@@ -145,7 +145,7 @@ static void check_pause(xmp_context handle, struct control *ctl,
 int main(int argc, char **argv)
 {
 	xmp_context handle;
-	struct xmp_module_info mi;
+	struct xmp_frame_info fi;
 	struct options options;
 	struct control control;
 	int i;
@@ -307,17 +307,17 @@ int main(int argc, char **argv)
 		control.time = 0.0;
 		control.loop = options.loop;
 		
-		if (xmp_player_start(handle, options.rate, options.format) == 0) {
-			xmp_mixer_set(handle, XMP_MIXER_INTERP, options.interp);
-			xmp_mixer_set(handle, XMP_MIXER_DSP, options.dsp);
+		if (xmp_start_player(handle, options.rate, options.format) == 0) {
+			xmp_set_mixer(handle, XMP_MIXER_INTERP, options.interp);
+			xmp_set_mixer(handle, XMP_MIXER_DSP, options.dsp);
 
 			if (options.mix >= 0) {
-				xmp_mixer_set(handle, XMP_MIXER_MIX, options.mix);
+				xmp_set_mixer(handle, XMP_MIXER_MIX, options.mix);
 			}
 
 			if (options.reverse) {
-				int mix = xmp_mixer_get(handle, XMP_MIXER_MIX);
-				xmp_mixer_set(handle, XMP_MIXER_MIX, -mix);
+				int mix = xmp_get_mixer(handle, XMP_MIXER_MIX);
+				xmp_set_mixer(handle, XMP_MIXER_MIX, -mix);
 			}
 
 			xmp_set_position(handle, options.start);
@@ -330,41 +330,41 @@ int main(int argc, char **argv)
 
 			/* Show module data */
 
-			xmp_player_get_info(handle, &mi);
+			xmp_get_frame_info(handle, &fi);
 
 			if (options.verbose > 0) {
-				info_mod(&mi);
+				info_mod(&fi);
 			}
 			if (options.verbose > 1) {
-				info_instruments(&mi);
+				info_instruments(&fi);
 			}
 	
 			/* Play module */
 
 			refresh_status = 1;
-			info_frame_init(&mi);
+			info_frame_init(&fi);
 
-			while (!options.info && xmp_player_frame(handle) == 0) {
-				int old_loop = mi.loop_count;
+			while (!options.info && xmp_play_frame(handle) == 0) {
+				int old_loop = fi.loop_count;
 				
-				xmp_player_get_info(handle, &mi);
-				if (!control.loop && old_loop != mi.loop_count)
+				xmp_get_frame_info(handle, &fi);
+				if (!control.loop && old_loop != fi.loop_count)
 					break;
 
 				if (!background && options.verbose > 0) {
-					info_frame(&mi, &control, refresh_status);
+					info_frame(&fi, &control, refresh_status);
 					refresh_status = 0;
 				}
 
-				control.time += 1.0 * mi.frame_time / 1000;
+				control.time += 1.0 * fi.frame_time / 1000;
 
-				sound->play(mi.buffer, mi.buffer_size);
+				sound->play(fi.buffer, fi.buffer_size);
 
 				if (!background && !options.nocmd) {
 					read_command(handle, &control);
 
 					if (control.display) {
-						show_info(control.display, &mi);
+						show_info(control.display, &fi);
 						control.display = 0;
 						refresh_status = 1;
 					}
@@ -375,13 +375,13 @@ int main(int argc, char **argv)
 					break;
 				}
 
-				check_pause(handle, &control, &mi,
+				check_pause(handle, &control, &fi,
 							options.verbose);
 
 				options.start = 0;
 			}
 
-			xmp_player_end(handle);
+			xmp_end_player(handle);
 		}
 
 		xmp_release_module(handle);

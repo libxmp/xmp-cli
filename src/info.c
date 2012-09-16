@@ -25,42 +25,42 @@ void info_help(void)
 );
 }
 
-void info_mod(struct xmp_module_info *mi)
+void info_mod(struct xmp_frame_info *fi)
 {
 	int i;
 	int num_seq;
 
-	report("Module name  : %s\n", mi->mod->name);
-	report("Module type  : %s\n", mi->mod->type);
-	report("Module length: %d patterns\n", mi->mod->len);
-	report("Patterns     : %d\n", mi->mod->pat);
-	report("Instruments  : %d\n", mi->mod->ins);
-	report("Samples      : %d\n", mi->mod->smp);
-	report("Channels     : %d [ ", mi->mod->chn);
+	report("Module name  : %s\n", fi->mod->name);
+	report("Module type  : %s\n", fi->mod->type);
+	report("Module length: %d patterns\n", fi->mod->len);
+	report("Patterns     : %d\n", fi->mod->pat);
+	report("Instruments  : %d\n", fi->mod->ins);
+	report("Samples      : %d\n", fi->mod->smp);
+	report("Channels     : %d [ ", fi->mod->chn);
 
-	for (i = 0; i < mi->mod->chn; i++) {
-		if (mi->mod->xxc[i].flg & XMP_CHANNEL_SYNTH) {
+	for (i = 0; i < fi->mod->chn; i++) {
+		if (fi->mod->xxc[i].flg & XMP_CHANNEL_SYNTH) {
 			report("S ");
 		} else {
-			report("%x ", mi->mod->xxc[i].pan >> 4);
+			report("%x ", fi->mod->xxc[i].pan >> 4);
 		}
 	}
 	report("]\n");
 
-	report("Duration     : %dmin%02ds", (mi->total_time + 500) / 60000,
-					((mi->total_time + 500) / 1000) % 60);
+	report("Duration     : %dmin%02ds", (fi->total_time + 500) / 60000,
+					((fi->total_time + 500) / 1000) % 60);
 
 	/* Check non-zero-length sequences */
 	num_seq = 0;
-	for (i = 0; i <  mi->num_sequences; i++) {
-		if (mi->seq_data[i].duration > 0)
+	for (i = 0; i <  fi->num_sequences; i++) {
+		if (fi->seq_data[i].duration > 0)
 			num_seq++;
 	}
 
 	if (num_seq > 1) {
 		report(" (main sequence)\n");
-		for (i = 1; i < mi->num_sequences; i++) {
-			int dur = mi->seq_data[i].duration;
+		for (i = 1; i < fi->num_sequences; i++) {
+			int dur = fi->seq_data[i].duration;
 
 			if (dur == 0) {
 				continue;
@@ -69,45 +69,45 @@ void info_mod(struct xmp_module_info *mi)
 			report("               %dmin%02ds "
 				"(sequence at position %d)\n",
 				(dur + 500) / 60000, ((dur + 500) / 1000) % 60,
-				mi->seq_data[i].entry_point);
+				fi->seq_data[i].entry_point);
 		}
 	} else {
 		report("\n");
 	}
 }
 
-void info_frame_init(struct xmp_module_info *mi)
+void info_frame_init(struct xmp_frame_info *fi)
 {
 	max_channels = 0;
 }
 
-void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
+void info_frame(struct xmp_frame_info *fi, struct control *ctl, int reprint)
 {
 	static int ord = -1, spd = -1, bpm = -1;
 	int time;
 
-	if (mi->virt_used > max_channels)
-		max_channels = mi->virt_used;
+	if (fi->virt_used > max_channels)
+		max_channels = fi->virt_used;
 
-	if (!reprint && mi->frame != 0)
+	if (!reprint && fi->frame != 0)
 		return;
 
 	time = ctl->time / 100;
 
-	if (reprint || mi->pos != ord || mi->bpm != bpm || mi->speed != spd) {
+	if (reprint || fi->pos != ord || fi->bpm != bpm || fi->speed != spd) {
 	        report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
 			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
-					mi->speed, mi->bpm,
-					mi->pos, mi->mod->len - 1,
-					mi->pattern, mi->mod->pat - 1);
-		ord = mi->pos;
-		bpm = mi->bpm;
-		spd = mi->speed;
+					fi->speed, fi->bpm,
+					fi->pos, fi->mod->len - 1,
+					fi->pattern, fi->mod->pat - 1);
+		ord = fi->pos;
+		bpm = fi->bpm;
+		spd = fi->speed;
 	}
 
 	report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
 	       "%02X/%02X] Chn[%02X/%02X] %c  ",
-		mi->row, mi->num_rows - 1, mi->virt_used, max_channels,
+		fi->row, fi->num_rows - 1, fi->virt_used, max_channels,
 		ctl->loop ? 'L' : ' ');
 
 	if (ctl->pause) {
@@ -121,10 +121,10 @@ void info_frame(struct xmp_module_info *mi, struct control *ctl, int reprint)
 	fflush(stdout);
 }
 
-void info_ins_smp(struct xmp_module_info *mi)
+void info_ins_smp(struct xmp_frame_info *fi)
 {
 	int i, j;
-	struct xmp_module *mod = mi->mod;
+	struct xmp_module *mod = fi->mod;
 
 	report("Instruments and samples:\n");
 	report("   Instrument name                  Smp  Size  Loop  End    Vol Fine Xpo Pan\n");
@@ -170,10 +170,10 @@ void info_ins_smp(struct xmp_module_info *mi)
 	}
 }
 
-void info_instruments(struct xmp_module_info *mi)
+void info_instruments(struct xmp_frame_info *fi)
 {
 	int i, j;
-	struct xmp_module *mod = mi->mod;
+	struct xmp_module *mod = fi->mod;
 
 	report("Instruments:\n");
 	report("   Instrument name                  Vl Fade Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
@@ -220,10 +220,10 @@ void info_instruments(struct xmp_module_info *mi)
 	}
 }
 
-void info_samples(struct xmp_module_info *mi)
+void info_samples(struct xmp_frame_info *fi)
 {
 	int i;
-	struct xmp_module *mod = mi->mod;
+	struct xmp_module *mod = fi->mod;
 
 	report("Samples:\n");
 	report("   Sample name                      Length Start  End    Flags\n");

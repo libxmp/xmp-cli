@@ -228,7 +228,7 @@ static void parse_modconf(xmp_context opaque, char *confname, char *md5)
 			}
 
 			if (interp >= 0) {
-				xmp_mixer_set(opaque, XMP_MIXER_INTERP, interp);
+				xmp_set_mixer(opaque, XMP_MIXER_INTERP, interp);
 			}
 		}
 	}
