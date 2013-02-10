@@ -15,7 +15,8 @@ struct options {
 	int loop;		/* loop module */
 	int random;		/* play in random order */
 	int reverse;		/* reverse stereo channels */
-	int verbose;
+	int vblank;		/* use vblank timing */
+	int verbose;		/* verbosity level */
 	int silent;		/* silent output */
 	int info;		/* display information and exit */
 	int probeonly;		/* probe sound driver and exit */

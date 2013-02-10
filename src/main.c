@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 	xmp_context handle;
 	struct xmp_module_info mi;
 	struct xmp_frame_info fi;
-	struct options options;
+	struct options opt;
 	struct control control;
 	int i;
 	int first;
@@ -166,46 +166,46 @@ int main(int argc, char **argv)
 
 	init_sound_drivers();
 
-	memset(&options, 0, sizeof (struct options));
+	memset(&opt, 0, sizeof (struct options));
 	memset(&control, 0, sizeof (struct control));
 
 	/* set defaults */
-	options.verbose = 1;
-	options.rate = 44100;
-	options.mix = -1;
-	options.driver_id = NULL;
-	options.interp = XMP_INTERP_SPLINE;
-	options.dsp = XMP_DSP_LOWPASS;
+	opt.verbose = 1;
+	opt.rate = 44100;
+	opt.mix = -1;
+	opt.driver_id = NULL;
+	opt.interp = XMP_INTERP_SPLINE;
+	opt.dsp = XMP_DSP_LOWPASS;
 
 	/* read configuration file */
-	read_config(&options);
+	read_config(&opt);
 
-	get_options(argc, argv, &options);
+	get_options(argc, argv, &opt);
 
-	if (!options.probeonly && optind >= argc) {
+	if (!opt.probeonly && optind >= argc) {
 		fprintf(stderr, "%s: no modules to play\n"
 			"Use `%s --help' for more information.\n",
 			argv[0], argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	if (options.interp < 0) {
+	if (opt.interp < 0) {
 		fprintf(stderr, "%s: unknown interpolation type\n"
 			"Use `%s --help' for more information.\n",
 			argv[0], argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	if (options.silent) {
-		options.driver_id = "null";
+	if (opt.silent) {
+		opt.driver_id = "null";
 	}
 
-	sound = select_sound_driver(&options);
+	sound = select_sound_driver(&opt);
 
 	if (sound == NULL) {
 		fprintf(stderr, "%s: can't initialize sound", argv[0]);
-		if (options.driver_id != NULL) {
-			fprintf(stderr, " (driver = %s)", options.driver_id);
+		if (opt.driver_id != NULL) {
+			fprintf(stderr, " (driver = %s)", opt.driver_id);
 		}
 		fprintf(stderr, "\n");
 
@@ -215,25 +215,25 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	if (options.verbose > 0) {
+	if (opt.verbose > 0) {
 		report("Extended Module Player " VERSION "\n"
 			"Copyright (C) 1996-2012 Claudio Matsuoka and Hipolito Carraro Jr\n");
 
 		report("Using %s\n", sound->description);
 
-		report("Mixer set to %d Hz, %dbit, %s%s%s\n", options.rate,
-		    options.format & XMP_FORMAT_8BIT ? 8 : 16,
-		    options.interp == XMP_INTERP_LINEAR ? "linear interpolated " :
-		    options.interp == XMP_INTERP_SPLINE ? "cubic spline interpolated " : "",
-		    options.format & XMP_FORMAT_MONO ? "mono" : "stereo",
-		    options.dsp & XMP_DSP_LOWPASS ? "" : " (no filter)");
+		report("Mixer set to %d Hz, %dbit, %s%s%s\n", opt.rate,
+		    opt.format & XMP_FORMAT_8BIT ? 8 : 16,
+		    opt.interp == XMP_INTERP_LINEAR ? "linear interpolated " :
+		    opt.interp == XMP_INTERP_SPLINE ? "cubic spline interpolated " : "",
+		    opt.format & XMP_FORMAT_MONO ? "mono" : "stereo",
+		    opt.dsp & XMP_DSP_LOWPASS ? "" : " (no filter)");
 	}
 
-	if (options.probeonly) {
+	if (opt.probeonly) {
 		exit(EXIT_SUCCESS);
 	}
 
-	if (options.random) {
+	if (opt.random) {
 		shuffle(argc - optind + 1, &argv[optind - 1]);
 	}
 
@@ -263,13 +263,13 @@ int main(int argc, char **argv)
 
 	skipprev = 0;
 
-	if (options.ins_path) {
-		setenv("XMP_INSTRUMENT_PATH", options.ins_path, 1);
+	if (opt.ins_path) {
+		setenv("XMP_INSTRUMENT_PATH", opt.ins_path, 1);
 	}
 
 	lf_flag = 0;
 	for (first = optind; optind < argc; optind++) {
-		if (options.verbose > 0) {
+		if (opt.verbose > 0) {
 			if (lf_flag)
 				report("\n");
 			lf_flag = 1;
@@ -278,6 +278,7 @@ int main(int argc, char **argv)
 		}
 
 		val = xmp_load_module(handle, argv[optind]);
+
 		if (val < 0) {
 			char *msg;
 
@@ -311,37 +312,47 @@ int main(int argc, char **argv)
 		}
 		skipprev = 0;
 		control.time = 0.0;
-		control.loop = options.loop;
+		control.loop = opt.loop;
 		
-		if (xmp_start_player(handle, options.rate, options.format) == 0) {
-			xmp_set_mixer(handle, XMP_MIXER_INTERP, options.interp);
-			xmp_set_mixer(handle, XMP_MIXER_DSP, options.dsp);
+		if (xmp_start_player(handle, opt.rate, opt.format) == 0) {
+			xmp_set_player(handle, XMP_PLAYER_INTERP, opt.interp);
+			xmp_set_player(handle, XMP_PLAYER_DSP, opt.dsp);
 
-			if (options.mix >= 0) {
-				xmp_set_mixer(handle, XMP_MIXER_MIX, options.mix);
+			if (opt.mix >= 0) {
+				xmp_set_player(handle, XMP_PLAYER_MIX, opt.mix);
 			}
 
-			if (options.reverse) {
-				int mix = xmp_get_mixer(handle, XMP_MIXER_MIX);
-				xmp_set_mixer(handle, XMP_MIXER_MIX, -mix);
+			if (opt.reverse) {
+				int mix;
+				mix = xmp_get_player(handle, XMP_PLAYER_MIX);
+				xmp_set_player(handle, XMP_PLAYER_MIX, -mix);
 			}
 
-			xmp_set_position(handle, options.start);
+			xmp_set_position(handle, opt.start);
 
 			/* Mute channels */
 
 			for (i = 0; i < XMP_MAX_CHANNELS; i++) {
-				xmp_channel_mute(handle, i, options.mute[i]);
+				xmp_channel_mute(handle, i, opt.mute[i]);
+			}
+
+			/* Change timing if vblank specified */
+
+			if (opt.vblank) {
+				xmp_set_player(handle, XMP_PLAYER_TIMING,
+							XMP_TIMING_VBLANK); 
+				xmp_scan_module(handle);
 			}
 
 			/* Show module data */
 
 			xmp_get_module_info(handle, &mi);
 
-			if (options.verbose > 0) {
+			if (opt.verbose > 0) {
 				info_mod(&mi);
 			}
-			if (options.verbose > 1) {
+
+			if (opt.verbose > 1) {
 				info_instruments(&mi);
 			}
 	
@@ -351,14 +362,14 @@ int main(int argc, char **argv)
 			info_frame_init();
 
 			fi.loop_count = 0;
-			while (!options.info && xmp_play_frame(handle) == 0) {
+			while (!opt.info && xmp_play_frame(handle) == 0) {
 				int old_loop = fi.loop_count;
 				
 				xmp_get_frame_info(handle, &fi);
 				if (!control.loop && old_loop != fi.loop_count)
 					break;
 
-				if (!background && options.verbose > 0) {
+				if (!background && opt.verbose > 0) {
 					info_frame(&mi, &fi, &control, refresh_status);
 					refresh_status = 0;
 				}
@@ -367,7 +378,7 @@ int main(int argc, char **argv)
 
 				sound->play(fi.buffer, fi.buffer_size);
 
-				if (!background && !options.nocmd) {
+				if (!background && !opt.nocmd) {
 					read_command(handle, &control);
 
 					if (control.display) {
@@ -377,15 +388,15 @@ int main(int argc, char **argv)
 					}
 				}
 
-				if (options.max_time > 0 &&
-				    control.time > options.max_time) {
+				if (opt.max_time > 0 &&
+				    control.time > opt.max_time) {
 					break;
 				}
 
 				check_pause(handle, &control, &mi, &fi,
-							options.verbose);
+								opt.verbose);
 
-				options.start = 0;
+				opt.start = 0;
 			}
 
 			xmp_end_player(handle);
@@ -393,7 +404,7 @@ int main(int argc, char **argv)
 
 		xmp_release_module(handle);
 
-		if (!options.info) {
+		if (!opt.info) {
 			report("\n");
 		}
 

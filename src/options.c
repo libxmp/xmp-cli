@@ -31,11 +31,8 @@ enum {
 	OPT_FX9BUG = 0x105,
 	OPT_PROBEONLY,
 	OPT_LOADONLY,
-	OPT_STDOUT,
-	OPT_STEREO,
 	OPT_NOCMD,
-	OPT_FIXLOOP,
-	OPT_SHOWTIME,
+	OPT_VBLANK
 };
 
 static void usage(char *s)
@@ -71,6 +68,7 @@ static void usage(char *s)
 "   -S --solo ch-list      Set channels to solo mode\n"
 "   -s --start num         Start from the specified order\n"
 "   -t --time num          Maximum playing time in seconds\n"
+"   --vblank               Force vblank timing in Amiga modules\n"
 "\nMixer options:\n"
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
 "   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
@@ -125,6 +123,7 @@ static struct option lopt[] = {
 	{ "tempo",		1, 0, 'T' },
 	{ "time",		1, 0, 't' },
 	{ "unsigned",		0, 0, 'u' },
+	{ "vblank",		0, 0, OPT_VBLANK },
 	{ "version",		0, 0, 'V' },
 	{ "verbose",		0, 0, 'v' },
 	{ NULL,			0, 0, 0   }
@@ -265,6 +264,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'u':
 			options->format |= XMP_FORMAT_UNSIGNED;
+			break;
+		case OPT_VBLANK:
+			options->vblank = 1;
 			break;
 		case 'V':
 			puts("Extended Module Player " VERSION);
