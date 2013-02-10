@@ -7,7 +7,7 @@ SRC_DFILES	= Makefile xmp.1 $(SRC_OBJS:.o=.c) common.h getopt.h list.h \
 		  sound_sndio.c sound_netbsd.c sound_bsd.c sound_solaris.c \
 		  sound_beos.c sound_ahi.c sound_dart.c sound_hpux.c \
 		  sound_aix.c sound_pulseaudio.c sound_qnx.c sound_alsa05.c \
-		  sound_win32.c
+		  sound_win32.c xmp.conf
 SRC_PATH	= src
 
 SRC_OBJS += $(DRIVERS)
@@ -37,3 +37,9 @@ install-docs: $(SRC_PATH)/xmp.1
 	@echo Installing manpage in $(DESTDIR)$(MANDIR)
 	@[ -d $(DESTDIR)$(MANDIR) ] || mkdir -p $(DESTDIR)$(MANDIR)
 	@$(INSTALL) -m644 $+ $(DESTDIR)$(MANDIR)
+
+install-conf: $(SRC_PATH)/xmp.conf
+	@echo Installing configuration file in $(DESTDIR)$(SYSCONFDIR)
+	@[ -d $(DESTDIR)$(SYSCONFDIR) ] || mkdir -p $(DESTDIR)$(SYSCONFDIR)
+	@$(INSTALL) -m644 $+ $(DESTDIR)$(SYSCONFDIR)
+

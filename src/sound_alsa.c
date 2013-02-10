@@ -24,8 +24,8 @@ static int init(struct options *options)
 
 	if ((ret = snd_pcm_open(&pcm_handle, card_name,
 		SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
-		fprintf(stderr, "Unable to initialize ALSA pcm device: %s\n",
-					snd_strerror(ret));
+		fprintf(stderr, "Unable to initialize ALSA pcm device %s: %s\n",
+						card_name, snd_strerror(ret));
 		return -1;
 	}
 

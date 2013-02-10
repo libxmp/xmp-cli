@@ -203,7 +203,12 @@ int main(int argc, char **argv)
 	sound = select_sound_driver(&options);
 
 	if (sound == NULL) {
-		fprintf(stderr, "%s: can't initialize sound\n", argv[0]);
+		fprintf(stderr, "%s: can't initialize sound", argv[0]);
+		if (options.driver_id != NULL) {
+			fprintf(stderr, " (driver = %s)", options.driver_id);
+		}
+		fprintf(stderr, "\n");
+
 		if (f != NULL) {
 			fclose(f);
 		}
