@@ -95,7 +95,7 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	if (!reprint && fi->frame != 0)
 		return;
 
-	time = ctl->time / 100;
+	time = fi->time / 100;
 
 	if (reprint || fi->pos != ord || fi->bpm != bpm || fi->speed != spd) {
 	        report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "

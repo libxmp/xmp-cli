@@ -29,7 +29,7 @@ struct options {
 };
 
 struct control {
-	double time;		/* Replay time in ms */
+	long time;		/* Replay time in ms */
 	int skip;		/* Skip to next module */
 	int loop;		/* Module is looped */
 	int pause;		/* Replay paused */
