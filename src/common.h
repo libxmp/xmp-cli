@@ -21,6 +21,7 @@ struct options {
 	int info;		/* display information and exit */
 	int probeonly;		/* probe sound driver and exit */
 	int nocmd;		/* disable interactive commands */
+	int norc;		/* don't read the configuration files */
 	int dparm;		/* driver parameter index */
 	char *driver_id;	/* sound driver ID */
 	char *out_file;		/* output file name */

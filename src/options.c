@@ -34,6 +34,7 @@ enum {
 	OPT_NOCMD,
 	OPT_VBLANK,
 	OPT_FIXLOOP,
+	OPT_NORC,
 };
 
 static void usage(char *s)
@@ -66,6 +67,7 @@ static void usage(char *s)
 "   -l --loop              Enable module looping\n"
 "   -M --mute ch-list      Mute the specified channels\n"
 "   --nocmd                Disable interactive commands\n"
+"   --norc                 Don't read configuration files\n"
 "   --offset-bug-emulation Emulate Protracker 2.x bug in effect 9\n"
 "   -R --random            Random order playing\n"
 "   -S --solo ch-list      Set channels to solo mode\n"
@@ -113,6 +115,7 @@ static struct option lopt[] = {
 	{ "mute",		1, 0, 'M' },
 	{ "null",		0, 0, 'N' },
 	{ "nocmd",		0, 0, OPT_NOCMD },
+	{ "norc",		0, 0, OPT_NORC },
 	{ "nofilter",		0, 0, 'F' },
 	{ "offset-bug-emulation",0, 0, OPT_FX9BUG },
 	{ "output-file",	1, 0, 'o' },
@@ -208,6 +211,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case OPT_NOCMD:
 			options->nocmd = 1;
+			break;
+		case OPT_NORC:
+			options->norc = 1;
 			break;
 		case 'o':
 			options->out_file = optarg;

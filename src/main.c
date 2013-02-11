@@ -178,7 +178,9 @@ int main(int argc, char **argv)
 	opt.dsp = XMP_DSP_LOWPASS;
 
 	/* read configuration file */
-	read_config(&opt);
+	if (!opt.norc) {
+		read_config(&opt);
+	}
 
 	get_options(argc, argv, &opt);
 
@@ -316,7 +318,9 @@ int main(int argc, char **argv)
 		}
 
 		xmp_get_module_info(handle, &mi);
-		read_modconf(&opt, mi.md5);
+		if (!opt.norc) {
+			read_modconf(&opt, mi.md5);
+		}
 
 		skipprev = 0;
 		control.time = 0.0;

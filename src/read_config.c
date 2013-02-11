@@ -198,6 +198,8 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 		if (line[0] == '[') {
 			if (compare_md5(md5, line + 1) == 0) {
 				active = 1;
+			} else {
+				active = 0;
 			}
 			continue;
 		}
