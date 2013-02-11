@@ -24,6 +24,7 @@ xmp - Extended Module Player
 [\fB-N, --null\fP]
 [\fB--nocmd\fP]
 [\fB-o, --output-file\fP \fIfilename\fP]
+[\fB--offset-bug-emulation\fP]
 [\fB-P, --pan\fP \fIpan\fP]
 [\fB--probe-only\fP]
 [\fB-q, --quiet\fP]
@@ -94,6 +95,8 @@ Disable interactive commands\&.
 .IP "\fB-o, --output-file\fP \fIfilename\fP" 
 Set the output file name when mixing to raw or WAV files\&. If \'-\' is
 given as the file name, the output will be sent to stdout\&.
+.IP "\fB--offset-bug-emulation\fP"
+Emulate Protracker 2.x handling of effect 0x09 (set sample offset)\&.
 .IP "\fB-P, --pan\fP \fInum\fP" 
 Set the percentual panning amplitude\&.
 .IP "\fB--probe-only\fP" 

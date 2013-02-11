@@ -66,6 +66,7 @@ static void usage(char *s)
 "   -l --loop              Enable module looping\n"
 "   -M --mute ch-list      Mute the specified channels\n"
 "   --nocmd                Disable interactive commands\n"
+"   --offset-bug-emulation Emulate Protracker 2.x bug in effect 9\n"
 "   -R --random            Random order playing\n"
 "   -S --solo ch-list      Set channels to solo mode\n"
 "   -s --start num         Start from the specified order\n"
@@ -113,6 +114,7 @@ static struct option lopt[] = {
 	{ "null",		0, 0, 'N' },
 	{ "nocmd",		0, 0, OPT_NOCMD },
 	{ "nofilter",		0, 0, 'F' },
+	{ "offset-bug-emulation",0, 0, OPT_FX9BUG },
 	{ "output-file",	1, 0, 'o' },
 	{ "pan",		1, 0, 'P' },
 	{ "probe-only",		0, 0, OPT_PROBEONLY },
@@ -215,6 +217,9 @@ void get_options(int argc, char **argv, struct options *options)
 			} else {
 				options->driver_id = "file";
 			}
+			break;
+		case OPT_FX9BUG:
+			options->flags |= XMP_FLAGS_FX9BUG;
 			break;
 		case 'P':
 			options->mix = strtoul(optarg, NULL, 0);
