@@ -32,7 +32,8 @@ enum {
 	OPT_PROBEONLY,
 	OPT_LOADONLY,
 	OPT_NOCMD,
-	OPT_VBLANK
+	OPT_VBLANK,
+	OPT_FIXLOOP,
 };
 
 static void usage(char *s)
@@ -61,6 +62,7 @@ static void usage(char *s)
 	printf("\nPlayer control options:\n"
 "   -D parameter[=val]     Pass configuration parameter to the output driver\n"
 "   -d --driver name       Force output to the specified device\n"
+"   --fix-sample-loops     Use sample loop start /2 in MOD/UNIC/NP3\n"
 "   -l --loop              Enable module looping\n"
 "   -M --mute ch-list      Mute the specified channels\n"
 "   --nocmd                Disable interactive commands\n"
@@ -99,6 +101,7 @@ static struct option lopt[] = {
 	{ "amplify",		1, 0, 'a' },
 	{ "bits",		1, 0, 'b' },
 	{ "driver",		1, 0, 'd' },
+	{ "fix-sample-loops",	0, 0, OPT_FIXLOOP },
 	{ "frequency",		1, 0, 'f' },
 	{ "help",		0, 0, 'h' },
 	{ "instrument-path",	1, 0, 'I' },
@@ -161,6 +164,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'f':
 			options->rate = strtoul(optarg, NULL, 0);
+			break;
+		case OPT_FIXLOOP:
+			options->flags |= XMP_FLAGS_FIXLOOP;
 			break;
 		case 'I':
 			options->ins_path = optarg;

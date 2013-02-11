@@ -12,6 +12,7 @@ xmp - Extended Module Player
 [\fB-d, --driver\fP \fIdriver\fP]
 [\fB-F, --nofilter\fP]
 [\fB-f, --frequency\fP \fIrate\fP]
+[\fB--fix-sample-loop\fP]
 [\fB-h, --help\fP]
 [\fB-I, --instrument-path\fP]
 [\fB-i, --interpolation \fItype\fP]
@@ -63,6 +64,10 @@ probe each available driver\&.
 Disable IT lowpass filter effect and envelopes.
 .IP "\fB-f, --frequency\fP \fIrate\fP" 
 Set the software mixer sampling rate in hertz\&.
+.IP "\fB--fix-sample-loop\fP"
+Halve sample loop start values\&. Use it to work around bad conversions
+from 15-instrument modules and to correctly play NoisePacker v2 and certain
+UNIC files.
 .IP "\fB-h, --help\fP" 
 Show a short summary of command-line options\&.
 .IP "\fB-I, --instrument-path\fP \fIpath\fP" 
