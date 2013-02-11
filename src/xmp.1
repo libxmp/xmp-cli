@@ -1,4 +1,4 @@
-.TH "XMP" "1" "Version 4\&.0\&.0" "Sep 2012" "Extended Module Player" 
+.TH "XMP" "1" "Version 4\&.0\&.0" "Feb 2013" "Extended Module Player" 
 .PP 
 .SH "NAME" 
 xmp - Extended Module Player
@@ -222,9 +222,12 @@ Play modules in /dev/dsp using the default device settings (unsigned 8bit,
 \f(CWxmp -o/dev/dsp -f8000 -m -b8 -u module\&.lha\fP
 .PP 
 Play all XM modules in the /mod directory and all subdirectories in
-random order\&:
+random order, ignoring any configuration set in the xmp\&.conf file\&:
 .IP "" 
-\f(CWxmp -R `find /mod -name "*\&.xm*" -print`\fP
+\f(CWxmp --norc -R `find /mod -name "*\&.xm" -print`\fP
+.PP 
+.SH "FILES"
+\f(CW/etc/xmp/xmp\&.conf\&, $HOME/\&.xmp/xmp\&.conf\&, /etc/xmp/modules\&.conf\&, $HOME/\&.xmp/modules\&.conf\fP
 .PP 
 .SH "AUTHORS" 
 Claudio Matsuoka and Hipolito Carraro Jr\&.
