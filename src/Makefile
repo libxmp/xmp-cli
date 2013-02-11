@@ -38,8 +38,8 @@ install-docs: $(SRC_PATH)/xmp.1
 	@[ -d $(DESTDIR)$(MANDIR) ] || mkdir -p $(DESTDIR)$(MANDIR)
 	@$(INSTALL) -m644 $+ $(DESTDIR)$(MANDIR)
 
-install-conf: $(SRC_PATH)/xmp.conf
-	@echo Installing configuration file in $(DESTDIR)$(SYSCONFDIR)
+install-conf: $(SRC_PATH)/xmp.conf $(SRC_PATH)/modules.conf
+	@echo Installing configuration files in $(DESTDIR)$(SYSCONFDIR)
 	@[ -d $(DESTDIR)$(SYSCONFDIR) ] || mkdir -p $(DESTDIR)$(SYSCONFDIR)
 	@$(INSTALL) -m644 $+ $(DESTDIR)$(SYSCONFDIR)
 

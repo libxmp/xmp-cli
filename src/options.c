@@ -266,7 +266,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->format |= XMP_FORMAT_UNSIGNED;
 			break;
 		case OPT_VBLANK:
-			options->vblank = 1;
+			options->flags |= XMP_FLAGS_VBLANK;
 			break;
 		case 'V':
 			puts("Extended Module Player " VERSION);

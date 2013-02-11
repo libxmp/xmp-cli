@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 	xmp_context handle;
 	struct xmp_module_info mi;
 	struct xmp_frame_info fi;
-	struct options opt;
+	struct options opt, save_opt;
 	struct control control;
 	int i;
 	int first;
@@ -268,7 +268,11 @@ int main(int argc, char **argv)
 	}
 
 	lf_flag = 0;
+	memcpy(&save_opt, &opt, sizeof (struct options));
+
 	for (first = optind; optind < argc; optind++) {
+		memcpy(&opt, &save_opt, sizeof (struct options));
+
 		if (opt.verbose > 0) {
 			if (lf_flag)
 				report("\n");
@@ -310,6 +314,10 @@ int main(int argc, char **argv)
 			}
 			continue;
 		}
+
+		xmp_get_module_info(handle, &mi);
+		read_modconf(&opt, mi.md5);
+
 		skipprev = 0;
 		control.time = 0.0;
 		control.loop = opt.loop;
@@ -336,17 +344,14 @@ int main(int argc, char **argv)
 				xmp_channel_mute(handle, i, opt.mute[i]);
 			}
 
-			/* Change timing if vblank specified */
+			/* Set player flags */
 
-			if (opt.vblank) {
-				xmp_set_player(handle, XMP_PLAYER_TIMING,
-							XMP_TIMING_VBLANK); 
+			xmp_set_player(handle, XMP_PLAYER_FLAGS, opt.flags);
+			if (opt.flags &	XMP_FLAGS_VBLANK) {
 				xmp_scan_module(handle);
 			}
 
 			/* Show module data */
-
-			xmp_get_module_info(handle, &mi);
 
 			if (opt.verbose > 0) {
 				info_mod(&mi);

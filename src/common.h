@@ -15,7 +15,7 @@ struct options {
 	int loop;		/* loop module */
 	int random;		/* play in random order */
 	int reverse;		/* reverse stereo channels */
-	int vblank;		/* use vblank timing */
+	int flags;		/* player flags */
 	int verbose;		/* verbosity level */
 	int silent;		/* silent output */
 	int info;		/* display information and exit */
@@ -43,6 +43,7 @@ int report(char *, ...);
 /* option */
 void get_options(int, char **, struct options *);
 int read_config(struct options *);
+void read_modconf(struct options *, unsigned char *);
 
 /* terminal */
 int set_tty(void);
