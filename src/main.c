@@ -266,7 +266,7 @@ int main(int argc, char **argv)
 	skipprev = 0;
 
 	if (opt.ins_path) {
-		setenv("XMP_INSTRUMENT_PATH", opt.ins_path, 1);
+		xmp_set_instrument_path(handle, opt.ins_path);
 	}
 
 	lf_flag = 0;
