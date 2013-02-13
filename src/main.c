@@ -119,7 +119,7 @@ static void shuffle(int argc, char **argv)
 	}
 }
 
-static void check_pause(xmp_context handle, struct control *ctl,
+static void check_pause(xmp_context xc, struct control *ctl,
 	struct xmp_module_info *mi, struct xmp_frame_info *fi, int verbose)
 {
 	if (ctl->pause) {
@@ -129,7 +129,7 @@ static void check_pause(xmp_context handle, struct control *ctl,
 		}
 		while (ctl->pause) {
 			usleep(100000);
-			read_command(handle, ctl);
+			read_command(xc, ctl);
 			if (ctl->display) {
 				show_info(ctl->display, mi);
 				if (verbose) {
@@ -144,7 +144,7 @@ static void check_pause(xmp_context handle, struct control *ctl,
 
 int main(int argc, char **argv)
 {
-	xmp_context handle;
+	xmp_context xc;
 	struct xmp_module_info mi;
 	struct xmp_frame_info fi;
 	struct options opt, save_opt;
@@ -261,12 +261,12 @@ int main(int argc, char **argv)
 	}
 #endif
 
-	handle = xmp_create_context();
+	xc = xmp_create_context();
 
 	skipprev = 0;
 
 	if (opt.ins_path) {
-		xmp_set_instrument_path(handle, opt.ins_path);
+		xmp_set_instrument_path(xc, opt.ins_path);
 	}
 
 	lf_flag = 0;
@@ -283,7 +283,7 @@ int main(int argc, char **argv)
 				argv[optind], optind - first + 1, argc - first);
 		}
 
-		val = xmp_load_module(handle, argv[optind]);
+		val = xmp_load_module(xc, argv[optind]);
 
 		if (val < 0) {
 			char *msg;
@@ -317,7 +317,7 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		xmp_get_module_info(handle, &mi);
+		xmp_get_module_info(xc, &mi);
 		if (!opt.norc) {
 			read_modconf(&opt, mi.md5);
 		}
@@ -326,33 +326,33 @@ int main(int argc, char **argv)
 		control.time = 0.0;
 		control.loop = opt.loop;
 		
-		if (xmp_start_player(handle, opt.rate, opt.format) == 0) {
-			xmp_set_player(handle, XMP_PLAYER_INTERP, opt.interp);
-			xmp_set_player(handle, XMP_PLAYER_DSP, opt.dsp);
+		if (xmp_start_player(xc, opt.rate, opt.format) == 0) {
+			xmp_set_player(xc, XMP_PLAYER_INTERP, opt.interp);
+			xmp_set_player(xc, XMP_PLAYER_DSP, opt.dsp);
 
 			if (opt.mix >= 0) {
-				xmp_set_player(handle, XMP_PLAYER_MIX, opt.mix);
+				xmp_set_player(xc, XMP_PLAYER_MIX, opt.mix);
 			}
 
 			if (opt.reverse) {
 				int mix;
-				mix = xmp_get_player(handle, XMP_PLAYER_MIX);
-				xmp_set_player(handle, XMP_PLAYER_MIX, -mix);
+				mix = xmp_get_player(xc, XMP_PLAYER_MIX);
+				xmp_set_player(xc, XMP_PLAYER_MIX, -mix);
 			}
 
-			xmp_set_position(handle, opt.start);
+			xmp_set_position(xc, opt.start);
 
 			/* Mute channels */
 
 			for (i = 0; i < XMP_MAX_CHANNELS; i++) {
-				xmp_channel_mute(handle, i, opt.mute[i]);
+				xmp_channel_mute(xc, i, opt.mute[i]);
 			}
 
 			/* Set player flags */
 
-			xmp_set_player(handle, XMP_PLAYER_FLAGS, opt.flags);
+			xmp_set_player(xc, XMP_PLAYER_FLAGS, opt.flags);
 			if (opt.flags &	XMP_FLAGS_VBLANK) {
-				xmp_scan_module(handle);
+				xmp_scan_module(xc);
 			}
 
 			/* Show module data */
@@ -371,10 +371,10 @@ int main(int argc, char **argv)
 			info_frame_init();
 
 			fi.loop_count = 0;
-			while (!opt.info && xmp_play_frame(handle) == 0) {
+			while (!opt.info && xmp_play_frame(xc) == 0) {
 				int old_loop = fi.loop_count;
 				
-				xmp_get_frame_info(handle, &fi);
+				xmp_get_frame_info(xc, &fi);
 				if (!control.loop && old_loop != fi.loop_count)
 					break;
 
@@ -388,7 +388,7 @@ int main(int argc, char **argv)
 				sound->play(fi.buffer, fi.buffer_size);
 
 				if (!background && !opt.nocmd) {
-					read_command(handle, &control);
+					read_command(xc, &control);
 
 					if (control.display) {
 						show_info(control.display, &mi);
@@ -402,16 +402,16 @@ int main(int argc, char **argv)
 					break;
 				}
 
-				check_pause(handle, &control, &mi, &fi,
-								opt.verbose);
+				check_pause(xc, &control, &mi, &fi,
+							opt.verbose);
 
 				opt.start = 0;
 			}
 
-			xmp_end_player(handle);
+			xmp_end_player(xc);
 		}
 
-		xmp_release_module(handle);
+		xmp_release_module(xc);
 
 		if (!opt.info) {
 			report("\n");
@@ -429,7 +429,7 @@ int main(int argc, char **argv)
 	sound->flush();
 
     end:
-	xmp_free_context(handle);
+	xmp_free_context(xc);
 
 	if (!background) {
 		reset_tty();
