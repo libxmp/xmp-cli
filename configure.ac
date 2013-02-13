@@ -70,7 +70,7 @@ esac
 AC_CHECK_HEADERS(sys/audioio.h)
 
 if test "${enable_oss}" != "no"; then
-  AC_CHECK_HEADER(sys/soundcard.h machine/soundcard.h)
+  AC_CHECK_HEADERS(sys/soundcard.h machine/soundcard.h)
   if test "${ac_cv_header_sys_soundcard_h}" = "yes" -o "${ac_cv_header_machine_soundcard_h}" = "yes"; then
     AC_DEFINE(SOUND_OSS)
     DRIVERS="${DRIVERS} sound_oss.o"
