@@ -44,7 +44,7 @@ binaries: src/xmp
 clean:
 	@rm -f $(OBJS)
 
-install: install-xmp install-docs
+install: install-xmp install-docs install-conf
 
 depend:
 	@echo Building dependencies...
