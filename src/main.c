@@ -219,7 +219,7 @@ int main(int argc, char **argv)
 
 	if (opt.verbose > 0) {
 		report("Extended Module Player " VERSION "\n"
-			"Copyright (C) 1996-2012 Claudio Matsuoka and Hipolito Carraro Jr\n");
+			"Copyright (C) 1996-2013 Claudio Matsuoka and Hipolito Carraro Jr\n");
 
 		report("Using %s\n", sound->description);
 
