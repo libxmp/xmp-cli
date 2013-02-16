@@ -88,7 +88,7 @@ if test "${enable_pulseaudio}" = "yes"; then
   AC_CHECK_HEADER(pulse/simple.h)
   if test "${ac_cv_header_pulse_simple_h}" = "yes"; then
     AC_DEFINE(SOUND_PULSEAUDIO)
-    DRIVERS="${DRIVERS} pulseaudio.o"
+    DRIVERS="${DRIVERS} sound_pulseaudio.o"
     LIBS="${LIBS} -lpulse-simple -lpulse"
   fi
 fi
