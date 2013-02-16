@@ -1,6 +1,15 @@
+/* Extended Module Player
+ * Copyright (C) 1996-2013 Claudio Matsuoka and Hipolito Carraro Jr
+ *
+ * This file is part of the Extended Module Player and is distributed
+ * under the terms of the GNU General Public License. See the COPYING
+ * file for more information.
+ */
+
 /*
  * Based on Bjornar Henden's driver for Mikmod
  */
+
 #include <windows.h>
 #include <stdio.h>
 #include "sound.h"
