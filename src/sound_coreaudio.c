@@ -21,7 +21,7 @@ static AudioUnit au;
  */
 
 static int paused;
-static uint8 *buffer;
+static unsigned char *buffer;
 static int buffer_len;
 static int buf_write_pos;
 static int buf_read_pos;
