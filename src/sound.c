@@ -72,6 +72,9 @@ void init_sound_drivers()
 #ifdef SOUND_WIN32
 	register_sound_driver(&sound_win32);
 #endif
+#ifdef SOUND_PULSEAUDIO
+	register_sound_driver(&sound_pulseaudio);
+#endif
 #ifdef SOUND_ALSA
 	register_sound_driver(&sound_alsa);
 #endif
@@ -83,9 +86,6 @@ void init_sound_drivers()
 #endif
 #ifdef SOUND_QNX
 	register_sound_driver(&sound_qnx);
-#endif
-#ifdef SOUND_PULSEAUDIO
-	register_sound_driver(&sound_pulseaudio);
 #endif
 	register_sound_driver(&sound_wav);
 	register_sound_driver(&sound_file);
