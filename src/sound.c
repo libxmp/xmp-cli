@@ -72,14 +72,14 @@ void init_sound_drivers()
 #ifdef SOUND_WIN32
 	register_sound_driver(&sound_win32);
 #endif
-#ifdef SOUND_OSS
-	register_sound_driver(&sound_oss);
-#endif
 #ifdef SOUND_ALSA
 	register_sound_driver(&sound_alsa);
 #endif
 #ifdef SOUND_ALSA05
 	register_sound_driver(&sound_alsa05);
+#endif
+#ifdef SOUND_OSS
+	register_sound_driver(&sound_oss);
 #endif
 #ifdef SOUND_QNX
 	register_sound_driver(&sound_qnx);
