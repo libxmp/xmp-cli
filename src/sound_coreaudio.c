@@ -33,7 +33,7 @@ static int packet_size;
 /* return minimum number of free bytes in buffer, value may change between
  * two immediately following calls, and the real number of free bytes
  * might actually be larger!  */
-static int buf_free()
+static int buf_free(void)
 {
 	int free = buf_read_pos - buf_write_pos - chunk_size;
 	if (free < 0)
@@ -44,7 +44,7 @@ static int buf_free()
 /* return minimum number of buffered bytes, value may change between
  * two immediately following calls, and the real number of buffered bytes
  * might actually be larger! */
-static int buf_used()
+static int buf_used(void)
 {
 	int used = buf_write_pos - buf_read_pos;
 	if (used < 0)
@@ -246,7 +246,7 @@ static void play(void *b, int i)
 }
 
 
-static void deinit()
+static void deinit(void)
 {
         AudioOutputUnitStop(au);
 	AudioUnitUninitialize(au);
@@ -254,15 +254,15 @@ static void deinit()
 	free(buffer);
 }
 
-static void flush()
+static void flush(void)
 {
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

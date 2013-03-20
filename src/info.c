@@ -87,7 +87,7 @@ void info_mod(struct xmp_module_info *mi)
 	}
 }
 
-void info_frame_init()
+void info_frame_init(void)
 {
 	max_channels = 0;
 }

@@ -161,17 +161,17 @@ static void play(void *b, int i)
 	};
 }
 
-static void deinit()
+static void deinit(void)
 {
 	ioctl(audio_fd, SNDCTL_DSP_RESET, NULL);
 	close(audio_fd);
 }
 
-static void flush()
+static void flush(void)
 {
 }
 
-static void onpause()
+static void onpause(void)
 {
 #ifdef SNDCTL_DSP_SETTRIGGER
 	int trig = 0;
@@ -184,7 +184,7 @@ static void onpause()
 		ioctl(audio_fd, SNDCTL_DSP_SYNC, NULL);
 }
 
-static void onresume()
+static void onresume(void)
 {
 #ifdef SNDCTL_DSP_SETTRIGGER
 	int trig = PCM_ENABLE_OUTPUT;

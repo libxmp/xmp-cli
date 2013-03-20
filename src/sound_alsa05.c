@@ -182,13 +182,13 @@ static void play(void *b, int i)
 	}
 }
 
-static void deinit()
+static void deinit(void)
 {
 	snd_pcm_close(pcm_handle);
 	free(mybuffer);
 }
 
-static void flush()
+static void flush(void)
 {
 	snd_pcm_plugin_flush(pcm_handle, SND_PCM_CHANNEL_PLAYBACK);
 	prepare_driver();

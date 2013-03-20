@@ -195,7 +195,7 @@ static void play(void *b, int i)
 
 }
 
-static void deinit()
+static void deinit(void)
 {
 	if (MixBuffers[0].pBuffer) {
 		mciSendCommand(DeviceID, MCI_BUFFER,

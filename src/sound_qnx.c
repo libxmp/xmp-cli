@@ -87,21 +87,21 @@ static void play(void *b, int i)
 	} while (i);
 }
 
-static void deinit()
+static void deinit(void)
 {
 	close(fd_audio);
 }
 
-static void flush()
+static void flush(void)
 {
 	ioctl(fd, SNDCTL_DSP_SYNC, NULL);
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

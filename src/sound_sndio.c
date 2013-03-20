@@ -76,7 +76,7 @@ static int init(struct options *options)
 	return -1;
 }
 
-static void deinit()
+static void deinit(void)
 {
 	sio_close(hdl);
 	hdl = NULL;
@@ -89,15 +89,15 @@ static void play(void *buf, int len)
 	}
 }
 
-static void flush()
+static void flush(void)
 {
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

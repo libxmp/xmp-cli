@@ -73,20 +73,20 @@ static void play(void *b, int len)
 	size += len;
 }
 
-static void deinit()
+static void deinit(void)
 {
 	free(sound_file.description);
 }
 
-static void flush()
+static void flush(void)
 {
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

@@ -17,7 +17,7 @@
 static struct termios term;
 #endif
 
-int set_tty()
+int set_tty(void)
 {
 #ifdef HAVE_TERMIOS_H
 	struct termios t;
@@ -38,7 +38,7 @@ int set_tty()
 	return 0;
 }
 
-int reset_tty()
+int reset_tty(void)
 {
 #ifdef HAVE_TERMIOS_H
 	if (!isatty(STDIN_FILENO))

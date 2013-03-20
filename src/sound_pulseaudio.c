@@ -60,12 +60,12 @@ static void play(void *b, int i)
 	}
 }
 
-static void deinit()
+static void deinit(void)
 {
 	pa_simple_free(s);
 }
 
-static void flush()
+static void flush(void)
 {
 	int error;
 
@@ -74,11 +74,11 @@ static void flush()
 	}
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

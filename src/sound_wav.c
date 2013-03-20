@@ -134,7 +134,7 @@ static void play(void *b, int len)
 	size += len;
 }
 
-static void deinit()
+static void deinit(void)
 {
 	lseek(fd, 40, SEEK_SET);
 	write_32l(fd, size);
@@ -149,15 +149,15 @@ static void deinit()
 	free(sound_wav.description);
 }
 
-static void flush()
+static void flush(void)
 {
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

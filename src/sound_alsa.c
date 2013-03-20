@@ -91,21 +91,21 @@ static void play(void *b, int i)
 	}
 }
 
-static void deinit()
+static void deinit(void)
 {
 	snd_pcm_close(pcm_handle);
 }
 
-static void flush()
+static void flush(void)
 {
 	snd_pcm_drain(pcm_handle);
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

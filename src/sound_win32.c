@@ -134,7 +134,7 @@ static void play(void *b, int len)
 	nextbuffer %= num_buffers;
 }
 
-static void deinit()
+static void deinit(void)
 {
 	int i;
 
@@ -151,15 +151,15 @@ static void deinit()
 	}
 }
 
-static void flush()
+static void flush(void)
 {
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

@@ -105,20 +105,20 @@ static void play(void *b, int i)
 	}
 }
 
-static void deinit()
+static void deinit(void)
 {
 	close(audio_fd);
 }
 
-static void flush()
+static void flush(void)
 {
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

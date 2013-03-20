@@ -32,7 +32,7 @@
  * This makes Cygwin builds work out of the box with no fiddling around,
  * but does impose a neglectible cpu overhead (for Cygwin builds only).
  */
-static int stdin_ready_for_reading()
+static int stdin_ready_for_reading(void)
 {
 	fd_set fds;
 	struct timeval tv;
@@ -53,7 +53,7 @@ static int stdin_ready_for_reading()
 }
 #endif
 
-static int read_key()
+static int read_key(void)
 {
 	char key;
 	int ret;

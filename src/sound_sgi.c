@@ -150,20 +150,20 @@ static void play(void *b, int i)
 	ALwritesamps(audio_port, b, i);
 }
 
-static void deinit()
+static void deinit(void)
 {
 	ALcloseport(audio_port);
 }
 
-static void flush()
+static void flush(void)
 {
 }
 
-static void onpause()
+static void onpause(void)
 {
 }
 
-static void onresume()
+static void onresume(void)
 {
 }
 

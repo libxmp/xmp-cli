@@ -106,7 +106,7 @@ static xmp_context ctx;
 static int paused;
 
 
-static int set_tty()
+static int set_tty(void)
 {
 #ifdef HAVE_TERMIOS_H
     struct termios t;
@@ -129,7 +129,7 @@ static int set_tty()
 }
 
 
-static int reset_tty()
+static int reset_tty(void)
 {
 #ifdef HAVE_TERMIOS_H
     if (background)
@@ -235,7 +235,7 @@ static void cleanup(int s)
  * This makes Cygwin builds work out of the box with no fiddling around,
  * but does impose a neglectible cpu overhead (for Cygwin builds only).
  */
-static int stdin_ready_for_reading()
+static int stdin_ready_for_reading(void)
 {
     fd_set fds;
     struct timeval tv;
@@ -256,7 +256,7 @@ static int stdin_ready_for_reading()
 }
 #endif
 
-void read_keyboard()
+void read_keyboard(void)
 {
     unsigned char cmd;
     int k;

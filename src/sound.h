@@ -35,7 +35,7 @@ struct sound_driver {
 #define chkparm2(x,y,z,w) { if (!strcmp(s, x)) { \
 	if (2 > sscanf(token, y, z, w)) parm_error(); } }
 
-static inline int is_big_endian() {
+static inline int is_big_endian(void) {
 	unsigned short w = 0x00ff;
 	return (*(char *)&w == 0x00);
 }

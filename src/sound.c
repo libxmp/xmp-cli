@@ -37,7 +37,7 @@ static void register_sound_driver(struct sound_driver *sd)
 	list_add_tail(&sd->list, &sound_driver_list);	
 }
 
-void init_sound_drivers()
+void init_sound_drivers(void)
 {
 #ifdef SOUND_AHI
 	register_sound_driver(&sound_ahi);
