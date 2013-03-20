@@ -90,7 +90,7 @@ static void onresume()
 {
 }
 
-static char *help[] = {
+static const char *const help[] = {
 	"big-endian", "Force big-endian 16-bit samples",
 	"little-endian", "Force little-endian 16-bit samples",
 	NULL

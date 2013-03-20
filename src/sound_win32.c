@@ -163,7 +163,7 @@ static void onresume()
 {
 }
 
-static char *help[] = {
+static const char *const help[] = {
 	"buffers=val", "Number of buffers (default 10)",
 	NULL
 };

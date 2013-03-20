@@ -105,8 +105,7 @@ static void onresume()
 {
 }
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"dev=<device_name>", "Audio device name (default is /dev/dsp)",
 	"buffer=val", "Audio buffer size (default is 32768)",
 	NULL

@@ -37,8 +37,7 @@ static int chunk_size;
 static int chunk_num;
 /* static int packet_size; */
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"buffer=num,size", "set the number and size of buffer fragments",
 	NULL
 };

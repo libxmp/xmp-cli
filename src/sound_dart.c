@@ -210,8 +210,7 @@ static void deinit()
 	}
 }
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"sharing={Y,N}", "Device Sharing    (default is N)",
 	"device=val", "OS/2 Audio Device (default is 0 auto-detect)",
 	"buffer=val", "Audio buffer size (default is 16)",

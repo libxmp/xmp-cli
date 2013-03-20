@@ -109,7 +109,7 @@ static void setaudio(int *rate, int *format)
 static int init(struct options *options)
 {
 	char **parm = options->driver_parm;
-	char *dev_audio[] = { "/dev/dsp", "/dev/sound/dsp" };
+	static const char *dev_audio[] = { "/dev/dsp", "/dev/sound/dsp" };
 	audio_buf_info info;
 	static char buf[80];
 	int i;
@@ -192,7 +192,7 @@ static void onresume()
 #endif
 }
 
-static char *help[] = {
+static const char *const help[] = {
 	"frag=num,size", "Set the number and size of fragments",
 	"dev=<device_name>", "Audio device to use (default /dev/dsp)",
 	"nosync", "Don't flush OSS buffers between modules",

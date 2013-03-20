@@ -7,9 +7,9 @@
 #include "list.h"
 
 struct sound_driver {
-	char *id;
+	const char *id;
 	char *description;
-	char **help;
+	const char *const *help;
 	int (*init)(struct options *);
         void (*deinit)(void);
 	void (*play)(void *, int);

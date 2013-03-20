@@ -109,8 +109,7 @@ static void onresume()
 {
 }
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"buffer=num", "Set the ALSA buffer time in milliseconds",
 	"period=num", "Set the ALSA period time in milliseconds",
 	"card <name>", "Select sound card to use",

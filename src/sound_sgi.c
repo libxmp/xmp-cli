@@ -23,7 +23,7 @@ static int al_sample_16;
  * audio port sample rates (these are the only ones supported by the library)
  */
 
-static int srate[] = {
+static const int srate[] = {
 	48000,
 	44100,
 	32000,
@@ -167,8 +167,7 @@ static void onresume()
 {
 }
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"buffer=val", "Audio buffer size",
 	NULL
 };

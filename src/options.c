@@ -41,7 +41,7 @@ static void usage(char *s)
 {
 	struct list_head *head;
 	struct sound_driver *sd;
-	char **hlp;
+	const char *const *hlp;
 
 	printf("Usage: %s [options] [modules]\n", s);
 
@@ -100,7 +100,7 @@ static void usage(char *s)
 "   -v --verbose           Verbose mode (incremental)\n");
 }
 
-static struct option lopt[] = {
+static const struct option lopt[] = {
 	{ "amplify",		1, 0, 'a' },
 	{ "bits",		1, 0, 'b' },
 	{ "driver",		1, 0, 'd' },

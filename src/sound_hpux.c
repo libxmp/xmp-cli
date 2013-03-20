@@ -19,7 +19,7 @@
 static int audio_fd;
 
 /* Standard sampling rates */
-static int srate[] = {
+static const int srate[] = {
 	44100, 32000, 22050, 16000, 11025, 8000, 0
 };
 
@@ -139,8 +139,7 @@ static void onresume()
 {
 }
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"gain=val", "Audio output gain (0 to 255)",
 	"port={s|h|l}", "Audio port (s[peaker], h[eadphones], l[ineout])",
 	"buffer=val", "Audio buffer size",

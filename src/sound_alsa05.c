@@ -194,8 +194,7 @@ static void flush()
 	prepare_driver();
 }
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"frag=num,size", "Set the number and size (bytes) of fragments",
 	"card <name>", "Select sound card to use",
 	NULL

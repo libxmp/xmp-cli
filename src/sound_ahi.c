@@ -68,8 +68,7 @@ static void onresume()
 {
 }
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"buffer=val", "Audio buffer size",
 	NULL
 };

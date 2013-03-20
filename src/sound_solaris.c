@@ -170,8 +170,7 @@ static void onresume()
 {
 }
 
-
-static char *help[] = {
+static const char *const help[] = {
 	"gain=val", "Audio output gain (0 to 255)",
 	"port={s|h|l}", "Audio port (s[peaker], h[eadphones], l[ineout])",
 	"buffer=val", "Audio buffer size (default is 32768)",
