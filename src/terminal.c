@@ -12,6 +12,7 @@
 
 #ifdef HAVE_TERMIOS_H
 #include <termios.h>
+#include <unistd.h>
 
 static struct termios term;
 #endif
@@ -21,14 +22,16 @@ int set_tty()
 #ifdef HAVE_TERMIOS_H
 	struct termios t;
 
-	if (tcgetattr(0, &term) < 0)
+	if (!isatty(STDIN_FILENO))
+		return 0;
+	if (tcgetattr(STDIN_FILENO, &term) < 0)
 		return -1;
 
 	t = term;
 	t.c_lflag &= ~(ECHO | ICANON | TOSTOP);
 	t.c_cc[VMIN] = t.c_cc[VTIME] = 0;
 
-	if (tcsetattr(0, TCSAFLUSH, &t) < 0)
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &t) < 0)
 		return -1;
 #endif
 
@@ -38,7 +41,9 @@ int set_tty()
 int reset_tty()
 {
 #ifdef HAVE_TERMIOS_H
-	if (tcsetattr(0, TCSAFLUSH, &term) < 0) {
+	if (!isatty(STDIN_FILENO))
+		return 0;
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) < 0) {
 		fprintf(stderr, "can't reset terminal!\n");
 		return -1;
 	}
