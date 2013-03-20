@@ -78,7 +78,7 @@ static void sigtstp_handler(int n)
 static void sigcont_handler(int sig)
 {
 #ifdef HAVE_TERMIOS_H
-	foreground = (tcgetpgrp(0) != getppid());
+	foreground = tcgetpgrp(STDIN_FILENO) == getpgrp();
 
 	if (foreground)
 		set_tty();
@@ -261,7 +261,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef HAVE_TERMIOS_H
-	foreground = (tcgetpgrp (0) != getppid ());
+	foreground = tcgetpgrp(STDIN_FILENO) == getpgrp();
 
 	if (foreground)
 		set_tty();
