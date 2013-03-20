@@ -28,7 +28,7 @@
 extern int optind;
 
 static struct sound_driver *sound;
-static unsigned int foreground;
+static unsigned int foreground_in, foreground_out;
 static int refresh_status;
 
 
@@ -78,9 +78,10 @@ static void sigtstp_handler(int n)
 static void sigcont_handler(int sig)
 {
 #ifdef HAVE_TERMIOS_H
-	foreground = tcgetpgrp(STDIN_FILENO) == getpgrp();
+	foreground_in  = tcgetpgrp(STDIN_FILENO)  == getpgrp();
+	foreground_out = tcgetpgrp(STDERR_FILENO) == getpgrp();
 
-	if (foreground)
+	if (foreground_in)
 		set_tty();
 #endif
 
@@ -260,13 +261,7 @@ int main(int argc, char **argv)
 #endif
 #endif
 
-#ifdef HAVE_TERMIOS_H
-	foreground = tcgetpgrp(STDIN_FILENO) == getpgrp();
-
-	if (foreground)
-		set_tty();
-#endif
-
+	sigcont_handler(0);
 	xc = xmp_create_context();
 
 	skipprev = 0;
@@ -384,7 +379,7 @@ int main(int argc, char **argv)
 				if (!control.loop && old_loop != fi.loop_count)
 					break;
 
-				if (foreground && opt.verbose > 0) {
+				if (foreground_out && opt.verbose > 0) {
 					info_frame(&mi, &fi, &control, refresh_status);
 					refresh_status = 0;
 				}
@@ -393,7 +388,7 @@ int main(int argc, char **argv)
 
 				sound->play(fi.buffer, fi.buffer_size);
 
-				if (foreground && !opt.nocmd) {
+				if (foreground_in && !opt.nocmd) {
 					read_command(xc, &control);
 
 					if (control.display) {
@@ -437,7 +432,7 @@ int main(int argc, char **argv)
     end:
 	xmp_free_context(xc);
 
-	if (foreground)
+	if (foreground_in)
 		reset_tty();
 
 	sound->deinit();
