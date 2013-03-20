@@ -78,14 +78,18 @@ static void sigtstp_handler(int n)
 static void sigcont_handler(int sig)
 {
 #ifdef HAVE_TERMIOS_H
+	unsigned int old_in = foreground_in;
+
 	foreground_in  = tcgetpgrp(STDIN_FILENO)  == getpgrp();
 	foreground_out = tcgetpgrp(STDERR_FILENO) == getpgrp();
 
-	if (foreground_in)
+	if (old_in != foreground_in)
+		/* Only call if it was not already prepared */
 		set_tty();
 #endif
 
-	refresh_status = 1;
+	if (sig != 0)
+		refresh_status = 1;
 
 	signal(SIGCONT, sigcont_handler);
 	signal(SIGTSTP, sigtstp_handler);
@@ -379,6 +383,7 @@ int main(int argc, char **argv)
 				if (!control.loop && old_loop != fi.loop_count)
 					break;
 
+				sigcont_handler(0);
 				if (foreground_out && opt.verbose > 0) {
 					info_frame(&mi, &fi, &control, refresh_status);
 					refresh_status = 0;
