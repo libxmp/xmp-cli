@@ -25,6 +25,9 @@ The Authors
 - Rune Elvemo <relvemo@grm.hia.no>
   * fixes for endianism problems in Linux/PPC
 
+- Jan Engelhardt <jengelh@inai.de>
+  * fixes for background process handling
+
 - Mike Gorchak <mike@malva.ua>
   * QNX6 portability fix
 
