@@ -2,6 +2,8 @@ Stable versions
 ---------------
 
 4.0.2 ():
+	- Fix data type in coreaudio driver
+
 	Changes by Jan Engelhardt:
 	- give Pulseaudio higher priority than ALSA
 	- give ALSA output higher priority than OSS
