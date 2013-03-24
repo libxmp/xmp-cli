@@ -27,6 +27,7 @@ The Authors
 
 - Jan Engelhardt <jengelh@inai.de>
   * fixes for background process handling
+  * misc source code fixes
 
 - Mike Gorchak <mike@malva.ua>
   * QNX6 portability fix

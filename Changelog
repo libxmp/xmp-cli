@@ -2,7 +2,11 @@ Stable versions
 ---------------
 
 4.0.2 ():
-	-
+	Changes by Jan Engelhardt:
+	- give Pulseaudio higher priority than ALSA
+	- give ALSA output higher priority than OSS
+	- fix background process handling
+	- sanitize background/foreground notation
 
 4.0.1 (20130216):
 	- fix license issues reported by Jan Engelhardt
