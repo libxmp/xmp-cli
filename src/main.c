@@ -361,8 +361,7 @@ int main(int argc, char **argv)
   else if ((y) < 0) (x) &= ~ (z); \
 } while (0)
 
-			flags = xmp_get_player(xc, XMP_PLAYER_FLAGS);
-
+			flags = 0;
 			set_flag(flags, opt.vblank, XMP_FLAGS_VBLANK);
 			set_flag(flags, opt.fx9bug, XMP_FLAGS_FX9BUG);
 			set_flag(flags, opt.fixloop, XMP_FLAGS_FIXLOOP);
