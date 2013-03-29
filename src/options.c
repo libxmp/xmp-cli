@@ -171,7 +171,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->rate = strtoul(optarg, NULL, 0);
 			break;
 		case OPT_FIXLOOP:
-			options->flags |= XMP_FLAGS_FIXLOOP;
+			options->fixloop = 1;
 			break;
 		case 'I':
 			options->ins_path = optarg;
@@ -225,7 +225,7 @@ void get_options(int argc, char **argv, struct options *options)
 			}
 			break;
 		case OPT_FX9BUG:
-			options->flags |= XMP_FLAGS_FX9BUG;
+			options->fx9bug = 1;
 			break;
 		case 'P':
 			options->mix = strtoul(optarg, NULL, 0);
@@ -283,7 +283,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->format |= XMP_FORMAT_UNSIGNED;
 			break;
 		case OPT_VBLANK:
-			options->flags |= XMP_FLAGS_VBLANK;
+			options->vblank = 1;
 			break;
 		case 'V':
 			puts("Extended Module Player " VERSION);
