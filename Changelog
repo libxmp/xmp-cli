@@ -3,6 +3,9 @@ Stable versions
 
 4.0.2 ():
 	- Fix data type in coreaudio driver
+	- Allow modules.conf to override default module quirks when
+	  using libxmp 4.0.3 or newer
+	- Don't rescan module if using libxmp 4.0.3 or newer
 
 	Changes by Jan Engelhardt:
 	- give Pulseaudio higher priority than ALSA

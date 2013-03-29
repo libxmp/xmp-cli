@@ -169,6 +169,7 @@ int main(int argc, char **argv)
 #ifndef WIN32
 	struct timeval tv;
 	struct timezone tz;
+	int flags;
 
 	gettimeofday(&tv, &tz);
 	srand(tv.tv_usec);
@@ -355,10 +356,23 @@ int main(int argc, char **argv)
 
 			/* Set player flags */
 
-			xmp_set_player(xc, XMP_PLAYER_FLAGS, opt.flags);
-			if (opt.flags &	XMP_FLAGS_VBLANK) {
+#define set_flag(x,y,z) do { \
+  if ((y) > 0) (x) |= (z); \
+  else if ((y) < 0) (x) &= ~ (z); \
+} while (0)
+
+			flags = xmp_get_player(xc, XMP_PLAYER_FLAGS);
+
+			set_flag(flags, opt.vblank, XMP_FLAGS_VBLANK);
+			set_flag(flags, opt.fx9bug, XMP_FLAGS_FX9BUG);
+			set_flag(flags, opt.fixloop, XMP_FLAGS_FIXLOOP);
+
+			xmp_set_player(xc, XMP_PLAYER_FLAGS, flags);
+#if XMP_VERCODE < 0x040003
+			if (flags & XMP_FLAGS_VBLANK) {
 				xmp_scan_module(xc);
 			}
+#endif
 
 			/* Show module data */
 

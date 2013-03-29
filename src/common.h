@@ -15,7 +15,9 @@ struct options {
 	int loop;		/* loop module */
 	int random;		/* play in random order */
 	int reverse;		/* reverse stereo channels */
-	int flags;		/* player flags */
+	int vblank;		/* vblank flag */
+	int fx9bug;		/* fx9bug flag */
+	int fixloop;		/* fixloop flag */
 	int verbose;		/* verbosity level */
 	int silent;		/* silent output */
 	int info;		/* display information and exit */

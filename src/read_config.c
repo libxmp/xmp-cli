@@ -98,6 +98,10 @@ int read_config(struct options *o)
 	if (!strcmp(var,x)) { if (get_yesno (val)) w |= (y); \
 	    else w &= ~(y); continue; } }
 
+#define getval_tristate(x,w) { \
+	if (!strcmp(var,x)) { if (get_yesno (val)) w = 1; \
+	    else w = -1; continue; } }
+
 #define getval_no(x,y) { \
 	if (!strcmp(var,x)) { y = atoi (val); continue; } }
 
@@ -221,9 +225,10 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 		getval_yn("reverse", o->reverse, 1);
 		getval_no("amplify", o->amplify);
 		getval_no("mix", o->mix);
-		getval_yn("fixloop", o->flags, XMP_FLAGS_FIXLOOP);
-		getval_yn("fx9bug", o->flags, XMP_FLAGS_FX9BUG);
-		getval_yn("vblank", o->flags, XMP_FLAGS_VBLANK);
+
+		getval_tristate("fixloop", o->fixloop);
+		getval_tristate("fx9bug", o->fx9bug);
+		getval_tristate("vblank", o->vblank);
 
 		if (!strcmp(var, "interpolation")) {
 			if (!strcmp(val, "nearest")) {
