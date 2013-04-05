@@ -23,7 +23,7 @@ DFILES		= README INSTALL COPYING CREDITS Changelog configure \
 		  config.sub config.guess install-sh configure.ac Makefile.in \
 		  $(MODULES)
 DDIRS		= src
-MODULES		= delicate_oooz!.mod
+MODULES		= 08_sad_song.it
 DRIVERS		= @DRIVERS@
 
 all: binaries

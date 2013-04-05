@@ -1,7 +1,7 @@
 Stable versions
 ---------------
 
-4.0.2 ():
+4.0.2 (20130405):
 	- Fix data type in coreaudio driver
 	- Allow modules.conf to override default module quirks when
 	  using libxmp 4.0.3 or newer
