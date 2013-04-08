@@ -50,7 +50,7 @@ static void play(void *b, int i)
 	do {
 		if ((j = pa_simple_write(s, b, i, &error)) > 0) {
 			i -= j;
-			b += j;
+			b = (char *)b + j;
 		} else
 			break;
 	} while (i);
