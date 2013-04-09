@@ -1,6 +1,10 @@
 Stable versions
 ---------------
 
+4.0.3 ():
+	- Fix native-endian support in coreaudio driver (reported by
+	  Misty De Meo)
+
 4.0.2 (20130407):
 	- Fix data type in coreaudio driver
 
