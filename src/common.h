@@ -25,6 +25,7 @@ struct options {
 	int nocmd;		/* disable interactive commands */
 	int norc;		/* don't read the configuration files */
 	int dparm;		/* driver parameter index */
+	int sequence;		/* sequence to play */
 	char *driver_id;	/* sound driver ID */
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */

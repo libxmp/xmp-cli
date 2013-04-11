@@ -332,6 +332,15 @@ int main(int argc, char **argv)
 		control.time = 0.0;
 		control.loop = opt.loop;
 		
+		if (opt.sequence) {
+			if (opt.sequence < mi.num_sequences) {
+				if (mi.seq_data[opt.sequence].duration > 0) {
+					opt.start = mi.seq_data[opt.sequence].entry_point;
+				}
+			}
+			opt.sequence = 0;
+		}
+
 		if (xmp_start_player(xc, opt.rate, opt.format) == 0) {
 			xmp_set_player(xc, XMP_PLAYER_INTERP, opt.interp);
 			xmp_set_player(xc, XMP_PLAYER_DSP, opt.dsp);
