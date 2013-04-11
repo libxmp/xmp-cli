@@ -42,6 +42,7 @@ struct control {
 	int display;		/* Info display flag */
 	int sequence;		/* Current sequence */
 	int explore;		/* Play all sequences */
+	int cur_seq;		/* Display current sequence */
 };
 
 

@@ -424,6 +424,11 @@ int main(int argc, char **argv)
 						control.display = 0;
 						refresh_status = 1;
 					}
+
+					if (control.cur_seq) {
+						info_message("Current sequence: %d (start at position %02X)", control.sequence, mi.seq_data[control.sequence].entry_point);
+						control.cur_seq = 0;
+					}
 				}
 
 				if (opt.max_time > 0 &&
