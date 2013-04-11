@@ -83,7 +83,7 @@ void info_mod(struct xmp_module_info *mi)
 			}
 
 			report("               %dmin%02ds "
-				"(sequence %d at position %d)\n",
+				"(sequence %d at position %02X)\n",
 				(dur + 500) / 60000, ((dur + 500) / 1000) % 60,
 				i, mi->seq_data[i].entry_point);
 		}
