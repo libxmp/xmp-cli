@@ -1,0 +1,14 @@
+# Binary files
+*.o
+src/xmp
+
+# Modules
+*.it
+
+# Generated files
+autom4te.cache
+config.log
+config.status
+configure
+depend
+
