@@ -90,6 +90,31 @@ static int read_key(void)
 	return key;
 }
 
+static void change_sequence(xmp_context handle, struct xmp_module_info *mi, struct control *ctl, int i)
+{
+	int seq = ctl->sequence;
+
+	seq += i;
+	while (mi->seq_data[seq].duration <= 0)
+		seq += i;
+
+	if (seq >= mi->num_sequences) {
+		seq = 0;
+	} else if (seq < 0) {
+		seq = mi->num_sequences - 1;
+		while (mi->seq_data[seq].duration <= 0)
+			seq--;
+	}
+
+	if (seq == ctl->sequence) {
+		info_message("Sequence not changed: only one sequence available");
+	} else {
+		ctl->sequence = seq;
+		info_message("Change to sequence %d", seq);
+		xmp_set_position(handle, mi->seq_data[seq].entry_point);
+	}
+}
+
 /* Interactive commands */
 
 /* VT100 ESC sequences:
@@ -98,7 +123,7 @@ static int read_key(void)
  * ESC [ C - right arrow
  * ESC [ D - left arrow
  */
-void read_command(xmp_context handle, struct control *ctl)
+void read_command(xmp_context handle, struct xmp_module_info *mi, struct control *ctl)
 {
 	int cmd;
 
@@ -185,6 +210,12 @@ void read_command(xmp_context handle, struct control *ctl)
 	case 'S':
 	case 'm':
 		ctl->display = cmd;
+		break;
+	case '>':
+		change_sequence(handle, mi, ctl, 1);
+		break;
+	case '<':
+		change_sequence(handle, mi, ctl, -1);
 		break;
 	}
 }

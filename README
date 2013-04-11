@@ -40,6 +40,8 @@ The following single key commands can be used during the playback:
             i         =>  display combined instrument/sample list
             I         =>  display instrument list
             S         =>  display sample list
+            <         =>  jump to previous sequence
+            >         =>  jump to next sequence
 
 Interactive mode can be disabled using the --nocmd command line option.
 

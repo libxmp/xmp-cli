@@ -39,6 +39,7 @@ struct control {
 	int loop;		/* Module is looped */
 	int pause;		/* Replay paused */
 	int display;		/* Info display flag */
+	int sequence;		/* Current sequence */
 };
 
 
@@ -55,6 +56,7 @@ int reset_tty(void);
 
 /* info */
 void info_mod(struct xmp_module_info *);
+void info_message(char *, ...);
 void info_frame_init(void);
 void info_frame(struct xmp_module_info *, struct xmp_frame_info *, struct control *, int);
 void info_ins_smp(struct xmp_module_info *);
@@ -63,6 +65,6 @@ void info_samples(struct xmp_module_info *);
 void info_help(void);
 
 /* commands */
-void read_command(xmp_context, struct control *);
+void read_command(xmp_context, struct xmp_module_info *, struct control *);
 
 #endif

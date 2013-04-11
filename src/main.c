@@ -141,7 +141,7 @@ static void check_pause(xmp_context xc, struct control *ctl,
 		}
 		while (ctl->pause) {
 			usleep(100000);
-			read_command(xc, ctl);
+			read_command(xc, mi, ctl);
 			if (ctl->display) {
 				show_info(ctl->display, mi);
 				if (verbose) {
@@ -416,7 +416,7 @@ int main(int argc, char **argv)
 				sound->play(fi.buffer, fi.buffer_size);
 
 				if (foreground_in && !opt.nocmd) {
-					read_command(xc, &control);
+					read_command(xc, &mi, &control);
 
 					if (control.display) {
 						show_info(control.display, &mi);

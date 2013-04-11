@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include <xmp.h>
 #include "common.h"
 
@@ -31,6 +32,8 @@ void info_help(void)
 "      i         Display combined instrument/sample list\n"
 "      I         Display instrument list\n"
 "      S         Display sample list\n"
+"      <         Play previous sequence\n"
+"      >         Play next sequence\n"
 );
 }
 
@@ -93,6 +96,20 @@ void info_frame_init(void)
 	max_channels = 0;
 }
 
+#define MSG_SIZE 80
+static int msg_timer = 0;
+static char msg_text[MSG_SIZE];
+
+void info_message(char *format, ...)
+{
+	va_list ap;
+
+	va_start(ap, format);
+	msg_timer = 200000;
+	vsnprintf(msg_text, MSG_SIZE, format, ap);
+	va_end(ap);
+}
+
 void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct control *ctl, int reprint)
 {
 	static int ord = -1, spd = -1, bpm = -1;
@@ -105,6 +122,20 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 		return;
 
 	time = fi->time / 100;
+
+	if (msg_timer > 0) {
+		report("\r%-61.61s %c  ", msg_text, ctl->loop ? 'L' : ' ');
+		msg_timer -= fi->frame_time;
+		if (msg_timer == 0)
+			msg_timer--;
+		else
+			goto print_time;
+	}
+
+	if (msg_timer < 0) {
+		reprint = 1;
+		msg_timer = 0;
+	}
 
 	if (reprint || fi->pos != ord || fi->bpm != bpm || fi->speed != spd) {
 	        report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
@@ -121,6 +152,8 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	       "%02X/%02X] Chn[%02X/%02X] %c  ",
 		fi->row, fi->num_rows - 1, fi->virt_used, max_channels,
 		ctl->loop ? 'L' : ' ');
+
+    print_time:
 
 	if (ctl->pause) {
 		report(" - PAUSED -");
