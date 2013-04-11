@@ -36,6 +36,7 @@ The following single key commands can be used during the playback:
             !         =>  unmute all channels
             ?         =>  display available commands
             l         =>  toggle loop mode
+            z         =>  toggle subsong explorer mode
             m         =>  display module information
             i         =>  display combined instrument/sample list
             I         =>  display instrument list

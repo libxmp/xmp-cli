@@ -331,6 +331,7 @@ int main(int argc, char **argv)
 		skipprev = 0;
 		control.time = 0.0;
 		control.loop = opt.loop;
+		control.explore = opt.explore;
 		
 		if (opt.sequence) {
 			if (opt.sequence < mi.num_sequences) {
@@ -436,7 +437,7 @@ int main(int argc, char **argv)
 				opt.start = 0;
 			}
 
-			if (opt.explore && control.skip == 0) {
+			if (control.explore && control.skip == 0) {
 				control.sequence++;
 				if (control.sequence < mi.num_sequences) {
 					xmp_set_position(xc, mi.seq_data

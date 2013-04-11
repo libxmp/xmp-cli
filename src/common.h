@@ -41,6 +41,7 @@ struct control {
 	int pause;		/* Replay paused */
 	int display;		/* Info display flag */
 	int sequence;		/* Current sequence */
+	int explore;		/* Play all sequences */
 };
 
 

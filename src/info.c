@@ -28,6 +28,7 @@ void info_help(void)
 "      !         Unmute all channels\n"
 "      ?         Display available commands\n"
 "      l         Toggle loop mode\n"
+"      z         Toggle subsong explorer mode\n"
 "      m         Display module information\n"
 "      i         Display combined instrument/sample list\n"
 "      I         Display instrument list\n"
@@ -124,7 +125,9 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	time = fi->time / 100;
 
 	if (msg_timer > 0) {
-		report("\r%-61.61s %c  ", msg_text, ctl->loop ? 'L' : ' ');
+		report("\r%-61.61s %c%c ", msg_text,
+			ctl->explore ? 'Z' : ' ',
+			ctl->loop ? 'L' : ' ');
 		msg_timer -= fi->frame_time;
 		if (msg_timer == 0)
 			msg_timer--;
@@ -149,9 +152,9 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	}
 
 	report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-	       "%02X/%02X] Chn[%02X/%02X] %c  ",
+	       "%02X/%02X] Chn[%02X/%02X] %c%c ",
 		fi->row, fi->num_rows - 1, fi->virt_used, max_channels,
-		ctl->loop ? 'L' : ' ');
+		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ');
 
     print_time:
 
