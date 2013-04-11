@@ -26,6 +26,7 @@ void info_help(void)
 "    1 - 0       Mute/unmute channels\n"
 "      !         Unmute all channels\n"
 "      ?         Display available commands\n"
+"      l         Toggle loop mode\n"
 "      m         Display module information\n"
 "      i         Display combined instrument/sample list\n"
 "      I         Display instrument list\n"
