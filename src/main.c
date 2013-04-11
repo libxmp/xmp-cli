@@ -396,8 +396,8 @@ int main(int argc, char **argv)
 
 			refresh_status = 1;
 			info_frame_init();
-
 			fi.loop_count = 0;
+    play_sequence:
 			while (!opt.info && xmp_play_frame(xc) == 0) {
 				int old_loop = fi.loop_count;
 				
@@ -434,6 +434,17 @@ int main(int argc, char **argv)
 							opt.verbose);
 
 				opt.start = 0;
+			}
+
+			if (opt.explore && control.skip == 0) {
+				control.sequence++;
+				if (control.sequence < mi.num_sequences) {
+					xmp_set_position(xc, mi.seq_data
+						[control.sequence].entry_point);
+					info_message("Playing sequence %d",
+						control.sequence);
+					goto play_sequence;
+				}
 			}
 
 			xmp_end_player(xc);

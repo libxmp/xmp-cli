@@ -95,6 +95,8 @@ static void change_sequence(xmp_context handle, struct xmp_module_info *mi, stru
 	int seq = ctl->sequence;
 
 	seq += i;
+
+	/* This should never happen with libxmp 4.0.5 or newer */
 	while (mi->seq_data[seq].duration <= 0)
 		seq += i;
 
@@ -102,6 +104,8 @@ static void change_sequence(xmp_context handle, struct xmp_module_info *mi, stru
 		seq = 0;
 	} else if (seq < 0) {
 		seq = mi->num_sequences - 1;
+
+		/* This should never happen with libxmp 4.0.5 or newer */
 		while (mi->seq_data[seq].duration <= 0)
 			seq--;
 	}

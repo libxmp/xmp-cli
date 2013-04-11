@@ -74,6 +74,7 @@ static void usage(char *s)
 "   -s --start num         Start from the specified order\n"
 "   -t --time num          Maximum playing time in seconds\n"
 "   --vblank               Force vblank timing in Amiga modules\n"
+"   -Z                     Play all sequences (subsongs) in module\n"
 "   -z --sequence num      Play the specified sequence (0=main)\n" 
 "\nMixer options:\n"
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
@@ -135,6 +136,7 @@ static const struct option lopt[] = {
 	{ "vblank",		0, 0, OPT_VBLANK },
 	{ "version",		0, 0, 'V' },
 	{ "verbose",		0, 0, 'v' },
+	{ "all-sequences",	1, 0, 'Z' },
 	{ "sequence",		1, 0, 'z' },
 	{ NULL,			0, 0, 0   }
 };
@@ -144,7 +146,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int optidx = 0;
 	int o;
 
-#define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNo:P:qRrS:s:T:t:uVvz:"
+#define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNo:P:qRrS:s:T:t:uVvZz:"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -292,6 +294,9 @@ void get_options(int argc, char **argv, struct options *options)
 			exit(0);
 		case 'v':
 			options->verbose++;
+			break;
+		case 'Z':
+			options->explore = 1;
 			break;
 		case 'z':
 			options->sequence = strtoul(optarg, NULL, 0);
