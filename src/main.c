@@ -342,9 +342,13 @@ int main(int argc, char **argv)
 				if (mi.seq_data[opt.sequence].duration > 0) {
 					opt.start = mi.seq_data[opt.sequence].entry_point;
 				}
+			} else {
+				fprintf(stderr, "%s: sequence %d doesn't exist in this module\n",
+					argv[0], opt.sequence);
+				continue;
 			}
-			opt.sequence = 0;
 		}
+		control.sequence = opt.sequence;
 
 		if (xmp_start_player(xc, opt.rate, opt.format) == 0) {
 			xmp_set_player(xc, XMP_PLAYER_INTERP, opt.interp);
