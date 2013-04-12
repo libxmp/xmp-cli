@@ -425,8 +425,16 @@ int main(int argc, char **argv)
 				int old_loop = fi.loop_count;
 				
 				xmp_get_frame_info(xc, &fi);
-				if (control.loop != 1 && old_loop != fi.loop_count)
-					break;
+
+				/* Check loop */
+
+				if (old_loop != fi.loop_count) {
+					if (control.loop == 1) {
+						info_message("Loop sequence %d", control.sequence);
+					} else {
+						break;
+					}
+				}
 
 				sigcont_handler(0);
 				if (foreground_out && opt.verbose > 0) {
@@ -498,6 +506,7 @@ int main(int argc, char **argv)
 	}
 
 	if (control.loop == 2 && played) {
+		info_message("Restart module list");
 		optind = first;
 		goto play_all;
 	}
