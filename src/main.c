@@ -154,6 +154,32 @@ static void check_pause(xmp_context xc, struct control *ctl,
 	}
 }
 
+static void load_error(char *name, char *filename, int val)
+{
+	char *msg;
+
+	val = -val;
+	switch (val) {
+	case XMP_ERROR_FORMAT:
+		msg = "Unrecognized file format";
+		break;
+	case XMP_ERROR_DEPACK:
+		msg = "Error depacking file";
+		break;
+	case XMP_ERROR_LOAD:
+		msg = "Error loading module";
+		break;
+	case XMP_ERROR_SYSTEM:
+		msg = strerror(errno);
+		break;
+	default:
+		msg = "Unknown error";
+	}
+
+	fprintf(stderr, "%s: %s: %s\n", name, filename, msg);
+}
+
+
 int main(int argc, char **argv)
 {
 	xmp_context xc;
@@ -295,31 +321,13 @@ int main(int argc, char **argv)
 				argv[optind], optind - first + 1, argc - first);
 		}
 
+		/* load module */
+
 		val = xmp_load_module(xc, argv[optind]);
 
 		if (val < 0) {
-			char *msg;
+			load_error(argv[0], argv[optind], val);
 
-			val = -val;
-			switch (val) {
-			case XMP_ERROR_FORMAT:
-				msg = "Unrecognized file format";
-				break;
-			case XMP_ERROR_DEPACK:
-				msg = "Error depacking file";
-				break;
-			case XMP_ERROR_LOAD:
-				msg = "Error loading module";
-				break;
-			case XMP_ERROR_SYSTEM:
-				msg = strerror(errno);
-				break;
-			default:
-				msg = "Unknown error";
-			}
-
-			fprintf(stderr, "%s: %s: %s\n", argv[0],
-						argv[optind], msg);
 			if (skipprev) {
 		        	optind -= 2;
 				if (optind < first) {
@@ -336,7 +344,9 @@ int main(int argc, char **argv)
 
 		skipprev = 0;
 		control.time = 0.0;
-		
+
+		/* check sequence */
+
 		if (opt.sequence) {
 			if (opt.sequence < mi.num_sequences) {
 				if (mi.seq_data[opt.sequence].duration > 0) {
@@ -349,6 +359,8 @@ int main(int argc, char **argv)
 			}
 		}
 		control.sequence = opt.sequence;
+
+		/* Play module */
 
 		if (xmp_start_player(xc, opt.rate, opt.format) == 0) {
 			xmp_set_player(xc, XMP_PLAYER_INTERP, opt.interp);
@@ -403,7 +415,7 @@ int main(int argc, char **argv)
 				info_instruments(&mi);
 			}
 	
-			/* Play module */
+			/* Play sequence */
 
 			refresh_status = 1;
 			info_frame_init();
@@ -441,6 +453,8 @@ int main(int argc, char **argv)
 					}
 				}
 
+				/* Check maximum replay time */
+
 				if (opt.max_time > 0 &&
 				    control.time > opt.max_time) {
 					break;
@@ -451,6 +465,8 @@ int main(int argc, char **argv)
 
 				opt.start = 0;
 			}
+
+			/* Subsong explorer */
 
 			if (control.explore && control.skip == 0) {
 				control.sequence++;
