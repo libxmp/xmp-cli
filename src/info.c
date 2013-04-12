@@ -126,9 +126,10 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	time = fi->time / 100;
 
 	if (msg_timer > 0) {
-		report("\r%-61.61s %c%c ", msg_text,
+		report("\r%-61.61s %c%c%c", msg_text,
 			ctl->explore ? 'Z' : ' ',
-			ctl->loop ? 'L' : ' ');
+			ctl->loop ? 'L' : ' ',
+			ctl->loop > 1 ? '*' : ' ');
 		msg_timer -= fi->frame_time;
 		if (msg_timer == 0)
 			msg_timer--;
@@ -153,9 +154,10 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	}
 
 	report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-	       "%02X/%02X] Chn[%02X/%02X] %c%c ",
+	       "%02X/%02X] Chn[%02X/%02X] %c%c%c",
 		fi->row, fi->num_rows - 1, fi->virt_used, max_channels,
-		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ');
+		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ',
+		ctl->loop > 1 ? '*' : ' ');
 
     print_time:
 

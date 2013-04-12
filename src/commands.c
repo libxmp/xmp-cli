@@ -182,7 +182,8 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		ctl->skip = -1;
 		break;
 	case 'l':
-		ctl->loop ^= 1;
+		ctl->loop++;
+		ctl->loop %= 3;
 		break;
 	case 'Z':
 		ctl->cur_seq = 1;

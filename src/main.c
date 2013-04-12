@@ -170,6 +170,7 @@ int main(int argc, char **argv)
 	struct timeval tv;
 	struct timezone tz;
 	int flags;
+	int played;
 
 	gettimeofday(&tv, &tz);
 	srand(tv.tv_usec);
@@ -278,7 +279,12 @@ int main(int argc, char **argv)
 	lf_flag = 0;
 	memcpy(&save_opt, &opt, sizeof (struct options));
 
-	for (first = optind; optind < argc; optind++) {
+	control.loop = opt.loop;
+	control.explore = opt.explore;
+	first = optind;
+
+    play_all:
+	for (played = 0; optind < argc; optind++) {
 		memcpy(&opt, &save_opt, sizeof (struct options));
 
 		if (opt.verbose > 0) {
@@ -330,8 +336,6 @@ int main(int argc, char **argv)
 
 		skipprev = 0;
 		control.time = 0.0;
-		control.loop = opt.loop;
-		control.explore = opt.explore;
 		
 		if (opt.sequence) {
 			if (opt.sequence < mi.num_sequences) {
@@ -345,6 +349,8 @@ int main(int argc, char **argv)
 		if (xmp_start_player(xc, opt.rate, opt.format) == 0) {
 			xmp_set_player(xc, XMP_PLAYER_INTERP, opt.interp);
 			xmp_set_player(xc, XMP_PLAYER_DSP, opt.dsp);
+
+			played = 1;
 
 			if (opt.mix >= 0) {
 				xmp_set_player(xc, XMP_PLAYER_MIX, opt.mix);
@@ -403,7 +409,7 @@ int main(int argc, char **argv)
 				int old_loop = fi.loop_count;
 				
 				xmp_get_frame_info(xc, &fi);
-				if (!control.loop && old_loop != fi.loop_count)
+				if (control.loop != 1 && old_loop != fi.loop_count)
 					break;
 
 				sigcont_handler(0);
@@ -469,6 +475,11 @@ int main(int argc, char **argv)
 			goto end;
 		}
 		control.skip = 0;
+	}
+
+	if (control.loop == 2 && played) {
+		optind = first;
+		goto play_all;
 	}
 
 	sound->flush();

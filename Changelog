@@ -2,14 +2,15 @@ Stable versions
 ---------------
 
 4.0.3 ():
-	Bug reported by Misty De Meo:
-	- Fix native-endian support in coreaudio driver
+	- Fix native-endian support in coreaudio driver (reported by
+	  Misty De Meo)
 
-	Subsong explorer requested by Benjamin Shadwick:
+	New features requested by Benjamin Shadwick:
 	- Add commands '<' and '>' to jump to previous/next sequence
 	- Add command 'z' to toggle the subsong explorer on/off
 	- Add option -z <num> to play a specified sequence
 	- Add option -Z to play all sequences in module
+	- Add option --loop-all to loop over entire module list
 
 4.0.2 (20130407):
 	- Fix data type in coreaudio driver

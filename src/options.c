@@ -35,6 +35,7 @@ enum {
 	OPT_VBLANK,
 	OPT_FIXLOOP,
 	OPT_NORC,
+	OPT_LOOPALL,
 };
 
 static void usage(char *s)
@@ -65,6 +66,7 @@ static void usage(char *s)
 "   -d --driver name       Force output to the specified device\n"
 "   --fix-sample-loops     Use sample loop start /2 in MOD/UNIC/NP3\n"
 "   -l --loop              Enable module looping\n"
+"   --loop-all             Loop over entire module list\n"
 "   -M --mute ch-list      Mute the specified channels\n"
 "   --nocmd                Disable interactive commands\n"
 "   --norc                 Don't read configuration files\n"
@@ -113,6 +115,7 @@ static const struct option lopt[] = {
 	{ "interpolation",	1, 0, 'i' },
 	{ "list-formats",	0, 0, 'L' },
 	{ "loop",		0, 0, 'l' },
+	{ "loop-all",		0, 0, OPT_LOOPALL },
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
 	{ "null",		0, 0, 'N' },
@@ -206,6 +209,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break; }
 		case 'l':
 			options->loop = 1;
+			break;
+		case OPT_LOOPALL:
+			options->loop = 2;
 			break;
 		case 'm':
 			options->format |= XMP_FORMAT_MONO;
