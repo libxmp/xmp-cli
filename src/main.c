@@ -342,9 +342,6 @@ int main(int argc, char **argv)
 			read_modconf(&opt, mi.md5);
 		}
 
-		skipprev = 0;
-		control.time = 0.0;
-
 		/* check sequence */
 
 		if (opt.sequence) {
@@ -355,10 +352,19 @@ int main(int argc, char **argv)
 			} else {
 				fprintf(stderr, "%s: sequence %d doesn't exist in this module\n",
 					argv[0], opt.sequence);
+				if (skipprev) {
+					optind -= 2;
+					if (optind < first) {
+						optind += 2;
+					}
+				}
 				continue;
 			}
 		}
 		control.sequence = opt.sequence;
+
+		skipprev = 0;
+		control.time = 0.0;
 
 		/* Play module */
 
