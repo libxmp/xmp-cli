@@ -23,6 +23,8 @@ $ make
 Use ./configure --with-libxmp=/some/path if libxmp is installed in a
 nonstandard place.
 
+To build on Cygwin you may need to pass --with-libxmp=/usr/local.
+
 
 Installation
 ------------

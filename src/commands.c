@@ -14,6 +14,8 @@
 #include "common.h"
 
 #ifdef __CYGWIN__
+#include <sys/select.h>
+
 /*
  * from	daniel åkerud <daniel.akerud@gmail.com>
  * date	Tue, Jul 28, 2009 at 9:59 AM
