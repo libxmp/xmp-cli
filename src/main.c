@@ -275,10 +275,6 @@ int main(int argc, char **argv)
 		exit(EXIT_SUCCESS);
 	}
 
-	if (opt.random) {
-		shuffle(argc - optind + 1, &argv[optind - 1]);
-	}
-
 #ifdef HAVE_SIGNAL_H
 	signal(SIGTERM, cleanup);
 	signal(SIGINT, cleanup);
@@ -310,6 +306,10 @@ int main(int argc, char **argv)
 	first = optind;
 
     play_all:
+	if (opt.random) {
+		shuffle(argc - optind + 1, &argv[optind - 1]);
+	}
+
 	for (played = 0; optind < argc; optind++) {
 		memcpy(&opt, &save_opt, sizeof (struct options));
 
