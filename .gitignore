@@ -1,6 +1,7 @@
 # Binary files
 *.o
 src/xmp
+*.gz
 
 # Modules
 *.it
