@@ -2,8 +2,8 @@ Stable versions
 ---------------
 
 4.0.3 ():
-	- Fix native-endian support in coreaudio driver (reported by
-	  Misty De Meo)
+	- Fix native-endian coreaudio output (reported by Misty De Meo)
+	- Fix MinGW32 build (reported by vaseleos0)
 
 	New features requested by Benjamin Shadwick:
 	- Add commands '<' and '>' to jump to previous/next sequence

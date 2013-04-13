@@ -192,11 +192,11 @@ int main(int argc, char **argv)
 	int skipprev;
 	FILE *f = NULL;
 	int val, lf_flag;
+	int flags;
+	int played;
 #ifndef WIN32
 	struct timeval tv;
 	struct timezone tz;
-	int flags;
-	int played;
 
 	gettimeofday(&tv, &tz);
 	srand(tv.tv_usec);
@@ -286,10 +286,10 @@ int main(int argc, char **argv)
 #ifdef SIGTSTP
 	signal(SIGCONT, sigcont_handler);
 	signal(SIGTSTP, sigtstp_handler);
+	sigcont_handler(0);
 #endif
 #endif
 
-	sigcont_handler(0);
 	xc = xmp_create_context();
 
 	skipprev = 0;
@@ -442,7 +442,9 @@ int main(int argc, char **argv)
 					}
 				}
 
+#ifdef SIGTSTP
 				sigcont_handler(0);
+#endif
 				if (foreground_out && opt.verbose > 0) {
 					info_frame(&mi, &fi, &control, refresh_status);
 					refresh_status = 0;
