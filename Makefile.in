@@ -23,7 +23,7 @@ DFILES		= README INSTALL COPYING CREDITS Changelog configure \
 		  config.sub config.guess install-sh configure.ac Makefile.in \
 		  $(MODULES)
 DDIRS		= src
-MODULES		= 08_sad_song.it
+MODULES		= ub-name.it
 DRIVERS		= @DRIVERS@
 
 all: binaries
