@@ -5,6 +5,8 @@ Stable versions
 	- Fix native-endian coreaudio output (reported by Misty De Meo)
 	- Fix MinGW32 build (reported by vaseleos0)
 	- Fix Cygwin build (reported by Benjamin Shadwick)
+	- Fix module-specifc flag settings to override build-in quirks
+          (requires libxmp 4.1 or later)
 
 	New features requested by Benjamin Shadwick:
 	- Add commands '<' and '>' to jump to previous/next sequence

@@ -8,7 +8,7 @@ Requirements
   are required to build sound drivers. Most Linux distributions provide
   these as -devel or -dev packages.
 
-- Development components of libxmp 4.0.0 or later. Libxmp is available at
+- Development components of libxmp 4.1.0 or later. Libxmp is available at
   http://xmp.sf.net.
 
 
