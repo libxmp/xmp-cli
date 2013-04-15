@@ -57,8 +57,8 @@ else
   AC_MSG_ERROR(Can't find libxmp header files)
 fi
 
-XMP_CHECK_LIBVERSION(0x040000,,
-  AC_MSG_ERROR(Can't find libxmp 4))
+XMP_CHECK_LIBVERSION(0x040100,,
+  AC_MSG_ERROR(Can't find libxmp 4.1))
 
 case "$host_cpu" in
 powerpc64)
