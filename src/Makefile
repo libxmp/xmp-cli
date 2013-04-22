@@ -18,7 +18,7 @@ dist-src:
 	mkdir -p $(DIST)/$(SRC_PATH)
 	cp -RPp $(addprefix $(SRC_PATH)/,$(SRC_DFILES)) $(DIST)/$(SRC_PATH)
 
-$(SRC_PATH)/xmp: $(OBJS)
+$(SRC_PATH)/xmp$(EXEEXT): $(OBJS)
 	@CMD='$(LD) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)'; \
 	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo LD $@ ; fi; \
 	eval $$CMD
@@ -28,8 +28,8 @@ $(SRC_PATH)/sound_beos.o: src/sound_beos.c
 	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo CXX $@ ; fi; \
 	eval $$CMD
 
-install-xmp: $(SRC_PATH)/xmp
-	@echo Installing xmp in $(DESTDIR)$(BINDIR)
+install-xmp: $(SRC_PATH)/xmp$(EXEEXT)
+	@echo Installing xmp$(EXEEXT) in $(DESTDIR)$(BINDIR)
 	@[ -d $(DESTDIR)$(BINDIR) ] || mkdir -p $(DESTDIR)$(BINDIR)
 	@$(INSTALL) -m755 $+ $(DESTDIR)$(BINDIR)
 

@@ -15,6 +15,7 @@ BINDIR		= @bindir@
 LIBDIR		= @libdir@
 MANDIR		= @mandir@/man1
 SYSCONFDIR	= @sysconfdir@/xmp
+EXEEXT		= @EXEEXT@
 SHELL		= /bin/sh
 V		= 0
 
@@ -32,14 +33,14 @@ include src/Makefile
 
 CFLAGS += -I. -DVERSION=\"$(VERSION)\"
 
-.SUFFIXES: .c .o .lo .a .so .dll
+.SUFFIXES: .c .o .lo .a .so .dll .exe
 
 .c.o:
 	@CMD='$(CC) $(CFLAGS) -o $*.o $<'; \
 	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo CC $*.o ; fi; \
 	eval $$CMD
 
-binaries: src/xmp
+binaries: src/xmp$(EXEEXT)
 
 clean:
 	@rm -f $(OBJS)
