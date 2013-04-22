@@ -28,7 +28,7 @@
 extern int optind;
 
 static struct sound_driver *sound;
-static unsigned int foreground_in, foreground_out;
+static unsigned int foreground_in = 1, foreground_out = 1;
 static int refresh_status;
 
 
@@ -83,9 +83,10 @@ static void sigcont_handler(int sig)
 	foreground_in  = tcgetpgrp(STDIN_FILENO)  == getpgrp();
 	foreground_out = tcgetpgrp(STDERR_FILENO) == getpgrp();
 
-	if (old_in != foreground_in)
+	if (old_in != foreground_in) {
 		/* Only call if it was not already prepared */
 		set_tty();
+	}
 #endif
 
 	if (sig != 0)
