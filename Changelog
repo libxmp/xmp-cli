@@ -1,6 +1,10 @@
 Stable versions
 ---------------
 
+4.0.4 ():
+	- Fix executable suffix in MinGW32
+	- Fix frame info display in Windows (reported by vaseleos0)
+
 4.0.3 (20130420):
 	- Fix native-endian coreaudio output (reported by Misty De Meo)
 	- Fix MinGW32 build (reported by vaseleos0)
