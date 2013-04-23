@@ -5,12 +5,13 @@ Stable versions
 	- Fix executable suffix in MinGW32
 	- Fix frame info display in Windows (reported by vaseleos0)
 
-4.0.3 (20130420):
+4.0.3 (20130421):
 	- Fix native-endian coreaudio output (reported by Misty De Meo)
 	- Fix MinGW32 build (reported by vaseleos0)
 	- Fix Cygwin build (reported by Benjamin Shadwick)
-	- Fix module-specifc flag settings to override build-in quirks
-          (requires libxmp 4.1 or later)
+	- Fix module-specifc flags to override built-in quirks (requires
+	  libxmp 4.1 or later)
+	- Don't place configuration file in places like /usr/local/etc
 
 	New features requested by Benjamin Shadwick:
 	- Add commands '<' and '>' to jump to previous/next sequence

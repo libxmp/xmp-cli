@@ -20,6 +20,20 @@ if test "$libxmp_path" != ""; then
   LIBS="${LIBS} -L${libxmp_path}/lib"
 fi
 
+dnl Don't use things like /usr/etc or /usr/var
+
+fix_prefix=no
+if test "x$prefix" = xNONE; then
+    fix_prefix=yes
+elif test "x$prefix" = x/usr -o "x$prefix" = x/usr/local; then
+    fix_prefix=yes
+fi
+
+if test $fix_prefix = yes -a $sysconfdir = '${prefix}/etc'; then
+    sysconfdir=/etc
+    localstatedir=/var
+fi
+
 AC_DEFUN([AC_CHECK_DEFINED],[
   AS_VAR_PUSHDEF([ac_var],[ac_cv_defined_$1])dnl
   AC_CACHE_CHECK([for $1 defined], ac_var,
