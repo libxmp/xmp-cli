@@ -188,6 +188,7 @@ cygwin*|mingw*)
   ;;
 beos*|haiku*)
   AC_DEFINE(SOUND_BEOS)
+  CFLAGS="${CFLAGS} -Wno-multichar"
   DRIVERS="${DRIVERS} sound_beos.o"
   LIBS="${LIBS} -lmedia -lbe"
   ;;
