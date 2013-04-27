@@ -19,6 +19,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+
+#ifdef __SUNPRO_CC
+#pragma error_messages (off,E_EMPTY_TRANSLATION_UNIT)
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
