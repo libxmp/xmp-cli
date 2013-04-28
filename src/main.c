@@ -88,7 +88,7 @@ static void sigcont_handler(int sig)
 		set_tty();
 	}
 #else
-	foreground_in = foregound_out = 1;
+	foreground_in = foreground_out = 1;
 #endif
 
 	if (sig != 0)
@@ -442,7 +442,7 @@ int main(int argc, char **argv)
 #ifdef SIGTSTP
 				sigcont_handler(0);
 #else
-				foreground_in = foregound_out = 1;
+				foreground_in = foreground_out = 1;
 #endif
 				if (foreground_out && opt.verbose > 0) {
 					info_frame(&mi, &fi, &control, refresh_status);
