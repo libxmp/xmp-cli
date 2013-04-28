@@ -27,7 +27,7 @@
 /* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
    Ditto for AIX 3.2 and <stdlib.h>.  */
 
-#ifdef __SUNPRO_CC
+#ifdef __SUNPRO_C
 #pragma error_messages (off,E_EMPTY_TRANSLATION_UNIT)
 #endif
 

@@ -20,7 +20,7 @@
    Boston, MA 02111-1307, USA.  */
 
 
-#ifdef __SUNPRO_CC
+#ifdef __SUNPRO_C
 #pragma error_messages (off,E_EMPTY_TRANSLATION_UNIT)
 #endif
 

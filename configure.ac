@@ -12,12 +12,14 @@ AC_ARG_WITH(libxmp,
   [  --with-libxmp=<path>    libxmp prefix (optional)],
   libxmp_path="$withval")
 
+AC_SUBST(LD_VERSCRIPT)
 AC_CANONICAL_HOST
 AC_PROG_CC
+AC_PROG_INSTALL
 
 if test "$libxmp_path" != ""; then
   CPPFLAGS="${CPPFLAGS} -I${libxmp_path}/include"
-  LIBS="${LIBS} -L${libxmp_path}/lib"
+  LDFLAGS="${LDFLAGS} -L${libxmp_path}/lib"
 fi
 
 dnl Don't use things like /usr/etc or /usr/var
@@ -33,6 +35,15 @@ if test $fix_prefix = yes -a $sysconfdir = '${prefix}/etc'; then
     sysconfdir=/etc
     localstatedir=/var
 fi
+
+dnl XMP_TRY_COMPILE(<message>,<cache-var>,<flags>,<program>,<ifyes>,<ifno>)
+AC_DEFUN([XMP_TRY_COMPILE],[
+  AC_CACHE_CHECK([$1],[$2],[
+    oldcflags="${CFLAGS}"
+    CFLAGS="${CFLAGS} $3"
+    AC_COMPILE_IFELSE([AC_LANG_SOURCE([[$4]])],[$2=yes],[$2=no],[true])
+    CFLAGS="${oldcflags}"])
+  AS_IF([test "x$$2" = xyes], [$5], [$6])])
 
 AC_DEFUN([AC_CHECK_DEFINED],[
   AS_VAR_PUSHDEF([ac_var],[ac_cv_defined_$1])dnl
@@ -199,18 +210,11 @@ if test -z "${DRIVERS}" -a "${ac_cv_header_sys_audioio_h}" = "yes"; then
   DRIVERS="${DRIVERS} sound_bsd.o"
 fi
 
-dnl XMP_TRY_COMPILE(<message>,<cache-var>,<flags>,<program>,<ifyes>,<ifno>)
-define(XMP_TRY_COMPILE,[
-  AC_CACHE_CHECK([$1],[$2],[
-    oldcflags="${CFLAGS}"
-    CFLAGS="${CFLAGS} $3"
-    AC_COMPILE_IFELSE([AC_LANG_SOURCE([[$4]])],[$2=yes],[$2=no],[true])
-    CFLAGS="${oldcflags}"])
-  if test "x$$2" = xyes; then
-    true; $5
-  else
-    true; $6
-  fi])
+XMP_TRY_COMPILE(whether compiler understands -Wall,
+  ac_cv_c_flag_w_all,
+  -Wall,[
+  int main(){}],
+  CFLAGS="${CFLAGS} -Wall") 
 
 XMP_TRY_COMPILE(whether compiler understands -Wunused-result,
   ac_cv_c_flag_w_unused_result,

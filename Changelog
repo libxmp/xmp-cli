@@ -4,6 +4,7 @@ Stable versions
 4.0.4 ():
 	- Fix executable suffix in MinGW32
 	- Fix frame info display in Windows (reported by vaseleos0)
+	- Fix build issues with Solaris Studio
 
 4.0.3 (20130421):
 	- Fix native-endian coreaudio output (reported by Misty De Meo)
