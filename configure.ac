@@ -1,5 +1,5 @@
-dnl AC_CONFIG_AUX_DIR(./scripts)
-AC_INIT
+AC_INIT([xmp], [4.0.2])
+AC_CONFIG_AUX_DIR([build-aux])
 0>confdefs.h
 
 AC_ARG_ENABLE(oss,
@@ -8,19 +8,15 @@ AC_ARG_ENABLE(alsa,
   [  --disable-alsa          don't compile ALSA support])
 AC_ARG_ENABLE(pulseaudio,
   [  --enable-pulseaudio     compile PulseAudio support])
-AC_ARG_WITH(libxmp,
-  [  --with-libxmp=<path>    libxmp prefix (optional)],
-  libxmp_path="$withval")
 
 AC_SUBST(LD_VERSCRIPT)
 AC_CANONICAL_HOST
 AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_INSTALL
+AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
-if test "$libxmp_path" != ""; then
-  CPPFLAGS="${CPPFLAGS} -I${libxmp_path}/include"
-  LDFLAGS="${LDFLAGS} -L${libxmp_path}/lib"
-fi
+PKG_CHECK_MODULES([libxmp], [libxmp >= 4.1])
 
 dnl Don't use things like /usr/etc or /usr/var
 
@@ -59,31 +55,7 @@ AC_DEFUN([AC_CHECK_DEFINED],[
   AS_VAR_POPDEF([ac_var])dnl
 ])
 
-AC_DEFUN([XMP_CHECK_LIBVERSION],[
-  AS_VAR_PUSHDEF([ac_var],[xmp_cv_libversion_$1])dnl
-  AC_CACHE_CHECK([for libxmp 4], ac_var,
-  AC_TRY_COMPILE([#include <xmp.h>],[
-    #if XMP_VERCODE >= $1
-    int ok;
-    #else
-    choke me
-    #endif
-  ],AS_VAR_SET(ac_var, yes),AS_VAR_SET(ac_var, no)))
-  AS_IF([test AS_VAR_GET(ac_var) != "no"], [$2], [$3])dnl
-  AS_VAR_POPDEF([ac_var])dnl
-])
-
-AC_CHECK_HEADERS(xmp.h getopt.h signal.h termios.h)
-
-if test "${ac_cv_header_xmp_h}" = "yes"; then
-  AC_CHECK_LIB(xmp,xmp_create_context,,
-    AC_MSG_ERROR(Can't find libxmp))
-else
-  AC_MSG_ERROR(Can't find libxmp header files)
-fi
-
-XMP_CHECK_LIBVERSION(0x040100,,
-  AC_MSG_ERROR(Can't find libxmp 4.1))
+AC_CHECK_HEADERS([getopt.h signal.h termios.h])
 
 case "$host_cpu" in
 powerpc64)
@@ -98,117 +70,132 @@ if test "${enable_oss}" != "no"; then
   AC_CHECK_HEADERS(sys/soundcard.h machine/soundcard.h)
   if test "${ac_cv_header_sys_soundcard_h}" = "yes" -o "${ac_cv_header_machine_soundcard_h}" = "yes"; then
     AC_DEFINE(SOUND_OSS)
-    DRIVERS="${DRIVERS} sound_oss.o"
-  fi
-fi
-if test "${enable_alsa}" != "no"; then
-  AC_CHECK_HEADER(alsa/asoundlib.h)
-  if test "${ac_cv_header_alsa_asoundlib_h}" = "yes"; then
-    AC_DEFINE(SOUND_ALSA)
-    DRIVERS="${DRIVERS} sound_alsa.o"
-    LIBS="${LIBS} -lasound"
-  fi
-fi
-if test "${enable_pulseaudio}" = "yes"; then
-  AC_CHECK_HEADER(pulse/simple.h)
-  if test "${ac_cv_header_pulse_simple_h}" = "yes"; then
-    AC_DEFINE(SOUND_PULSEAUDIO)
-    DRIVERS="${DRIVERS} sound_pulseaudio.o"
-    LIBS="${LIBS} -lpulse-simple -lpulse"
+    AM_CONDITIONAL([SOUND_OSS], [true])
   fi
 fi
 
+AS_IF([test "$enable_alsa" = "yes"], [
+	PKG_CHECK_MODULES([alsa], [alsa >= 1], [enable_alsa=yes])
+], [
+	AS_IF([test "$enable_alsa" != "no"], [
+		PKG_CHECK_MODULES([alsa], [alsa >= 1], [enable_alsa=yes], [true])
+	])
+])
+AM_CONDITIONAL([SOUND_ALSA], [test "$enable_alsa" = "yes"])
+
+AS_IF([test "$enable_pulseaudio" = "yes"], [
+	PKG_CHECK_MODULES([pulseaudio], [libpulse-simple],
+		[enable_pulseaudio=yes])
+], [
+	AS_IF([test "$enable_pulseaudio" != "no"], [
+		PKG_CHECK_MODULES([pulseaudio], [libpulse-simple],
+			[enable_pulseaudio=yes], [true])
+	])
+])
+AM_CONDITIONAL([SOUND_PULSE], [test "$enable_pulseaudio" = "yes"])
+
+AM_CONDITIONAL([SOUND_AHI], [false])
+AM_CONDITIONAL([SOUND_COREAUDIO], [false])
+AM_CONDITIONAL([SOUND_SNDIO], [false])
+AM_CONDITIONAL([SOUND_BSD], [false])
+AM_CONDITIONAL([SOUND_NETBSD], [false])
+AM_CONDITIONAL([SOUND_SOLARIS], [false])
+AM_CONDITIONAL([SOUND_HPUX], [false])
+AM_CONDITIONAL([SOUND_AIX], [false])
+AM_CONDITIONAL([SOUND_SGI], [false])
+AM_CONDITIONAL([SOUND_QNX], [false])
+AM_CONDITIONAL([SOUND_ALSA05], [false])
+AM_CONDITIONAL([SOUND_WIN32], [false])
+AM_CONDITIONAL([SOUND_BEOS], [false])
+
 case "${host_os}" in
 amigaos*|aros)
-  DRIVERS="${DRIVERS} sound_ahi.o"
   AC_DEFINE(SOUND_AHI)
+  AM_CONDITIONAL([SOUND_AHI], [true])
   ;;
 darwin*)
   AC_CHECK_HEADER(CoreAudio/CoreAudio.h)
   if test "${ac_cv_header_CoreAudio_CoreAudio_h}" = "yes"; then
     AC_DEFINE(SOUND_COREAUDIO)
-    DRIVERS="${DRIVERS} sound_coreaudio.o"
-    LIBS="${LIBS} -framework AudioToolbox -framework AudioUnit -framework CoreServices"
+    AM_CONDITIONAL([SOUND_COREAUDIO], [true])
+    XMP_DARWIN_LDFLAGS="-framework AudioToolbox -framework AudioUnit -framework CoreServices"
+    AC_SUBST([XMP_DARWIN_LDFLAGS])
   fi
   ;;
 openbsd*)
   AC_CHECK_HEADER(sndio.h)
   if test "${ac_cv_header_sndio_h}" = "yes"; then
     AC_DEFINE(SOUND_SNDIO)
-    DRIVERS="${DRIVERS} sound_sndio.o"
-    LIBS="${LIBS} -lsndio"
+    AM_CONDITIONAL([SOUND_SNDIO], [true])
   fi
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
     AC_DEFINE(SOUND_BSD)
-    DRIVERS="${DRIVERS} sound_bsd.o"
+    AM_CONDITIONAL([SOUND_BSD], [true])
   fi
   ;;
 netbsd*)
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
     AC_DEFINE(SOUND_NETBSD)
-    DRIVERS="${DRIVERS} sound_netbsd.o"
+    AM_CONDITIONAL([SOUND_NETBSD], [true])
   fi
   ;;
 solaris*)
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
     AC_DEFINE(SOUND_SOLARIS)
-    DRIVERS="${DRIVERS} sound_solaris.o"
+    AM_CONDITIONAL([SOUND_SOLARIS], [true])
   fi
   ;;
 hpux*)
   AC_CHECK_HEADER(sys/audio.h)
   if test "${ac_cv_header_sys_audio_h}" = "yes"; then
     AC_DEFINE(SOUND_HPUX)
-    DRIVERS="${DRIVERS} sound_hpux.o"
+    AM_CONDITIONAL([SOUND_HPUX], [true])
   fi
   ;;
 aix*)
   AC_CHECK_HEADER(audio.h)
   if test "${ac_cv_header_audio_h}" = "yes"; then
     AC_DEFINE(SOUND_AIX)
-    DRIVERS="${DRIVERS} sound_aix.o"
+    AM_CONDITIONAL([SOUND_AIX], [true])
   fi
   ;;
 irix*)
   AC_CHECK_HEADERS(dmedia/audio.h)
   if test "${ac_cv_header_dmedia_audio_h}" = "yes"; then
     AC_DEFINE(SOUND_SGI)
-    DRIVERS="${DRIVERS} sound_sgi.o"
-    LIBS="${LIBS} -laudio"
+    AM_CONDITIONAL([SOUND_SGI], [true])
   fi
   ;;
 qnx*)
   AC_CHECK_HEADERS(sys/audio.h)
   if test "${ac_cv_header_sys_audio_h}" = "yes"; then
     AC_DEFINE(DRIVER_QNX)
-    DRIVERS="${DRIVERS} sound_qnx.o"
+    AM_CONDITIONAL([SOUND_QNX], [true])
   fi
   ;;
 nto-qnx*)
   AC_CHECK_HEADERS(sys/asoundlib.h)
   if test "${ac_cv_header_sys_asoundlib_h}" = "yes"; then
     AC_DEFINE(DRIVER_ALSA05)
-    DRIVERS="${DRIVERS} alsa05.o"
-    LIBS="${LIBS} -lasound"
+    AM_CONDITIONAL([SOUND_ALSA05], [true])
   fi
   ;;
 cygwin*|mingw*)
   AC_DEFINE(SOUND_WIN32)
-  DRIVERS="${DRIVERS} sound_win32.o"
-  LIBS="${LIBS} -lwinmm"
+  AM_CONDITIONAL([SOUND_WIN32], [true])
   ;;
 beos*|haiku*)
   AC_DEFINE(SOUND_BEOS)
   CFLAGS="${CFLAGS} -Wno-multichar"
-  DRIVERS="${DRIVERS} sound_beos.o"
-  LIBS="${LIBS} -lmedia -lbe"
+  AM_CONDITIONAL([SOUND_BEOS], [true])
   ;;
+*)
+	AS_IF([test "$ac_cv_header_sys_audioio_h" = "yes"], [
+		AC_DEFINE([SOUND_BSD])
+		AM_CONDITIONAL([SOUND_BSD], [true])
+	])
+	;;
 esac
-
-if test -z "${DRIVERS}" -a "${ac_cv_header_sys_audioio_h}" = "yes"; then
-  AC_DEFINE(SOUND_BSD)
-  DRIVERS="${DRIVERS} sound_bsd.o"
-fi
 
 XMP_TRY_COMPILE(whether compiler understands -Wall,
   ac_cv_c_flag_w_all,
@@ -223,7 +210,5 @@ XMP_TRY_COMPILE(whether compiler understands -Wunused-result,
   CFLAGS="${CFLAGS} -Wno-unused-result")  
 
 AC_CHECK_FUNCS(kill getopt_long)
-AC_PROG_INSTALL
-AC_SUBST(DRIVERS)
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
