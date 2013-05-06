@@ -22,7 +22,7 @@ xmp_SOURCES += sound_alsa.c
 xmp_LDADD   += ${alsa_LIBS}
 endif
 
-if SOUND_PULSE
+if SOUND_PULSEAUDIO
 xmp_SOURCES += sound_pulseaudio.c
 xmp_LDADD   += ${pulseaudio_LIBS}
 endif

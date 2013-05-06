@@ -66,6 +66,23 @@ esac
 
 AC_CHECK_HEADERS(sys/audioio.h)
 
+AM_CONDITIONAL([SOUND_AHI], [false])
+AM_CONDITIONAL([SOUND_AIX], [false])
+AM_CONDITIONAL([SOUND_ALSA05], [false])
+AM_CONDITIONAL([SOUND_ALSA], [false])
+AM_CONDITIONAL([SOUND_BEOS], [false])
+AM_CONDITIONAL([SOUND_BSD], [false])
+AM_CONDITIONAL([SOUND_COREAUDIO], [false])
+AM_CONDITIONAL([SOUND_HPUX], [false])
+AM_CONDITIONAL([SOUND_NETBSD], [false])
+AM_CONDITIONAL([SOUND_OSS], [false])
+AM_CONDITIONAL([SOUND_PULSEAUDIO], [false])
+AM_CONDITIONAL([SOUND_QNX], [false])
+AM_CONDITIONAL([SOUND_SGI], [false])
+AM_CONDITIONAL([SOUND_SNDIO], [false])
+AM_CONDITIONAL([SOUND_SOLARIS], [false])
+AM_CONDITIONAL([SOUND_WIN32], [false])
+
 if test "${enable_oss}" != "no"; then
   AC_CHECK_HEADERS(sys/soundcard.h machine/soundcard.h)
   if test "${ac_cv_header_sys_soundcard_h}" = "yes" -o "${ac_cv_header_machine_soundcard_h}" = "yes"; then
@@ -75,38 +92,29 @@ if test "${enable_oss}" != "no"; then
 fi
 
 AS_IF([test "$enable_alsa" = "yes"], [
-	PKG_CHECK_MODULES([alsa], [alsa >= 1], [enable_alsa=yes])
+  PKG_CHECK_MODULES([alsa], [alsa >= 1], [enable_alsa=yes])
 ], [
-	AS_IF([test "$enable_alsa" != "no"], [
-		PKG_CHECK_MODULES([alsa], [alsa >= 1], [enable_alsa=yes], [true])
-	])
+  AS_IF([test "$enable_alsa" != "no"], [
+    PKG_CHECK_MODULES([alsa], [alsa >= 1], [enable_alsa=yes], [true])
+  ])
 ])
-AM_CONDITIONAL([SOUND_ALSA], [test "$enable_alsa" = "yes"])
+AS_IF([test "$enable_alsa" = "yes"], [
+  AC_DEFINE(SOUND_ALSA)
+  AM_CONDITIONAL([SOUND_ALSA], [true])
+])
 
 AS_IF([test "$enable_pulseaudio" = "yes"], [
-	PKG_CHECK_MODULES([pulseaudio], [libpulse-simple],
-		[enable_pulseaudio=yes])
+  PKG_CHECK_MODULES([pulseaudio], [libpulse-simple], [enable_pulseaudio=yes])
 ], [
-	AS_IF([test "$enable_pulseaudio" != "no"], [
-		PKG_CHECK_MODULES([pulseaudio], [libpulse-simple],
+  AS_IF([test "$enable_pulseaudio" != "no"], [
+    PKG_CHECK_MODULES([pulseaudio], [libpulse-simple],
 			[enable_pulseaudio=yes], [true])
-	])
+  ])
 ])
-AM_CONDITIONAL([SOUND_PULSE], [test "$enable_pulseaudio" = "yes"])
-
-AM_CONDITIONAL([SOUND_AHI], [false])
-AM_CONDITIONAL([SOUND_COREAUDIO], [false])
-AM_CONDITIONAL([SOUND_SNDIO], [false])
-AM_CONDITIONAL([SOUND_BSD], [false])
-AM_CONDITIONAL([SOUND_NETBSD], [false])
-AM_CONDITIONAL([SOUND_SOLARIS], [false])
-AM_CONDITIONAL([SOUND_HPUX], [false])
-AM_CONDITIONAL([SOUND_AIX], [false])
-AM_CONDITIONAL([SOUND_SGI], [false])
-AM_CONDITIONAL([SOUND_QNX], [false])
-AM_CONDITIONAL([SOUND_ALSA05], [false])
-AM_CONDITIONAL([SOUND_WIN32], [false])
-AM_CONDITIONAL([SOUND_BEOS], [false])
+AS_IF([test "$enable_pulseaudio" = "yes"], [
+  AC_DEFINE(SOUND_PULSEAUDIO)
+  AM_CONDITIONAL([SOUND_PULSEAUDIO], [true])
+])
 
 case "${host_os}" in
 amigaos*|aros)
@@ -169,14 +177,14 @@ irix*)
 qnx*)
   AC_CHECK_HEADERS(sys/audio.h)
   if test "${ac_cv_header_sys_audio_h}" = "yes"; then
-    AC_DEFINE(DRIVER_QNX)
+    AC_DEFINE(SOUND_QNX)
     AM_CONDITIONAL([SOUND_QNX], [true])
   fi
   ;;
 nto-qnx*)
   AC_CHECK_HEADERS(sys/asoundlib.h)
   if test "${ac_cv_header_sys_asoundlib_h}" = "yes"; then
-    AC_DEFINE(DRIVER_ALSA05)
+    AC_DEFINE(SOUND_ALSA05)
     AM_CONDITIONAL([SOUND_ALSA05], [true])
   fi
   ;;
@@ -190,11 +198,11 @@ beos*|haiku*)
   AM_CONDITIONAL([SOUND_BEOS], [true])
   ;;
 *)
-	AS_IF([test "$ac_cv_header_sys_audioio_h" = "yes"], [
-		AC_DEFINE([SOUND_BSD])
-		AM_CONDITIONAL([SOUND_BSD], [true])
-	])
-	;;
+  AS_IF([test "$ac_cv_header_sys_audioio_h" = "yes"], [
+    AC_DEFINE([SOUND_BSD])
+    AM_CONDITIONAL([SOUND_BSD], [true])
+  ])
+  ;;
 esac
 
 XMP_TRY_COMPILE(whether compiler understands -Wall,
