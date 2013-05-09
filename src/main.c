@@ -333,8 +333,9 @@ int main(int argc, char **argv)
 
 			if (skipprev) {
 		        	optind -= 2;
-				if (optind < first) {
+				if (optind < (first - 1)) {
 					optind += 2;
+					skipprev = 0;
 				}
 			}
 			continue;
