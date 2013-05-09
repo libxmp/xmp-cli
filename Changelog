@@ -2,6 +2,8 @@ Stable versions
 ---------------
 
 4.0.5 ():
+	- Fix loop when skipping to first file and it's not playable
+
 	Changes by Jan Engelhardt:
 	- Change buildsystem to use automake
 
