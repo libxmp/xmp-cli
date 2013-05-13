@@ -13,6 +13,18 @@ AC_SUBST(LD_VERSCRIPT)
 AC_CANONICAL_HOST
 AC_PROG_CC
 AC_PROG_CXX
+case "$host_os" in
+beos*|haiku*)
+	AS_IF([! which "$CXX" >/dev/null 2>/dev/null],
+		[AC_MSG_ERROR([C++ compiler required on this platform ($host_os)])])
+	;;
+*)
+	# Do not error out on linking when g++ is absent.
+	CXXLD='${CCLD}'
+	AC_SUBST([CXXLD])
+	;;
+esac
+
 AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
