@@ -91,8 +91,8 @@ static void onresume(void)
 }
 
 static const char *const help[] = {
-	"big-endian", "Force big-endian 16-bit samples",
-	"little-endian", "Force little-endian 16-bit samples",
+	"endian=big", "Force big-endian 16-bit samples",
+	"endian=little", "Force little-endian 16-bit samples",
 	NULL
 };
 
