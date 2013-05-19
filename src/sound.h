@@ -1,5 +1,5 @@
-#ifndef __SOUND_H
-#define __SOUND_H
+#ifndef XMP_SOUND_H
+#define XMP_SOUND_H
 
 #include <xmp.h>
 #include <stdio.h>
