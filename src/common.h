@@ -1,5 +1,19 @@
-#ifndef __COMMON_H
-#define __COMMON_H
+#ifndef XMP_COMMON_H
+#define XMP_COMMON_H
+
+#ifdef _MSC_VER
+#define PATH_MAX 1024
+#define inline __inline
+#define open _open
+#define close _close
+#define write _write
+#define lseek _lseek
+#define strdup _strdup
+#define strcasecmp _stricmp
+#define snprintf _snprintf
+#define kbhit _kbhit
+#define getch _getch
+#endif
 
 #define MAX_DRV_PARM 20
 
@@ -35,7 +49,7 @@ struct options {
 };
 
 struct control {
-	long time;		/* Replay time in ms */
+	double time;		/* Replay time in ms */
 	int skip;		/* Skip to next module */
 	int loop;		/* Module is looped */
 	int pause;		/* Replay paused */

@@ -25,7 +25,7 @@ struct sound_driver {
 #define parm_end() } }
 #define parm_error() do { \
 	fprintf(stderr, "xmp: incorrect parameters in -D %s\n", s); \
-	exit(-4); } while (0)
+	exit(4); } while (0)
 #define chkparm0(x,y) { \
 	if (!strcmp(s, x)) { \
 	    if (token != NULL) parm_error(); else { y; } } }

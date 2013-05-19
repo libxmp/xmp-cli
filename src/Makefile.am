@@ -89,7 +89,7 @@ man_MANS = xmp.1
 pkgsysconfdir   = ${sysconfdir}/${PACKAGE_NAME}
 pkgsysconf_DATA = modules.conf xmp.conf
 
-EXTRA_DIST = ${man_MANS} ${pkgsysconf_DATA}
+EXTRA_DIST = ${man_MANS} ${pkgsysconf_DATA} win32/usleep.c win32/unistd.h
 
 # unused sources
 EXTRA_DIST += sound_dart.c

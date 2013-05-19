@@ -218,7 +218,8 @@ static char *posixly_correct;
 /* Avoid depending on library functions or files
    whose names are inconsistent.  */
 
-char *getenv ();
+/* char *getenv (); */
+#include <stdlib.h>
 
 static char *
 my_index (str, chr)
@@ -370,7 +371,7 @@ _getopt_initialize (argc, argv, optstring)
 
   nextchar = NULL;
 
-  posixly_correct = getenv ("POSIXLY_CORRECT");
+  posixly_correct getenv ("POSIXLY_CORRECT");
 
   /* Determine how to handle the ordering of options and nonoptions.  */
 

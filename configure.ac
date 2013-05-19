@@ -1,4 +1,4 @@
-AC_INIT([xmp], [4.0.5])
+AC_INIT([xmp], [4.0.6])
 AC_CONFIG_AUX_DIR([build-aux])
 0>confdefs.h
 
@@ -67,7 +67,7 @@ AC_DEFUN([AC_CHECK_DEFINED],[
   AS_VAR_POPDEF([ac_var])dnl
 ])
 
-AC_CHECK_HEADERS([getopt.h signal.h termios.h])
+AC_CHECK_HEADERS([getopt.h signal.h termios.h sys/time.h sys/audioio.h])
 
 case "$host_cpu" in
 powerpc64)
@@ -75,8 +75,6 @@ powerpc64)
   LDFLAGS="${LDFLAGS} -m64"
   ;;
 esac
-
-AC_CHECK_HEADERS(sys/audioio.h)
 
 AM_CONDITIONAL([SOUND_AHI], [false])
 AM_CONDITIONAL([SOUND_AIX], [false])
