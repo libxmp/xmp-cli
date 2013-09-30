@@ -296,6 +296,10 @@ int main(int argc, char **argv)
 #endif
 
 	xc = xmp_create_context();
+	if (xc == NULL) {
+		perror(argv[0]);
+		exit(EXIT_FAILURE);
+	}
 
 	skipprev = 0;
 
