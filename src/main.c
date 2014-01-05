@@ -264,7 +264,7 @@ int main(int argc, char **argv)
 
 	if (opt.verbose > 0) {
 		report("Extended Module Player " VERSION "\n"
-			"Copyright (C) 1996-2013 Claudio Matsuoka and Hipolito Carraro Jr\n");
+			"Copyright (C) 1996-2014 Claudio Matsuoka and Hipolito Carraro Jr\n");
 
 		report("Using %s\n", sound->description);
 
@@ -326,7 +326,7 @@ int main(int argc, char **argv)
 			if (lf_flag)
 				report("\n");
 			lf_flag = 1;
-			report("Loading %s... (%d of %d)\n",
+			report("Loading %s (%d of %d)\n",
 				argv[optind], optind - first + 1, argc - first);
 		}
 
