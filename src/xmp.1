@@ -5,182 +5,182 @@ xmp - Extended Module Player
 .PP 
 .SH "SYNOPSIS" 
 \fBxmp\fP
-[\fB-a, --amplify\fP \fIfactor\fP]
-[\fB-b, --bits\fP \fIbits\fP]
-[\fB-c, --stdout\fP]
-[\fB-D\fP \fIdevice-specific parameters\fP]
-[\fB-d, --driver\fP \fIdriver\fP]
-[\fB-F, --nofilter\fP]
-[\fB-f, --frequency\fP \fIrate\fP]
-[\fB--fix-sample-loop\fP]
-[\fB-h, --help\fP]
-[\fB-I, --instrument-path\fP]
-[\fB-i, --interpolation \fItype\fP]
-[\fB--load-only\fP]
-[\fB-L, --list-formats\fP]
-[\fB-l, --loop\fP]
-[\fB--loop-all\fP]
-[\fB-M, --mute\fP \fIchannel-list\fP]
-[\fB-m, --mono\fP]
-[\fB-N, --null\fP]
-[\fB--nocmd\fP]
-[\fB-o, --output-file\fP \fIfilename\fP]
-[\fB--offset-bug-emulation\fP]
-[\fB-P, --pan\fP \fIpan\fP]
-[\fB--probe-only\fP]
-[\fB-q, --quiet\fP]
-[\fB-R, --random\fP]
-[\fB-S, --solo\fP \fIchannel-list\fP]
-[\fB-s, --start\fP \fIpos\fP]
-[\fB-t, --time\fP \fItime\fP]
-[\fB-u, --unsigned\fP]
-[\fB--vblank\fP]
-[\fB-V, --version\fP]
-[\fB-v, --verbose\fP]
-[\fB-Z, --all-sequences\fP]
-[\fB-z, --sequence\fP]
+[\fB\-a, \-\-amplify\fP \fIfactor\fP]
+[\fB\-b, \-\-bits\fP \fIbits\fP]
+[\fB\-c, \-\-stdout\fP]
+[\fB\-D\fP \fIdevice-specific parameters\fP]
+[\fB\-d, \-\-driver\fP \fIdriver\fP]
+[\fB\-F, \-\-nofilter\fP]
+[\fB\-f, \-\-frequency\fP \fIrate\fP]
+[\fB\-\-fix\-sample\-loop\fP]
+[\fB\-h, \-\-help\fP]
+[\fB\-I, \-\-instrument\-path\fP]
+[\fB\-i, \-\-interpolation \fItype\fP]
+[\fB\-\-load\-only\fP]
+[\fB\-L, \-\-list\-formats\fP]
+[\fB\-l, \-\-loop\fP]
+[\fB\-\-loop\-all\fP]
+[\fB\-M, \-\-mute\fP \fIchannel-list\fP]
+[\fB\-m, \-\-mono\fP]
+[\fB\-N, \-\-null\fP]
+[\fB\-\-nocmd\fP]
+[\fB\-o, \-\-output\-file\fP \fIfilename\fP]
+[\fB\-\-offset\-bug\-emulation\fP]
+[\fB\-P, \-\-pan\fP \fIpan\fP]
+[\fB\-\-probe\-only\fP]
+[\fB\-q, \-\-quiet\fP]
+[\fB\-R, \-\-random\fP]
+[\fB\-S, \-\-solo\fP \fIchannel-list\fP]
+[\fB\-s, \-\-start\fP \fIpos\fP]
+[\fB\-t, \-\-time\fP \fItime\fP]
+[\fB\-u, \-\-unsigned\fP]
+[\fB\-\-vblank\fP]
+[\fB\-V, \-\-version\fP]
+[\fB\-v, \-\-verbose\fP]
+[\fB\-Z, \-\-all\-sequences\fP]
+[\fB\-z, \-\-sequence\fP]
 \fImodules\fP
 .PP 
 .SH "DESCRIPTION" 
 \fBxmp\fP is a tracked music module player\&. It plays many
 module formats including Fasttracker II (XM), Noise/Fast/Protracker (MOD),
 Scream Tracker 3 (S3M) and Impulse Tracker (IT)\&. Run
-\f(CWxmp --list-formats\fP for a complete list of supported formats\&.
+\f(CWxmp \-\-list\-formats\fP for a complete list of supported formats\&.
 .PP 
 .SH "OPTIONS" 
-.IP "\fB-a, --amplify\fP \fIfactor\fP" 
+.IP "\fB\-a, \-\-amplify\fP \fIfactor\fP" 
 Amplification factor for the software mixer\&. Valid amplification factors
 range from 0 to 3. Default is 1. \&. Warning\&: higher amplification
 factors may cause distorted or noisy output\&.
-.IP "\fB-b, --bits\fP \fIbits\fP" 
+.IP "\fB\-b, \-\-bits\fP \fIbits\fP" 
 Set the software mixer resolution (8 or 16 bits)\&. If ommited,
 The audio device will be opened at the highest resolution available\&.
-.IP "\fB-c, --stdout\fP" 
+.IP "\fB\-c, \-\-stdout\fP" 
 Mix the module to stdout\&.
-.IP "\fB-D\fP \fIdevice-specific parameter\fP" 
+.IP "\fB\-D\fP \fIdevice-specific parameter\fP" 
 Pass a configuration parameter to the device driver\&. See the
 \fBDEVICE DRIVER PARAMETERS\fP section below for a
 list of known parameters\&. 
-.IP "\fB-d, --driver\fP \fIdriver\fP" 
+.IP "\fB\-d, \-\-driver\fP \fIdriver\fP" 
 Select the output driver\&. If not specified, \fBxmp\fP will try to
 probe each available driver\&.
-.IP "\fB-F, --nofilter\fP" 
+.IP "\fB\-F, \-\-nofilter\fP" 
 Disable IT lowpass filter effect and envelopes.
-.IP "\fB-f, --frequency\fP \fIrate\fP" 
+.IP "\fB\-f, \-\-frequency\fP \fIrate\fP" 
 Set the software mixer sampling rate in hertz\&.
-.IP "\fB--fix-sample-loop\fP"
+.IP "\fB\-\-fix\-sample\-loop\fP"
 Halve sample loop start values\&. Use it to work around bad conversions
 from 15-instrument modules and to correctly play NoisePacker v2 and certain
 UNIC files.
-.IP "\fB-h, --help\fP" 
+.IP "\fB\-h, \-\-help\fP" 
 Show a short summary of command-line options\&.
-.IP "\fB-I, --instrument-path\fP \fIpath\fP" 
+.IP "\fB\-I, \-\-instrument\-path\fP \fIpath\fP" 
 Set the pathname to the directory containing external samples\&.
-.IP "\fB-i, --interpolation\fP \fItype\fP" 
+.IP "\fB\-i, \-\-interpolation\fP \fItype\fP" 
 Select interpolation type. Available types are \fInearest\fP for
 nearest-neighbor interpolation\&, \fIlinear\fI for linear interpolation\&, and
 \fIspline\fI for cubic spline interpolation\&. Default is cubic spline\&.
-.IP "\fB--load-only\fP" 
+.IP "\fB\-\-load\-only\fP" 
 Load module and exit\&.
-.IP "\fB-L, --list-formats\fP" 
+.IP "\fB\-L, \-\-list\-formats\fP" 
 List supported module formats\&.
-.IP "\fB-l, --loop\fP" 
+.IP "\fB\-l, \-\-loop\fP" 
 Enable module looping\&.
-.IP "\fB--loop-all\fP" 
+.IP "\fB\-\-loop\-all\fP" 
 Loop over the entire module list\&.
-.IP "\fB-M, --mute\fP \fIchannel-list\fP" 
+.IP "\fB\-M, \-\-mute\fP \fIchannel-list\fP" 
 Mute the specified channels\&. \fIchannel-list\fP is a comma-separated
 list of decimal channel ranges\&. Example: 0,2-4,8-16\&.
-.IP "\fB-m, --mono\fP" 
+.IP "\fB\-m, \-\-mono\fP" 
 Force mono output (default is stereo in stereo-capable devices)\&.
-.IP "\fB-N, --null\fP" 
-Load and mix module, but discard output data (same as --device=null)\&.
-.IP "\fB--nocmd\fP" 
+.IP "\fB\-N, \-\-null\fP" 
+Load and mix module, but discard output data (same as \-\-device=null)\&.
+.IP "\fB\-\-nocmd\fP" 
 Disable interactive commands\&.
-.IP "\fB-o, --output-file\fP \fIfilename\fP" 
+.IP "\fB\-o, \-\-output\-file\fP \fIfilename\fP" 
 Set the output file name when mixing to raw or WAV files\&. If \'-\' is
 given as the file name, the output will be sent to stdout\&.
-.IP "\fB--offset-bug-emulation\fP"
+.IP "\fB\-\-offset\-bug\-emulation\fP"
 Emulate Protracker 2.x handling of effect 0x09 (set sample offset)\&.
-.IP "\fB-P, --pan\fP \fInum\fP" 
+.IP "\fB\-P, \-\-pan\fP \fInum\fP" 
 Set the percentual panning amplitude\&.
-.IP "\fB--probe-only\fP" 
+.IP "\fB\-\-probe\-only\fP" 
 Exit after probing the audio device\&.
-.IP "\fB-R, --random\fP" 
+.IP "\fB\-R, \-\-random\fP" 
 Play modules in random order\&.
-.IP "\fB-r, --reverse\fP" 
+.IP "\fB\-r, \-\-reverse\fP" 
 Reverse left/right stereo channels\&.
-.IP "\fB-S, --solo\fP \fIchannel-list\fP" 
+.IP "\fB\-S, \-\-solo\fP \fIchannel-list\fP" 
 Play only the specified channels\&. \fIchannel-list\fP is a
 comma-separated list of decimal channel ranges\&. Example: 0,2-4,8-16\&.
-.IP "\fB-s, --start\fP \fIpos\fP" 
+.IP "\fB\-s, \-\-start\fP \fIpos\fP" 
 Start playing the module from the position \fIpos\fP\&.
-.IP "\fB-t, --time\fP \fItime\fP" 
+.IP "\fB\-t, \-\-time\fP \fItime\fP" 
 Specifies the maximum playing time to \fItime\fP seconds\&.
-.IP "\fB-u, --unsigned\fP" 
+.IP "\fB\-u, \-\-unsigned\fP" 
 Tell the software mixer to use unsigned samples when mixing to
 a file (default is signed)\&.
-.IP "\fB--vblank\fP" 
+.IP "\fB\-\-vblank\fP" 
 Force Amiga vblank-based timing (no CIA tempo setting)\&.
-.IP "\fB-V, --version\fP" 
+.IP "\fB\-V, \-\-version\fP" 
 Print version information\&.
-.IP "\fB-v, --verbose\fP" 
+.IP "\fB\-v, \-\-verbose\fP" 
 Verbose mode (incremental)\&. If specified more than once, the
 verbosity level will be increased (no messages will be displayed
 when the player runs in background)\&.
-.IP "\fB-Z, --all-sequences\fP" 
+.IP "\fB\-Z, \-\-all\-sequences\fP" 
 Play all hidden or alternative pattern sequences (subsongs) in module\&.
-.IP "\fB-z, --sequence\fP \fInum\fP" 
+.IP "\fB\-z, \-\-sequence\fP \fInum\fP" 
 Play hidden or alternative pattern sequence \fInum\fP\ (0 is the main
 sequence)\&.
 .PP 
 .SH "DEVICE DRIVER PARAMETERS" 
-Use the option \fB-D\fP to send parameters directly to the device
-drivers\&. Multiple \fB-D\fP options can be specified in the command line\&.
+Use the option \fB\-D\fP to send parameters directly to the device
+drivers\&. Multiple \fB\-D\fP options can be specified in the command line\&.
 .PP 
 File output options:
-.IP "\fB-D\fP \fIendian=big\fP" 
+.IP "\fB\-D\fP \fIendian=big\fP" 
 Generate big-endian 16-bit samples (default is the machine byte ordering)\&.
-.IP "\fB-D\fP \fIendian=little\fP" 
+.IP "\fB\-D\fP \fIendian=little\fP" 
 Generate little-endian 16-bit samples (default is the machine byte ordering)\&.
 .PP 
 ALSA driver options:
-.IP "\fB-D\fP \fIbuffer=value\fP" 
+.IP "\fB\-D\fP \fIbuffer=value\fP" 
 Set buffer size in ms\&. Default value is 250.
-.IP "\fB-D\fP \fIperiod=value\fP" 
+.IP "\fB\-D\fP \fIperiod=value\fP" 
 Set period time in ms\&. Default value is 50.
-.IP "\fB-D\fP \fIcard=name\fP" 
+.IP "\fB\-D\fP \fIcard=name\fP" 
 Choose the ALSA device to use\&. Default value is "default"\&.
 .PP 
 OSS driver options:
-.IP "\fB-D\fP \fIfrag=num,size\fP" 
+.IP "\fB\-D\fP \fIfrag=num,size\fP" 
 Set the maximum number of fragments to \fInum\fP and the size of
 each fragment to \fIsize\fP bytes (must be a power of two)\&.
 The number and size of fragments set a tradeoff between the buffering
 latency and sensibility to system load\&. To get better synchronization,
 reduce the values\&. To avoid gaps in the sound playback, increase
 the values\&.
-.IP "\fB-D\fP \fIdev=device_name\fP" 
+.IP "\fB\-D\fP \fIdev=device_name\fP" 
 Set the audio device to open\&. Default is /dev/dsp\&.
-.IP "\fB-D\fP \fInosync\fP" 
+.IP "\fB\-D\fP \fInosync\fP" 
 Don\'t sync the OSS audio device between modules\&.
 .PP 
 BSD driver options:
-.IP "\fB-D\fP \fIgain=value\fP" 
+.IP "\fB\-D\fP \fIgain=value\fP" 
 Set the audio gain\&. Valid values range from 0 to 255\&.
 The default is 128\&.
-.IP "\fB-D\fP \fIbuffer=size\fP" 
+.IP "\fB\-D\fP \fIbuffer=size\fP" 
 Set the size in bytes of the audio buffer\&. Default value is 32 Kb\&.
 .PP
 HP-UX and Solaris driver options:
-.IP "\fB-D\fP \fIgain=value\fP" 
+.IP "\fB\-D\fP \fIgain=value\fP" 
 Set the audio gain\&. Valid values range from 0 to 255\&.
 The default is 128\&.
-.IP "\fB-D\fP \fIport={s|h|l}\fP" 
+.IP "\fB\-D\fP \fIport={s|h|l}\fP" 
 Set the audio port\&. Valid arguments are \fIs\fP for the internal
 speaker, \fIh\fP for headphones and \fIl\fP for line out\&. The default
 is the internal speaker\&.
-.IP "\fB-D\fP \fIbuffer=size\fP" 
+.IP "\fB\-D\fP \fIbuffer=size\fP" 
 Set the size in bytes of the audio buffer\&. The default value is 32 Kb\&.
 .PP
 .SH "INTERACTIVE COMMANDS" 
@@ -222,27 +222,27 @@ Change to previous sequence (subsong)\&.
 .IP "\fB>\fP" 
 Change to next sequence (subsong)\&.
 .PP 
-Interactive mode can be disabled using the \fB--nocmd\fP command
+Interactive mode can be disabled using the \fB\-\-nocmd\fP command
 line option\&.
 .PP 
 .SH "EXAMPLES" 
 Play module and save output in a .wav file\&:
 .IP "" 
-\f(CWxmp -ofilename.wav module\&.mod\fP
+\f(CWxmp \-ofilename.wav module\&.mod\fP
 .PP 
 Play module muting channels 0 to 3 and 6\&:
 .IP "" 
-\f(CWxmp --mute=0-3,6 module\&.mod\&.gz\fP
+\f(CWxmp \-\-mute=0\-3,6 module\&.mod\&.gz\fP
 .PP 
 Play modules in /dev/dsp using the default device settings (unsigned 8bit,
 8 kHz mono):
 .IP "" 
-\f(CWxmp -o/dev/dsp -f8000 -m -b8 -u module\&.lha\fP
+\f(CWxmp \-o/dev/dsp \-f8000 \-m \-b8 \-u module\&.lha\fP
 .PP 
 Play all XM modules in the /mod directory and all subdirectories in
 random order, ignoring any configuration set in the xmp\&.conf file\&:
 .IP "" 
-\f(CWxmp --norc -R `find /mod -name "*\&.xm" -print`\fP
+\f(CWxmp \-\-norc \-R `find /mod \-name "*\&.xm" \-print`\fP
 .PP 
 .SH "FILES"
 \f(CW/etc/xmp/xmp\&.conf\&, $HOME/\&.xmp/xmp\&.conf\&, /etc/xmp/modules\&.conf\&, $HOME/\&.xmp/modules\&.conf\fP

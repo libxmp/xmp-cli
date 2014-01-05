@@ -68,21 +68,23 @@ static int init(struct options *options)
 
 	AUDIO_INITINFO(&ainfo);
 
+	ainfo.mode = AUMODE_PLAY_ALL;
 	ainfo.play.sample_rate = options->rate;
 	ainfo.play.channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
 
 	if (options->format & XMP_FORMAT_8BIT) {
 		ainfo.play.precision = 8;
-		ainfo.play.precision = AUDIO_ENCODING_ULINEAR;
+		ainfo.play.encoding = AUDIO_ENCODING_ULINEAR;
 		options->format |= XMP_FORMAT_UNSIGNED;
 	} else {
 		ainfo.play.precision = 16;
-		ainfo.play.precision = AUDIO_ENCODING_SLINEAR;
+		ainfo.play.encoding = AUDIO_ENCODING_SLINEAR;
 		options->format &= ~XMP_FORMAT_UNSIGNED;
 	}
 
 	ainfo.play.gain = gain;
 	ainfo.play.buffer_size = bsize;
+	ainfo.blocksize = 0;
 
 	if (ioctl(audio_fd, AUDIO_SETINFO, &ainfo) == -1) {
 		close(audio_fd);
