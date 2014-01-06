@@ -56,6 +56,8 @@ void info_mod(struct xmp_module_info *mi)
 	for (i = 0; i < mi->mod->chn; i++) {
 		if (mi->mod->xxc[i].flg & XMP_CHANNEL_SYNTH) {
 			report("S ");
+		} else if (mi->mod->xxc[i].flg & XMP_CHANNEL_MUTE) {
+			report("- ");
 		} else {
 			report("%x ", mi->mod->xxc[i].pan >> 4);
 		}
