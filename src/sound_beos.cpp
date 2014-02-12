@@ -147,7 +147,6 @@ void render_proc(void *theCookie, void *buffer, size_t req,
 static int init(struct options *options)
 {
 	char **parm = options->driver_parm;
-	static char desc[80];
 
 	be_app = new BApplication("application/x-vnd.cm-xmp");
 
@@ -158,10 +157,6 @@ static int init(struct options *options)
 	chkparm2("buffer", "%d,%d", &chunk_num, &chunk_size);
 	parm_end();
 
-	snprintf(desc, 80, "%s [%d fragments of %d bytes]",
-			sound_beos.description, chunk_num, chunk_size);
-	sound_beos.description = desc;
-
 	fmt.frame_rate = options->rate;
 	fmt.channel_count = options->format & XMP_FORMAT_MONO ? 1 : 2;
 	fmt.format = options->format & XMP_FORMAT_8BIT ?
@@ -170,7 +165,7 @@ static int init(struct options *options)
 				B_MEDIA_LITTLE_ENDIAN : B_MEDIA_BIG_ENDIAN;
 	fmt.buffer_size = chunk_size * chunk_num;
 
-	buffer_len = chunk_size * chunk_num;
+	buffer_len = chunk_size;
 	buffer = (uint8 *)calloc(1, buffer_len);
 	buf_read_pos = 0;
 	buf_write_pos = 0;
@@ -194,8 +189,9 @@ static void play(void *b, int i)
         	if ((j = write_buffer((uint8 *)b, i)) > 0) {
 			i -= j;
 			b = (uint8 *)b + j;
-		} else
+		} else {
 			break;
+		}
 	}
 
 	if (paused) {
