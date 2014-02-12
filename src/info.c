@@ -132,7 +132,7 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 			ctl->explore ? 'Z' : ' ',
 			ctl->loop ? 'L' : ' ',
 			ctl->loop > 1 ? '*' : ' ');
-		msg_timer -= fi->frame_time;
+		msg_timer -= fi->frame_time * fi->speed / 6;
 		if (msg_timer == 0)
 			msg_timer--;
 		else
