@@ -5,6 +5,7 @@ Stable versions
 	- Fix NetBSD sound driver (by shattered)
 	- Fix Haiku sound driver
 	- Fix info message display time
+	- Start instrument numbering at 1
 	- Minor cosmetic fixes
 
 4.0.6 (20130519):
