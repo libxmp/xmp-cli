@@ -188,7 +188,7 @@ void info_ins_smp(struct xmp_module_info *mi)
 			continue;
 		}
 
-		report("%02x %-32.32s ", i, ins->name);
+		report("%02x %-32.32s ", i + 1, ins->name);
 
 		for (j = 0; j < ins->nsm; j++) {
 			struct xmp_subinstrument *sub = &ins->sub[j];
@@ -202,7 +202,7 @@ void info_ins_smp(struct xmp_module_info *mi)
 			}
 
 			report("[%02x] %05x%c%05x %05x%c V%02x %+04d %+03d P%02x\n",
-				sub->sid,
+				sub->sid + 1,
 				smp->len,
 				smp->flg & XMP_SAMPLE_16BIT ? '+' : ' ',
 				smp->lps,
@@ -237,8 +237,8 @@ void info_instruments(struct xmp_module_info *mi)
 			continue;
 		}
 
-		report("%02x %-32.32s %02x %04x %c%c%c %02x ", i, ins->name,
-			ins->vol, ins->rls,
+		report("%02x %-32.32s %02x %04x %c%c%c %02x ",
+			i + 1, ins->name, ins->vol, ins->rls,
 			ins->aei.flg & XMP_ENVELOPE_ON ? 'A' : '-',
 			ins->fei.flg & XMP_ENVELOPE_ON ? 'F' : '-',
 			ins->pei.flg & XMP_ENVELOPE_ON ? 'P' : '-',
@@ -257,7 +257,7 @@ void info_instruments(struct xmp_module_info *mi)
 			}
 
 			report("[%02x] %02x %02x %+04d %+03d P%02x %02x\n",
-				j,
+				j + 1,
 				sub->gvl,
 				sub->vol,
 				sub->fin,
@@ -288,7 +288,7 @@ void info_samples(struct xmp_module_info *mi)
 		}
 
 		report("%02x %-32.32s %06x %06x %06x %s %s %s\n",
-			i, smp->name,
+			i + 1, smp->name,
 			smp->len,
 			smp->lps,
 			smp->lpe,
