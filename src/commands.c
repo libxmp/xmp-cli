@@ -60,8 +60,6 @@ static int read_key(void)
 	char key;
 	int ret;
 
-	ret = 0;
-
 #if defined HAVE_TERMIOS_H && !defined WIN32
 #ifdef __CYGWIN__
 	if (stdin_ready_for_reading())
