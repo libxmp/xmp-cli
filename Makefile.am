@@ -2,4 +2,4 @@
 
 SUBDIRS = src
 
-EXTRA_DIST = CREDITS Changelog ub-name.it
+EXTRA_DIST = CREDITS Changelog

@@ -1,7 +1,7 @@
 Stable versions
 ---------------
 
-4.0.7 ():
+4.0.7 (20140301):
 	- Fix NetBSD sound driver (by shattered)
 	- Fix Haiku sound driver
 	- Fix info message display time
@@ -12,7 +12,7 @@ Stable versions
 	- Portability fixes to build with Visual C++
 
 	Changes by Jan Engelhardt:
-	- Do not error out when g++ is absent on non-BEOS
+	- Do not error out when g++ is absent on non-BeOS
 
 4.0.5 (20130512):
 	- Fix loop when skipping to first file and it's not playable
