@@ -14,6 +14,10 @@
 #include <stdio.h>
 #include "sound.h"
 
+#if defined(_MSC_VER) && (_MSC_VER < 1300)
+typedef DWORD DWORD_PTR;
+#endif
+
 #define MAXBUFFERS	32			/* max number of buffers */
 #define BUFFERSIZE	120			/* buffer size in ms */
 
@@ -58,8 +62,8 @@ static void show_error(int res)
 	fprintf(stderr, "Error: %s", msg);
 }
 
-static void CALLBACK wave_callback(HWAVEOUT hwo, UINT uMsg, DWORD dwInstance,
-				   DWORD dwParam1, DWORD dwParam2)
+static void CALLBACK wave_callback(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance,
+                                  DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
 	if (uMsg == WOM_DONE) {
         	freebuffer++;
@@ -94,7 +98,7 @@ static int init(struct options *options)
 	    wfe.wBitsPerSample / 8;
 	wfe.nBlockAlign = wfe.nChannels * wfe.wBitsPerSample / 8;
 
-	res = waveOutOpen(&hwaveout, WAVE_MAPPER, &wfe, (DWORD) wave_callback,
+	res = waveOutOpen(&hwaveout, WAVE_MAPPER, &wfe, (DWORD_PTR) wave_callback,
 			  0, CALLBACK_FUNCTION);
 
 	if (res != MMSYSERR_NOERROR) {
