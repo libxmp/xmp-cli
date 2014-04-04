@@ -1,4 +1,4 @@
-AC_INIT([xmp], [4.0.7])
+AC_INIT([xmp], [4.0.8])
 AC_CONFIG_AUX_DIR([build-aux])
 0>confdefs.h
 
