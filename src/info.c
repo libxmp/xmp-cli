@@ -117,6 +117,7 @@ void info_message(char *format, ...)
 void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct control *ctl, int reprint)
 {
 	static int ord = -1, spd = -1, bpm = -1;
+	char rowstr[3], numrowstr[3];
 	int time;
 
 	if (fi->virt_used > max_channels)
@@ -155,9 +156,21 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 		spd = fi->speed;
 	}
 
+	if (fi->row <= 0xff) {
+		snprintf(rowstr, 3, "%02X", fi->row);
+	} else {
+		strcpy(rowstr, "++");
+	}
+
+	if (fi->num_rows <= 0x100) {
+		snprintf(numrowstr, 3, "%02X", fi->num_rows - 1);
+	} else {
+		strcpy(numrowstr, "++");
+	}
+
 	report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-	       "%02X/%02X] Chn[%02X/%02X] %c%c%c",
-		fi->row, fi->num_rows - 1, fi->virt_used, max_channels,
+	       "%2.2s/%2.2s] Chn[%02X/%02X] %c%c%c",
+		rowstr, numrowstr, fi->virt_used, max_channels,
 		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ',
 		ctl->loop > 1 ? '*' : ' ');
 
