@@ -1,6 +1,11 @@
 Stable versions
 ---------------
 
+4.0.8 ():
+	- Fix ignored amplify option (by Dennis Lindroos)
+	- Fix Win64 compatibility (by Ozkan Sezer)
+	- Fix screen corruption with large number of rows
+
 4.0.7 (20140224):
 	- Fix NetBSD sound driver (by shattered)
 	- Fix Haiku sound driver
@@ -9,16 +14,12 @@ Stable versions
 	- Minor cosmetic fixes
 
 4.0.6 (20130519):
+	- Fix error when g++ is absent on non-BeOS (by Jan Engelhardt)
 	- Portability fixes to build with Visual C++
 
-	Changes by Jan Engelhardt:
-	- Do not error out when g++ is absent on non-BeOS
-
 4.0.5 (20130512):
+	- Change buildsystem to use automake (by Jan Engelhardt)
 	- Fix loop when skipping to first file and it's not playable
-
-	Changes by Jan Engelhardt:
-	- Change buildsystem to use automake
 
 4.0.4 (20130428):
 	- Fix executable suffix in MinGW32
