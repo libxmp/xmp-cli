@@ -384,6 +384,8 @@ int main(int argc, char **argv)
 
 			played = 1;
 
+			xmp_set_player(xc, XMP_PLAYER_AMP, opt.amplify);
+
 			if (opt.mix >= 0) {
 				xmp_set_player(xc, XMP_PLAYER_MIX, opt.mix);
 			}
