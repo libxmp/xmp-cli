@@ -1,0 +1,16 @@
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libxmp-dev
+
+language: c
+
+compiler:
+  - gcc
+  - clang
+
+matrix:
+  include:
+    - compiler: i586-mingw32msvc-gcc
+      script: autoconf && ./configure --host=i586-mingw32msvc && make
+
+script: ./autogen.sh && automake && autoconf && ./configure && make
