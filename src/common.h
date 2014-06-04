@@ -79,6 +79,7 @@ void info_frame(struct xmp_module_info *, struct xmp_frame_info *, struct contro
 void info_ins_smp(struct xmp_module_info *);
 void info_instruments(struct xmp_module_info *);
 void info_samples(struct xmp_module_info *);
+void info_comment(struct xmp_module_info *);
 void info_help(void);
 
 /* commands */

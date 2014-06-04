@@ -30,6 +30,7 @@ void info_help(void)
 "      Z         Display current sequence\n"
 "      z         Toggle subsong explorer mode\n"
 "      l         Toggle loop mode\n"
+"      M         Display message (if any)\n"
 "      m         Display module information\n"
 "      i         Display combined instrument/sample list\n"
 "      I         Display instrument list\n"
@@ -308,6 +309,25 @@ void info_samples(struct xmp_module_info *mi)
 			smp->flg & XMP_SAMPLE_16BIT ? "16" : "--",
 			smp->flg & XMP_SAMPLE_LOOP  ? "L"  : "-",
 			smp->flg & XMP_SAMPLE_LOOP_BIDIR ? "B" : "-");
+	}
+}
+
+void info_comment(struct xmp_module_info *mi)
+{
+	if (mi->comment != NULL) {
+		char *c = mi->comment;
+
+		while (*c != 0) {
+			report("> ");
+			do {
+				if (*c == 0)
+					break;
+				report("%c", *c);
+			} while (*c++ != '\n');
+		}		
+		report("\n\n");
+	} else {
+		report("<no message>\n\n");
 	}
 }
 

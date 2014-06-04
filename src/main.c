@@ -117,6 +117,9 @@ static void show_info(int what, struct xmp_module_info *mi)
 	case 'S':
 		info_samples(mi);
 		break;
+	case 'M':
+		info_comment(mi);
+		break;
 	case 'm':
 		info_mod(mi);
 		break;

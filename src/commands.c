@@ -219,6 +219,7 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 	case 'i':
 	case 'I':
 	case 'S':
+	case 'M':
 	case 'm':
 		ctl->display = cmd;
 		break;
