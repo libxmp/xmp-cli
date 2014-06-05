@@ -42,6 +42,7 @@ The following single key commands can be used during the playback:
             i         =>  display combined instrument/sample list
             I         =>  display instrument list
             S         =>  display sample list
+            c         =>  display comment, if any
             <         =>  jump to previous sequence
             >         =>  jump to next sequence
 

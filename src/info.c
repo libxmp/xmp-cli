@@ -30,11 +30,11 @@ void info_help(void)
 "      Z         Display current sequence\n"
 "      z         Toggle subsong explorer mode\n"
 "      l         Toggle loop mode\n"
-"      M         Display message (if any)\n"
 "      m         Display module information\n"
 "      i         Display combined instrument/sample list\n"
 "      I         Display instrument list\n"
 "      S         Display sample list\n"
+"      c         Display comment, if any\n"
 "      <         Play previous sequence\n"
 "      >         Play next sequence\n"
 );
@@ -326,8 +326,6 @@ void info_comment(struct xmp_module_info *mi)
 			} while (*c++ != '\n');
 		}		
 		report("\n\n");
-	} else {
-		report("<no message>\n\n");
 	}
 }
 

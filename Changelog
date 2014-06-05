@@ -2,7 +2,7 @@ Stable versions
 ---------------
 
 4.0.8 ():
-	- Add command M to display song message
+	- Add command c to display song comment
 	- Fix ignored amplify option (by Dennis Lindroos)
 	- Fix Win64 compatibility (by Ozkan Sezer)
 	- Fix screen corruption with large number of rows
