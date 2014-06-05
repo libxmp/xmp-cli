@@ -2,7 +2,8 @@ Stable versions
 ---------------
 
 4.0.8 ():
-	- Add command c to display song comment
+	- Add command 'c' to display module comment
+	- Add command-line option -C to display module comment
 	- Fix ignored amplify option (by Dennis Lindroos)
 	- Fix Win64 compatibility (by Ozkan Sezer)
 	- Fix screen corruption with large number of rows

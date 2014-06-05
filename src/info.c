@@ -314,18 +314,16 @@ void info_samples(struct xmp_module_info *mi)
 
 void info_comment(struct xmp_module_info *mi)
 {
-	if (mi->comment != NULL) {
-		char *c = mi->comment;
+	char *c = mi->comment;
 
-		while (*c != 0) {
-			report("> ");
-			do {
-				if (*c == 0)
-					break;
-				report("%c", *c);
-			} while (*c++ != '\n');
-		}		
-		report("\n\n");
-	}
+	while (*c != 0) {
+		report("> ");
+		do {
+			if (*c == 0)
+				break;
+			report("%c", *c);
+		} while (*c++ != '\n');
+	}		
+	report("\n\n");
 }
 

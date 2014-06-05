@@ -95,6 +95,7 @@ static void usage(char *s)
 "\nEnvironment options:\n"
 "   -I --instrument-path   Set pathname to external samples\n"
 "\nInformation options:\n"
+"   -C --show-comment      Display the module comment text, if any\n"
 "   -h --help              Display a summary of the command line options\n"
 "   -L --list-formats      List supported module formats\n"
 "   --probe-only           Probe audio device and exit\n"
@@ -130,6 +131,7 @@ static const struct option lopt[] = {
 	{ "quiet",		0, 0, 'q' },
 	{ "random",		0, 0, 'R' },
 	{ "reverse",		0, 0, 'r' },
+	{ "show-comment",	0, 0, 'C' },
 	{ "solo",		1, 0, 'S' },
 	{ "start",		1, 0, 's' },
 	{ "stdout",		0, 0, 'c' },
@@ -149,7 +151,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int optidx = 0;
 	int o;
 
-#define OPTIONS "a:b:cD:d:Ff:hI:i:LlM:mNo:P:qRrS:s:T:t:uVvZz:"
+#define OPTIONS "a:b:CcD:d:Ff:hI:i:LlM:mNo:P:qRrS:s:T:t:uVvZz:"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -159,6 +161,9 @@ void get_options(int argc, char **argv, struct options *options)
 			if (atoi(optarg) == 8) {
 				options->format |= XMP_FORMAT_8BIT;
 			}
+			break;
+		case 'C':
+			options->show_comment = 1;
 			break;
 		case 'c':
 			options->driver_id = "file";

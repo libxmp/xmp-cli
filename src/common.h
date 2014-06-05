@@ -41,6 +41,7 @@ struct options {
 	int dparm;		/* driver parameter index */
 	int sequence;		/* sequence to play */
 	int explore;		/* play all sequences in module */
+	int show_comment;	/* show module comment text */
 	char *driver_id;	/* sound driver ID */
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */

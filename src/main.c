@@ -429,6 +429,13 @@ int main(int argc, char **argv)
 			if (opt.verbose > 1) {
 				info_instruments(&mi);
 			}
+
+			if (opt.show_comment) {
+				if (mi.comment != NULL) {
+					report("\n");
+					info_comment(&mi);
+				}
+			}
 	
 			/* Play sequence */
 
