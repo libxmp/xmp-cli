@@ -8,8 +8,6 @@ AC_ARG_ENABLE(alsa,
   [  --disable-alsa          don't compile ALSA support])
 AC_ARG_ENABLE(pulseaudio,
   [  --enable-pulseaudio     compile PulseAudio support])
-AC_ARG_WITH(libxmp,
-  [  --with-libxmp=<path>    libxmp prefix (optional)])
 
 AC_SUBST(LD_VERSCRIPT)
 AC_CANONICAL_HOST
@@ -30,21 +28,7 @@ esac
 AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
-dnl For the case where we don't have pkgconfig and we have the library
-dnl installed in a non-default location
-
-if test "x$with_libxmp" = "xno"; then
-    AC_ERROR(libxmp is required)
-fi
-if test "x$with_libxmp" != "x"; then
-    CPPFLAGS="${CPPFLAGS} -I${with_libxmp}/include"
-    LDFLAGS="${LDFLAGS} -L${with_libxmp}/lib"
-    if test ! -f "${with_libxmp}/include/xmp.h"; then
-        AC_ERROR(can't find ${with_libxmp}/include/xmp.h)
-    fi
-else
-    PKG_CHECK_MODULES([libxmp], [libxmp >= 4.1])
-fi
+PKG_CHECK_MODULES([libxmp], [libxmp >= 4.1])
 
 dnl Don't use things like /usr/etc or /usr/var
 
