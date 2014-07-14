@@ -59,7 +59,8 @@ int read_config(struct options *o)
 	if ((rc = fopen(myrc, "r")) == NULL)
 		return -1;
 #elif defined WIN32
-	char *home = getenv("SystemRoot");
+	const char *home = getenv("USERPROFILE");
+	if (!home) home = "C:";
 
 	snprintf(myrc, PATH_MAX, "%s/xmp.conf", home);
 
@@ -261,7 +262,8 @@ void read_modconf(struct options *o, unsigned char *md5)
 	parse_modconf(o, "PROGDIR:modules.conf", md5);
 #elif defined WIN32
 	char myrc[PATH_MAX];
-	char *home = getenv("SystemRoot");
+	const char *home = getenv("USERPROFILE");
+	if (!home) home = "C:";
 
 	snprintf(myrc, PATH_MAX, "%s/modules.conf", home);
 	parse_modconf(o, myrc, md5);
