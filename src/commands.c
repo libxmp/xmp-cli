@@ -223,9 +223,7 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		ctl->display = cmd;
 		break;
 	case 'c':
-		if (mi->comment != NULL) {
-			ctl->display = cmd;
-		}
+		ctl->display = cmd;
 		break;
 	case '>':
 		change_sequence(handle, mi, ctl, 1);

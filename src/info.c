@@ -316,6 +316,11 @@ void info_comment(struct xmp_module_info *mi)
 {
 	char *c = mi->comment;
 
+	if (mi->comment == NULL) {
+		report("No comment.\n");
+		return;
+	}
+
 	while (*c != 0) {
 		report("> ");
 		do {
