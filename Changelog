@@ -1,11 +1,12 @@
 Stable versions
 ---------------
 
-4.0.8 ():
+4.0.8 (20140714):
 	- Add command 'c' to display module comment
 	- Add command-line option -C to display module comment
 	- Fix ignored amplify option (by Dennis Lindroos)
 	- Fix Win64 compatibility (by Ozkan Sezer)
+	- Fix configuration file location in Windows (by Ozkan Sezer)
 	- Fix screen corruption with large number of rows
 
 4.0.7 (20140224):
