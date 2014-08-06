@@ -113,6 +113,7 @@ int read_config(struct options *o)
 		getval_yn("reverse", o->reverse, 1);
 		getval_no("amplify", o->amplify);
 		getval_no("mix", o->mix);
+		getval_no("default_pan", o->defpan);
 		/*getval_no("chorus", o->chorus);
 		getval_no("reverb", o->reverb);*/
 		getval_no("srate", o->rate);
