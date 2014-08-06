@@ -1,4 +1,4 @@
-.TH "XMP" "1" "Version 4\&.0\&.8" "Jul 2014" "Extended Module Player" 
+.TH "XMP" "1" "Version 4\&.0\&.9" "Ago 2014" "Extended Module Player" 
 .PP 
 .SH "NAME" 
 xmp - Extended Module Player
@@ -27,7 +27,8 @@ xmp - Extended Module Player
 [\fB\-\-nocmd\fP]
 [\fB\-o, \-\-output\-file\fP \fIfilename\fP]
 [\fB\-\-offset\-bug\-emulation\fP]
-[\fB\-P, \-\-pan\fP \fIpan\fP]
+[\fB\-P, \-\-pan\fP \fInum\fP]
+[\fB\-p, \-\-default\-pan\fP \fInum\fP]
 [\fB\-\-probe\-only\fP]
 [\fB\-q, \-\-quiet\fP]
 [\fB\-R, \-\-random\fP]
@@ -107,6 +108,9 @@ given as the file name, the output will be sent to stdout\&.
 Emulate Protracker 2.x handling of effect 0x09 (set sample offset)\&.
 .IP "\fB\-P, \-\-pan\fP \fInum\fP" 
 Set the percentual panning amplitude\&.
+.IP "\fB\-P, \-\-default\-pan\fP \fInum\fP" 
+Set the percentual default pan setting for modules that don\'t set their
+own pan values\&. Useful to reduce LRRL pan separation on headphones\&.
 .IP "\fB\-\-probe\-only\fP" 
 Exit after probing the audio device\&.
 .IP "\fB\-R, \-\-random\fP" 

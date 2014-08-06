@@ -90,6 +90,7 @@ static void usage(char *s)
 "   -F --nofilter          Disable IT lowpass filters\n"
 "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
 "   -P --pan pan           Percentual pan separation\n"
+"   -p --default-pan       Percentual default pan setting\n"
 "   -r --reverse           Reverse left/right stereo channels\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
 "\nEnvironment options:\n"
@@ -109,6 +110,7 @@ static const struct option lopt[] = {
 	{ "amplify",		1, 0, 'a' },
 	{ "bits",		1, 0, 'b' },
 	{ "driver",		1, 0, 'd' },
+	{ "default-pan",	1, 0, 'p' },
 	{ "fix-sample-loops",	0, 0, OPT_FIXLOOP },
 	{ "frequency",		1, 0, 'f' },
 	{ "help",		0, 0, 'h' },
@@ -151,7 +153,7 @@ void get_options(int argc, char **argv, struct options *options)
 	int optidx = 0;
 	int o;
 
-#define OPTIONS "a:b:CcD:d:Ff:hI:i:LlM:mNo:P:qRrS:s:T:t:uVvZz:"
+#define OPTIONS "a:b:CcD:d:Ff:hI:i:LlM:mNo:P:p:qRrS:s:T:t:uVvZz:"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -248,6 +250,13 @@ void get_options(int argc, char **argv, struct options *options)
 				options->mix = 0;
 			if (options->mix > 100)
 				options->mix = 100;
+			break;
+		case 'p':
+			options->defpan = strtoul(optarg, NULL, 0);
+			if (options->defpan < 0)
+				options->defpan = 0;
+			if (options->defpan > 100)
+				options->defpan = 100;
 			break;
 		case OPT_PROBEONLY:
 			options->probeonly = 1;

@@ -24,6 +24,7 @@ struct options {
 	int format;		/* sample format */
 	int max_time;		/* max. replay time */
 	int mix;		/* channel separation */
+	int defpan;		/* default pan */
 	int interp;		/* interpolation type */
 	int dsp;		/* dsp effects */
 	int loop;		/* loop module */

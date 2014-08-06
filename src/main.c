@@ -221,6 +221,7 @@ int main(int argc, char **argv)
 	opt.verbose = 1;
 	opt.rate = 44100;
 	opt.mix = -1;
+	opt.defpan = 100;
 	opt.driver_id = NULL;
 	opt.interp = XMP_INTERP_SPLINE;
 	opt.dsp = XMP_DSP_LOWPASS;
@@ -332,6 +333,8 @@ int main(int argc, char **argv)
 			report("Loading %s (%d of %d)\n",
 				argv[optind], optind - first + 1, argc - first);
 		}
+
+		xmp_set_player(xc, XMP_PLAYER_DEFPAN, opt.defpan);
 
 		/* load module */
 

@@ -28,7 +28,7 @@ esac
 AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
-PKG_CHECK_MODULES([libxmp], [libxmp >= 4.1])
+PKG_CHECK_MODULES([libxmp], [libxmp >= 4.3])
 
 dnl Don't use things like /usr/etc or /usr/var
 
