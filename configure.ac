@@ -28,7 +28,9 @@ esac
 AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
-PKG_CHECK_MODULES([libxmp], [libxmp >= 4.3])
+PKG_CHECK_MODULES([libxmp], [libxmp >= 4.3],
+  AC_CHECK_LIB(xmp, xmp_version, [], [exit 1]),
+  [echo "You need libxmp version 4.3 or later to build this package"; exit 1])
 
 dnl Don't use things like /usr/etc or /usr/var
 
@@ -105,7 +107,9 @@ AS_IF([test "$enable_alsa" = "yes"], [
   PKG_CHECK_MODULES([alsa], [alsa >= 1], [enable_alsa=yes])
 ], [
   AS_IF([test "$enable_alsa" != "no"], [
-    PKG_CHECK_MODULES([alsa], [alsa >= 1], [enable_alsa=yes], [true])
+    PKG_CHECK_MODULES([alsa], [alsa >= 1],
+      AC_CHECK_LIB(asound, snd_pcm_open, [enable_alsa=yes]),
+      [true])
   ])
 ])
 AS_IF([test "$enable_alsa" = "yes"], [
@@ -118,7 +122,8 @@ AS_IF([test "$enable_pulseaudio" = "yes"], [
 ], [
   AS_IF([test "$enable_pulseaudio" != "no"], [
     PKG_CHECK_MODULES([pulseaudio], [libpulse-simple],
-			[enable_pulseaudio=yes], [true])
+      AC_CHECK_LIB(pulse-simple, pa_simple_new,	[enable_pulseaudio=yes]),
+      [true])
   ])
 ])
 AS_IF([test "$enable_pulseaudio" = "yes"], [
