@@ -371,7 +371,7 @@ _getopt_initialize (argc, argv, optstring)
 
   nextchar = NULL;
 
-  posixly_correct getenv ("POSIXLY_CORRECT");
+  posixly_correct = getenv ("POSIXLY_CORRECT");
 
   /* Determine how to handle the ordering of options and nonoptions.  */
 
