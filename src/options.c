@@ -38,7 +38,7 @@ enum {
 	OPT_LOOPALL,
 };
 
-static void usage(char *s)
+static void usage(char *s, struct options *options)
 {
 	struct list_head *head;
 	struct sound_driver *sd;
@@ -90,7 +90,7 @@ static void usage(char *s)
 "   -F --nofilter          Disable IT lowpass filters\n"
 "   -o --output-file name  Mix the module to file ('-' for stdout)\n"
 "   -P --pan pan           Percentual pan separation\n"
-"   -p --default-pan       Percentual default pan setting\n"
+"   -p --default-pan       Percentual default pan setting (default %d%%)\n"
 "   -r --reverse           Reverse left/right stereo channels\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
 "\nEnvironment options:\n"
@@ -103,7 +103,8 @@ static void usage(char *s)
 "   --load-only            Load module and exit\n"
 "   -q --quiet             Quiet mode (verbosity level = 0)\n"
 "   -V --version           Print version information\n"
-"   -v --verbose           Verbose mode (incremental)\n");
+"   -v --verbose           Verbose mode (incremental)\n",
+		options->defpan);
 }
 
 static const struct option lopt[] = {
@@ -322,7 +323,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->sequence = strtoul(optarg, NULL, 0);
 			break;
 		case 'h':
-			usage(argv[0]);
+			usage(argv[0], options);
 		default:
 			exit(-1);
 		}

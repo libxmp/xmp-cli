@@ -5,6 +5,8 @@ Stable versions
 	- Add option '-p' to set the default pan amplitude
 	- Add parameter 'default_pan' to configuration file
 	- Fix library detection when cross-compiling
+	- FIx Visual Studio 2013 build (by Stephen Leary)
+	- Default pan amplitude set to 50%
 
 4.0.8 (20140714):
 	- Add command 'c' to display module comment

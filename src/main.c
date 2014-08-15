@@ -221,7 +221,7 @@ int main(int argc, char **argv)
 	opt.verbose = 1;
 	opt.rate = 44100;
 	opt.mix = -1;
-	opt.defpan = 100;
+	opt.defpan = 50;
 	opt.driver_id = NULL;
 	opt.interp = XMP_INTERP_SPLINE;
 	opt.dsp = XMP_DSP_LOWPASS;
