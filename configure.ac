@@ -137,7 +137,7 @@ amigaos*|aros)
   AM_CONDITIONAL([SOUND_AHI], [true])
   ;;
 darwin*)
-  AC_CHECK_HEADER(CoreAudio/CoreAudio.h)
+  AC_CHECK_HEADERS(AudioUnit/AudioComponent.h CoreAudio/CoreAudio.h)
   if test "${ac_cv_header_CoreAudio_CoreAudio_h}" = "yes"; then
     AC_DEFINE(SOUND_COREAUDIO)
     AM_CONDITIONAL([SOUND_COREAUDIO], [true])

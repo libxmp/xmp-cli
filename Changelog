@@ -1,6 +1,9 @@
 Stable versions
 ---------------
 
+4.0.10 ():
+	- Update deprecated calls in CoreAudio driver
+
 4.0.9 (20140926):
 	- Add option '-p' to set the default pan amplitude
 	- Add parameter 'default_pan' to configuration file

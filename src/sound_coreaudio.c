@@ -15,6 +15,14 @@
 
 static AudioUnit au;
 
+#ifndef HAVE_AUDIOUNIT_AUDIOCOMPONENT_H
+#define AudioComponent Component
+#define	AudioComponentDescription ComponentDescription
+#define AudioComponentFindNext FindNextComponent
+#define AudioComponentInstanceNew OpenAComponent
+#define AudioComponentInstanceDispose CloseComponent
+#endif
+
 /*
  * CoreAudio helpers by Timothy J. Wood from mplayer/libao
  * The player fills a ring buffer, OSX retrieves data from the buffer
@@ -121,8 +129,8 @@ OSStatus render_proc(void *inRefCon,
 static int init(struct options *options)
 {
 	AudioStreamBasicDescription ad;
-	Component comp;
-	ComponentDescription cd;
+	AudioComponent comp;
+	AudioComponentDescription cd;
 	AURenderCallbackStruct rc;
 	OSStatus err;
 	UInt32 size, max_frames;
@@ -160,12 +168,12 @@ static int init(struct options *options)
 	cd.componentFlags = 0;
 	cd.componentFlagsMask = 0;
 
-	if ((comp = FindNextComponent(NULL, &cd)) == NULL) {
+	if ((comp = AudioComponentFindNext(NULL, &cd)) == NULL) {
 		fprintf(stderr, "error: FindNextComponent\n");
 		return -1;
 	}
 
-	if ((err = OpenAComponent(comp, &au))) {
+	if ((err = AudioComponentInstanceNew(comp, &au))) {
 		fprintf(stderr, "error: OpenAComponent (%d)\n", (int)err);
 		return -1;
 	}
@@ -250,7 +258,7 @@ static void deinit(void)
 {
         AudioOutputUnitStop(au);
 	AudioUnitUninitialize(au);
-	CloseComponent(au);
+	AudioComponentInstanceDispose(au);
 	free(buffer);
 }
 
