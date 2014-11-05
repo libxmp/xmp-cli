@@ -1,4 +1,4 @@
-.TH "XMP" "1" "Version 4\&.0\&.9" "Sep 2014" "Extended Module Player" 
+.TH "XMP" "1" "Version 4\&.0\&.10" "Nov 2014" "Extended Module Player" 
 .PP 
 .SH "NAME" 
 xmp - Extended Module Player
@@ -179,6 +179,10 @@ The default is 128\&.
 .IP "\fB\-D\fP \fIbuffer=size\fP" 
 Set the size in bytes of the audio buffer\&. Default value is 32 Kb\&.
 .PP
+CoreAudio driver options:
+.IP "\fB\-D\fP \fIbuffer=value\fP" 
+Set buffer size in ms\&. Default value is 250.
+.PP 
 HP-UX and Solaris driver options:
 .IP "\fB\-D\fP \fIgain=value\fP" 
 Set the audio gain\&. Valid values range from 0 to 255\&.

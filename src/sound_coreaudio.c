@@ -132,12 +132,17 @@ static int init(struct options *options)
 	AudioComponent comp;
 	AudioComponentDescription cd;
 	AURenderCallbackStruct rc;
-	OSStatus err;
+	OSStatus status;
 	UInt32 size, max_frames;
-	//char **parm = options->driver_parm;
+	int latency = 250;
+	char **parm = options->driver_parm;
 
-	//parm_init(parm);
-	//parm_end();
+	parm_init(parm);
+	chkparm1("buffer", latency = strtoul(token, NULL, 0));
+	parm_end();
+
+	if (latency < 20)
+		latency = 20;
 
 	ad.mSampleRate = options->rate;
 	ad.mFormatID = kAudioFormatLinearPCM;
@@ -168,48 +173,30 @@ static int init(struct options *options)
 	cd.componentFlags = 0;
 	cd.componentFlagsMask = 0;
 
-	if ((comp = AudioComponentFindNext(NULL, &cd)) == NULL) {
-		fprintf(stderr, "error: FindNextComponent\n");
-		return -1;
-	}
+	if ((comp = AudioComponentFindNext(NULL, &cd)) == NULL)
+		goto err;
 
-	if ((err = AudioComponentInstanceNew(comp, &au))) {
-		fprintf(stderr, "error: OpenAComponent (%d)\n", (int)err);
-		return -1;
-	}
+	if ((status = AudioComponentInstanceNew(comp, &au)))
+		goto err1;
 
-	if ((err = AudioUnitInitialize(au))) {
-		fprintf(stderr, "error: AudioUnitInitialize (%d)\n", (int)err);
-		return -1;
-	}
+	if ((status = AudioUnitInitialize(au)))
+		goto err1;
 
-	if ((err = AudioUnitSetProperty(au, kAudioUnitProperty_StreamFormat,
-			kAudioUnitScope_Input, 0, &ad, sizeof(ad)))) {
-		fprintf(stderr, "error: AudioUnitSetProperty: StreamFormat (%d)\n", (int)err);
-		fprintf(stderr, "mSampleRate = %lf\n", ad.mSampleRate);
-		fprintf(stderr, "mFormatID = 0x%x\n", (unsigned)ad.mFormatID);
-		fprintf(stderr, "mFormatFlags = 0x%x\n", (unsigned)ad.mFormatFlags);
-		fprintf(stderr, "mChannelsPerFrame = %d\n", (int)ad.mChannelsPerFrame);
-		fprintf(stderr, "mBitsPerChannel = %d\n", (int)ad.mBitsPerChannel);
-		fprintf(stderr, "mBytesPerFrame = %d\n", (int)ad.mBytesPerFrame);
-		fprintf(stderr, "mBytesPerPacket = %d\n", (int)ad.mBytesPerPacket);
-		fprintf(stderr, "mFramesPerPacket = %d\n", (int)ad.mFramesPerPacket);
-
-		return -1;
-	}
+	if ((status = AudioUnitSetProperty(au, kAudioUnitProperty_StreamFormat,
+			kAudioUnitScope_Input, 0, &ad, sizeof(ad))))
+		goto err1;
 
 	size = sizeof(UInt32);
-        if ((err = AudioUnitGetProperty(au, kAudioDevicePropertyBufferSize,
-			kAudioUnitScope_Input, 0, &max_frames, &size))) {
-		fprintf(stderr, "error: AudioUnitGetProperty: BufferSize (%d)\n", (int)err);
-		return -1;
-	}
+        if ((status = AudioUnitGetProperty(au, kAudioDevicePropertyBufferSize,
+			kAudioUnitScope_Input, 0, &max_frames, &size)))
+		goto err1;
 
 	chunk_size = max_frames;
-        num_chunks = (options->rate * ad.mBytesPerFrame + chunk_size - 1) /
-								chunk_size;
+        num_chunks = (options->rate * ad.mBytesPerFrame * latency / 1000
+						+ chunk_size - 1) / chunk_size;
         buffer_len = (num_chunks + 1) * chunk_size;
-        buffer = calloc(num_chunks + 1, chunk_size);
+	if ((buffer = calloc(num_chunks + 1, chunk_size)) == NULL)
+		goto err;
 
 	rc.inputProc = render_proc;
 	rc.inputProcRefCon = 0;
@@ -218,13 +205,19 @@ static int init(struct options *options)
         buf_write_pos = 0;
 	paused = 1;
 
-	if ((err = AudioUnitSetProperty(au, kAudioUnitProperty_SetRenderCallback,
-			kAudioUnitScope_Input, 0, &rc, sizeof(rc)))) {
-		fprintf(stderr, "error: AudioUnitSetProperty: SetRenderCallback (%d)\n", (int)err);
-		return -1;
-	}
+	if ((status = AudioUnitSetProperty(au,
+			kAudioUnitProperty_SetRenderCallback,
+			kAudioUnitScope_Input, 0, &rc, sizeof(rc))))
+		goto err2;
 	
 	return 0;
+
+    err2:
+	free(buffer);
+    err1:
+	fprintf(stderr, "initialization error: %d\n", (int)status);
+    err:
+	return -1;
 }
 
 
@@ -268,10 +261,12 @@ static void flush(void)
 
 static void onpause(void)
 {
+        AudioOutputUnitStop(au);
 }
 
 static void onresume(void)
 {
+	AudioOutputUnitStart(au);
 }
 
 struct sound_driver sound_coreaudio = {
