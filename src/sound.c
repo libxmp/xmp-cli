@@ -12,6 +12,7 @@
 
 extern struct sound_driver sound_null;
 extern struct sound_driver sound_wav;
+extern struct sound_driver sound_aiff;
 extern struct sound_driver sound_file;
 extern struct sound_driver sound_qnx;
 extern struct sound_driver sound_alsa05;
@@ -88,6 +89,7 @@ void init_sound_drivers(void)
 	register_sound_driver(&sound_qnx);
 #endif
 	register_sound_driver(&sound_wav);
+	register_sound_driver(&sound_aiff);
 	register_sound_driver(&sound_file);
 	register_sound_driver(&sound_null);
 }

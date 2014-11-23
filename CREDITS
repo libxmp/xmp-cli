@@ -41,6 +41,7 @@ The Authors
 
 - Lorence Lombardo <lombi@iprimus.com.au>
   * Amiga AHI driver
+  * AIFF file writer
 
 - Kevin Langman <langman@earthling.net>
   * OS/2 port and OS/2 DART drivers

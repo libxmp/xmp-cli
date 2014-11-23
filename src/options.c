@@ -238,6 +238,9 @@ void get_options(int argc, char **argv, struct options *options)
 			if (strlen(optarg) >= 4 &&
 			    !strcasecmp(optarg + strlen(optarg) - 4, ".wav")) {
 				options->driver_id = "wav";
+			} else if (strlen(optarg) >= 5 &&
+			    !strcasecmp(optarg + strlen(optarg) - 5, ".aiff")) {
+				options->driver_id = "aiff";
 			} else {
 				options->driver_id = "file";
 			}

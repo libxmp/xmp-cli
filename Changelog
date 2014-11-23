@@ -2,6 +2,7 @@ Stable versions
 ---------------
 
 4.0.10 ():
+	- Add AIFF file output driver (by Lorence Lombardo)
 	- Adjust CoreAudio driver latency
 
 4.0.9 (20140926):
