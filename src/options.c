@@ -76,7 +76,7 @@ static void usage(char *s, struct options *options)
 "   -s --start num         Start from the specified order\n"
 "   -t --time num          Maximum playing time in seconds\n"
 "   --vblank               Force vblank timing in Amiga modules\n"
-"   -Z                     Play all sequences (subsongs) in module\n"
+"   -Z --all-sequences     Play all sequences (subsongs) in module\n"
 "   -z --sequence num      Play the specified sequence (0=main)\n" 
 "\nMixer options:\n"
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"

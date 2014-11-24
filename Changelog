@@ -4,6 +4,7 @@ Stable versions
 4.0.10 ():
 	- Add AIFF file output driver (by Lorence Lombardo)
 	- Adjust CoreAudio driver latency
+	- Fix missing --all-sequences in help message
 
 4.0.9 (20140926):
 	- Add option '-p' to set the default pan amplitude
