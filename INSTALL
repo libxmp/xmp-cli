@@ -1,15 +1,12 @@
 Requirements
 ------------
 
-- This package needs the GNU make. In BSD or SysV you may need to use
-  gmake instead of make.
-
 - Development components of the sound system to use (ALSA, Pulse Audio, etc.)
   are required to build sound drivers. Most Linux distributions provide
   these as -devel or -dev packages.
 
-- Development components of libxmp 4.1.0 or later. Libxmp is available at
-  http://xmp.sf.net.
+- Development components of libxmp 4.3.0 or later. Libxmp can be downloaded
+  from http://xmp.sf.net/.
 
 
 Building xmp
@@ -20,10 +17,9 @@ In most systems just execute:
 $ ./configure
 $ make
 
-Use ./configure --with-libxmp=/some/path if libxmp is installed in a
-nonstandard place.
-
-To build on Cygwin you may need to pass --with-libxmp=/usr/local.
+You can set CFLAGS and LIBS appropriately if libraries are installed in a
+nonstandard place. Run ./configure --help for a list of configurable
+parameters.
 
 
 Installation
