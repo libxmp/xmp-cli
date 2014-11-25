@@ -216,14 +216,15 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		}
 		break; }
 	case '?':
+	case 'c':
 	case 'i':
 	case 'I':
 	case 'S':
 	case 'm':
 		ctl->display = cmd;
 		break;
-	case 'c':
-		ctl->display = cmd;
+	case 'h':
+		ctl->display = '?';
 		break;
 	case '>':
 		change_sequence(handle, mi, ctl, 1);
