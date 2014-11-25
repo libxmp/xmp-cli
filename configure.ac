@@ -1,4 +1,4 @@
-AC_INIT([xmp], [4.0.9])
+AC_INIT([xmp], [4.0.10])
 AM_SILENT_RULES([yes])
 AC_CONFIG_AUX_DIR([build-aux])
 0>confdefs.h
