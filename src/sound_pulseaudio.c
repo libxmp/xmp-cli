@@ -85,7 +85,7 @@ static void onresume(void)
 
 struct sound_driver sound_pulseaudio = {
 	"pulseaudio",
-	"PulseAudio",
+	"PulseAudio sound output",
 	NULL,
 	init,
 	deinit,

@@ -271,7 +271,7 @@ static void onresume(void)
 
 struct sound_driver sound_coreaudio = {
 	"coreaudio",
-	"CoreAudio",
+	"CoreAudio sound output",
 	NULL,
 	init,
 	deinit,

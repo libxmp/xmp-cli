@@ -174,7 +174,7 @@ static const char *const help[] = {
 
 struct sound_driver sound_win32 = {
 	"win32",
-	"Windows WinMM",
+	"Windows WinMM sound output",
 	help,
 	init,
 	deinit,
