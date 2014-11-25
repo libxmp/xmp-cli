@@ -3,6 +3,8 @@ Stable versions
 
 4.0.10 ():
 	- Add AIFF file output driver (by Lorence Lombardo)
+	- Add command 'h' to display help message (by Eugene Toder)
+	- Fix sound driver deinitialization on signal (by Eugene Toder)
 	- Adjust CoreAudio driver latency
 	- Fix missing --all-sequences in help message
 

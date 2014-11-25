@@ -57,7 +57,11 @@ static void cleanup(int sig)
 	signal(SIGFPE, SIG_DFL);
 	signal(SIGSEGV, SIG_DFL);
 
-	sound->deinit();
+	/* Don't deinit from signal handler
+	 * (https://github.com/cmatsuoka/xmp-cli/issues/5)
+	 * sound->deinit();
+	 */
+
 	reset_tty();
 
 	signal(sig, SIG_DFL);
