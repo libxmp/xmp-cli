@@ -279,7 +279,7 @@ int main(int argc, char **argv)
 		    opt.format & XMP_FORMAT_MONO ? "mono" : "stereo",
 		    opt.dsp & XMP_DSP_LOWPASS ? "" : " (no filter)");
 
-		report("Press h for help\n\n");
+		report("Press 'h' for help\n\n");
 	}
 
 	if (opt.probeonly) {
