@@ -340,7 +340,9 @@ int main(int argc, char **argv)
 				argv[optind], optind - first + 1, argc - first);
 		}
 
+#if XMP_VERCODE >= 0x040300
 		xmp_set_player(xc, XMP_PLAYER_DEFPAN, opt.defpan);
+#endif
 
 		/* load module */
 
