@@ -59,6 +59,8 @@ void info_mod(struct xmp_module_info *mi)
 			report("S ");
 		} else if (mi->mod->xxc[i].flg & XMP_CHANNEL_MUTE) {
 			report("- ");
+		} else if (mi->mod->xxc[i].flg & XMP_CHANNEL_SURROUND) {
+			report("^ ");
 		} else {
 			report("%x ", mi->mod->xxc[i].pan >> 4);
 		}

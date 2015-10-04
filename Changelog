@@ -1,6 +1,9 @@
 Stable versions
 ---------------
 
+4.0.11 ():
+	- Mark surround channels in channel list
+
 4.0.10 (20141030):
 	- Add AIFF file output driver (by Lorence Lombardo)
 	- Add command 'h' to display help message (by Eugene Toder)
