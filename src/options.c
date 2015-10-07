@@ -327,6 +327,7 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'h':
 			usage(argv[0], options);
+			/* fall through */
 		default:
 			exit(-1);
 		}

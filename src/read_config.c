@@ -81,8 +81,9 @@ int read_config(struct options *o)
 
 	while (!feof(rc)) {
 		memset(line, 0, 256);
-		fscanf(rc, "%255[^\n]", line);
-		fgetc(rc);
+		if (fscanf(rc, "%255[^\n]", line) < 0 || fgetc(rc) < 0) {
+			break;
+		}
 
 		/* Delete comments */
 		if ((hash = strchr(line, '#')))
@@ -90,8 +91,9 @@ int read_config(struct options *o)
 
 		delete_spaces(line);
 
-		if (!(var = strtok(line, "=\n")))
+		if (!(var = strtok(line, "=\n"))) {
 			continue;
+		}
 
 		val = strtok(NULL, " \t\n");
 
@@ -146,7 +148,8 @@ int read_config(struct options *o)
 		}
 
 		if (!strcmp(var, "instrument_path")) {
-			strncpy(instrument_path, val, 256);
+			strncpy(instrument_path, val, 255);
+			instrument_path[255] = 0;
 			o->ins_path = instrument_path;
 			continue;
 		}
@@ -194,8 +197,9 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 
 	while (!feof(rc)) {
 		memset(line, 0, 256);
-		fscanf(rc, "%255[^\n]", line);
-		fgetc(rc);
+		if (fscanf(rc, "%255[^\n]", line) < 0 || fgetc(rc) < 0) {
+			break;
+		}
 
 		/* Delete comments */
 		if ((hash = strchr(line, '#')))
@@ -210,13 +214,15 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 			continue;
 		}
 
-		if (!active)
+		if (!active) {
 			continue;
+		}
 
 		delete_spaces(line);
 
-		if (!(var = strtok(line, "=\n")))
+		if (!(var = strtok(line, "=\n"))) {
 			continue;
+		}
 
 		val = strtok(NULL, " \t\n");
 

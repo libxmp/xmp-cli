@@ -20,7 +20,7 @@ struct sound_driver {
 };
 
 #define parm_init(p) { char *token; for (; *(p); (p)++) { \
-	char s[80]; strncpy(s, *(p), 80); \
+	char s[80]; strncpy(s, *(p), 79); s[79] = 0; \
 	token = strtok(s, ":="); token = strtok(NULL, "");
 #define parm_end() } }
 #define parm_error() do { \
