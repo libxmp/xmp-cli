@@ -123,17 +123,20 @@ static void deinit(void)
 	unsigned long tmp;
 
 	if (size > 54) {
-		lseek(fd, 4, SEEK_SET);		/* FORM chunk size */
-		tmp = size - 8;
-		write32b(fd, tmp);
+		if (lseek(fd, 4, SEEK_SET) == 4) {	/* FORM chunk size */
+			tmp = size - 8;
+			write32b(fd, tmp);
+		}
 
-		lseek(fd, 22, SEEK_SET);	/* COMM frames */
-		tmp = (size - 54) / (bits / 8) / channels;
-		write32b(fd, tmp);
+		if (lseek(fd, 22, SEEK_SET) == 22) {	/* COMM frames */
+			tmp = (size - 54) / (bits / 8) / channels;
+			write32b(fd, tmp);
+		}
 
-		lseek(fd, 42, SEEK_SET);	/* SSND chunk size */
-		tmp = size - 48;		/* minus header + 8 */
-		write32b(fd, tmp);
+		if (lseek(fd, 42, SEEK_SET) == 42) {	/* SSND chunk size */
+			tmp = size - 48;		/* minus header + 8 */
+			write32b(fd, tmp);
+		}
 	}
 
 	if (fd > 0) {
