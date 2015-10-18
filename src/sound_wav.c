@@ -136,11 +136,13 @@ static void play(void *b, int len)
 
 static void deinit(void)
 {
-	lseek(fd, 40, SEEK_SET);
-	write_32l(fd, size);
+	if (lseek(fd, 40, SEEK_SET) == 40) {
+		write_32l(fd, size);
+	}
 
-	lseek(fd, 4, SEEK_SET);
-	write_32l(fd, size + 40);
+	if (lseek(fd, 4, SEEK_SET) == 4) {
+		write_32l(fd, size + 40);
+	}
 
 	if (fd > 0) {
 		close(fd);

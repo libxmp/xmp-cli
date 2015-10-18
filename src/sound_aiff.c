@@ -120,22 +120,18 @@ static void play(void *b, int len)
 
 static void deinit(void) 
 {
-	unsigned long tmp;
-
 	if (size > 54) {
 		if (lseek(fd, 4, SEEK_SET) == 4) {	/* FORM chunk size */
-			tmp = size - 8;
-			write32b(fd, tmp);
+			write32b(fd, size - 8);
 		}
 
 		if (lseek(fd, 22, SEEK_SET) == 22) {	/* COMM frames */
-			tmp = (size - 54) / (bits / 8) / channels;
+			unsigned long tmp = (size - 54) / (bits / 8) / channels;
 			write32b(fd, tmp);
 		}
 
 		if (lseek(fd, 42, SEEK_SET) == 42) {	/* SSND chunk size */
-			tmp = size - 48;		/* minus header + 8 */
-			write32b(fd, tmp);
+			write32b(fd, size - 48);	/* minus header + 8 */
 		}
 	}
 
