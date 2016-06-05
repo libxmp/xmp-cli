@@ -105,7 +105,7 @@ static void sigcont_handler(int sig)
 }
 #endif
 
-static void show_info(int what, struct xmp_module_info *mi)
+static void show_info(int what, struct xmp_module_info *mi, int mode)
 {
 	report("\r%78.78s\n", " ");
 	switch (what) {
@@ -125,7 +125,7 @@ static void show_info(int what, struct xmp_module_info *mi)
 		info_comment(mi);
 		break;
 	case 'm':
-		info_mod(mi);
+		info_mod(mi, mode);
 		break;
 	}
 }
@@ -155,7 +155,8 @@ static void check_pause(xmp_context xc, struct control *ctl,
 			usleep(100000);
 			read_command(xc, mi, ctl);
 			if (ctl->display) {
-				show_info(ctl->display, mi);
+				int mode = xmp_get_player(xc, XMP_PLAYER_MODE);
+				show_info(ctl->display, mi, mode);
 				if (verbose) {
 					info_frame(mi, fi, ctl, 1);
 				}
@@ -403,7 +404,10 @@ int main(int argc, char **argv)
 		if (xmp_start_player(xc, opt.rate, opt.format) == 0) {
 			xmp_set_player(xc, XMP_PLAYER_INTERP, opt.interp);
 			xmp_set_player(xc, XMP_PLAYER_DSP, opt.dsp);
-			xmp_set_player(xc, XMP_PLAYER_MODE, opt.player_mode);
+			if (opt.player_mode != XMP_MODE_AUTO) {
+				xmp_set_player(xc, XMP_PLAYER_MODE,
+							opt.player_mode);
+			}
 
 			played = 1;
 
@@ -443,7 +447,8 @@ int main(int argc, char **argv)
 			/* Show module data */
 
 			if (opt.verbose > 0) {
-				info_mod(&mi);
+				int mode = xmp_get_player(xc, XMP_PLAYER_MODE);
+				info_mod(&mi, mode);
 			}
 
 			if (opt.verbose > 1) {
@@ -496,7 +501,10 @@ int main(int argc, char **argv)
 					read_command(xc, &mi, &control);
 
 					if (control.display) {
-						show_info(control.display, &mi);
+						int mode = xmp_get_player(xc,
+							XMP_PLAYER_MODE);
+						show_info(control.display, &mi,
+									mode);
 						control.display = 0;
 						refresh_status = 1;
 					}

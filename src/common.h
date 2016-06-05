@@ -69,6 +69,7 @@ struct control {
 	int cur_seq;		/* Display current sequence */
 };
 
+extern struct player_mode pmode[];
 
 int report(char *, ...);
 
@@ -82,7 +83,7 @@ int set_tty(void);
 int reset_tty(void);
 
 /* info */
-void info_mod(struct xmp_module_info *);
+void info_mod(struct xmp_module_info *, int);
 void info_message(char *, ...);
 void info_frame_init(void);
 void info_frame(struct xmp_module_info *, struct xmp_frame_info *, struct control *, int);

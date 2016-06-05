@@ -17,8 +17,6 @@
 #include <sys/unistd.h>
 #endif
 
-extern struct player_mode pmode[];
-
 static char driver[32];
 static char instrument_path[256];
 

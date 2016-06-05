@@ -40,15 +40,26 @@ void info_help(void)
 );
 }
 
-void info_mod(struct xmp_module_info *mi)
+void info_mod(struct xmp_module_info *mi, int mode)
 {
 	int i;
 	int num_seq;
 	int total_time;
 
 	report("Module name  : %s\n", mi->mod->name);
-	report("Module type  : %s\n", mi->mod->type);
-	report("Module length: %d patterns\n", mi->mod->len);
+	report("Module type  : %s", mi->mod->type);
+
+	if (mode != XMP_MODE_AUTO) {
+		struct player_mode *pm;
+		for (pm = pmode; pm->name != NULL; pm++) {
+			if (pm->mode == mode) {
+				report(" [play as:%s]", pm->desc);
+				break;
+			}
+		}
+	}
+
+	report("\nModule length: %d patterns\n", mi->mod->len);
 	report("Patterns     : %d\n", mi->mod->pat);
 	report("Instruments  : %d\n", mi->mod->ins);
 	report("Samples      : %d\n", mi->mod->smp);
