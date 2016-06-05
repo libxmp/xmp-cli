@@ -15,7 +15,14 @@
 #define getch _getch
 #endif
 
+#define NUM_MODES 13
 #define MAX_DRV_PARM 20
+
+struct player_mode {
+	char *name;
+	char *desc;
+	int mode;
+};
 
 struct options {
 	int start;		/* start order */
@@ -31,7 +38,7 @@ struct options {
 	int random;		/* play in random order */
 	int reverse;		/* reverse stereo channels */
 	int vblank;		/* vblank flag */
-	int fx9bug;		/* fx9bug flag */
+	int fx9bug;		/* fx9bug flag -- DEPRECATED */
 	int fixloop;		/* fixloop flag */
 	int verbose;		/* verbosity level */
 	int silent;		/* silent output */
@@ -43,6 +50,7 @@ struct options {
 	int sequence;		/* sequence to play */
 	int explore;		/* play all sequences in module */
 	int show_comment;	/* show module comment text */
+	int player_mode;	/* force tracker emulation */
 	char *driver_id;	/* sound driver ID */
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */

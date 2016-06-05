@@ -1,4 +1,4 @@
-AC_INIT([xmp], [4.0.11])
+AC_INIT([xmp], [4.1.0])
 AM_SILENT_RULES([yes])
 AC_CONFIG_AUX_DIR([build-aux])
 0>confdefs.h
@@ -29,9 +29,9 @@ esac
 AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
-PKG_CHECK_MODULES([libxmp], [libxmp >= 4.3],
+PKG_CHECK_MODULES([libxmp], [libxmp >= 4.4],
   AC_CHECK_LIB(xmp, xmp_version, [], [exit 1]),
-  [echo "You need libxmp version 4.3 or later to build this package"; exit 1])
+  [echo "You need libxmp version 4.4 or later to build this package"; exit 1])
 
 dnl Don't use things like /usr/etc or /usr/var
 

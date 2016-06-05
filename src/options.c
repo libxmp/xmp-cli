@@ -38,10 +38,26 @@ enum {
 	OPT_LOOPALL,
 };
 
+struct player_mode pmode[] = {
+	{ "auto",         "Autodetect",                XMP_MODE_AUTO },
+	{ "mod",          "Generic MOD player",        XMP_MODE_MOD },
+	{ "noisetracker", "Noisetracker",              XMP_MODE_NOISETRACKER },
+	{ "protracker",   "Protracker 1/2",            XMP_MODE_PROTRACKER },
+	{ "s3m",          "Generic S3M player",        XMP_MODE_S3M },
+	{ "st3",          "Scream Tracker 3",          XMP_MODE_ST3 },
+	{ "st3gus",       "Scream Tracker 3 with GUS", XMP_MODE_ST3GUS },
+	{ "xm",	          "Generic XM player",         XMP_MODE_XM },
+	{ "ft2",          "Fasttracker II",            XMP_MODE_FT2 },
+	{ "it",           "Impulse Tracker",           XMP_MODE_IT },
+	{ "itsmp",        "Impulse Tracker sample mode", XMP_MODE_ITSMP },
+	{ NULL, NULL, 0 }
+};
+
 static void usage(char *s, struct options *options)
 {
 	struct list_head *head;
 	struct sound_driver *sd;
+	struct player_mode *pm;
 	const char *const *hlp;
 
 	printf("Usage: %s [options] [modules]\n", s);
@@ -61,16 +77,21 @@ static void usage(char *s, struct options *options)
 			printf("   -D%-20.20s %s\n", hlp[0], hlp[1]);
 	}
 
+	printf("\nAvailable player modes:\n");
+	for (pm = pmode; pm->name != NULL; pm++) {
+		printf("   %-22.22s %s\n", pm->name, pm->desc);
+	}
+
 	printf("\nPlayer control options:\n"
 "   -D parameter[=val]     Pass configuration parameter to the output driver\n"
 "   -d --driver name       Force output to the specified device\n"
+"   -e --player-mode mode  Force tracker emulation (default auto)\n"
 "   --fix-sample-loops     Use sample loop start /2 in MOD/UNIC/NP3\n"
 "   -l --loop              Enable module looping\n"
 "   --loop-all             Loop over entire module list\n"
 "   -M --mute ch-list      Mute the specified channels\n"
 "   --nocmd                Disable interactive commands\n"
 "   --norc                 Don't read configuration files\n"
-"   --offset-bug-emulation Emulate Protracker 2.x bug in effect 9\n"
 "   -R --random            Random order playing\n"
 "   -S --solo ch-list      Set channels to solo mode\n"
 "   -s --start num         Start from the specified order\n"
@@ -126,9 +147,10 @@ static const struct option lopt[] = {
 	{ "nocmd",		0, 0, OPT_NOCMD },
 	{ "norc",		0, 0, OPT_NORC },
 	{ "nofilter",		0, 0, 'F' },
-	{ "offset-bug-emulation",0, 0, OPT_FX9BUG },
+	/* { "offset-bug-emulation",0, 0, OPT_FX9BUG }, */
 	{ "output-file",	1, 0, 'o' },
 	{ "pan",		1, 0, 'P' },
+	{ "player-mode",	1, 0, 'e' },
 	{ "probe-only",		0, 0, OPT_PROBEONLY },
 	{ "load-only",		0, 0, OPT_LOADONLY },
 	{ "quiet",		0, 0, 'q' },
@@ -151,10 +173,11 @@ static const struct option lopt[] = {
 
 void get_options(int argc, char **argv, struct options *options)
 {
+	struct player_mode *pm;
 	int optidx = 0;
 	int o;
 
-#define OPTIONS "a:b:CcD:d:Ff:hI:i:LlM:mNo:P:p:qRrS:s:T:t:uVvZz:"
+#define OPTIONS "a:b:CcD:d:e:Ff:hI:i:LlM:mNo:P:p:qRrS:s:T:t:uVvZz:"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'a':
@@ -178,6 +201,16 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case 'd':
 			options->driver_id = optarg;
+			break;
+		case 'e':
+			for (pm = pmode; pm->name != NULL; pm++) {
+				if (!strcmp(optarg, pm->name)) {
+					options->player_mode = pm->mode;
+					break;
+				}
+				options->player_mode = -1;
+			}
+
 			break;
 		case 'F':
 			options->dsp &= ~XMP_DSP_LOWPASS;
@@ -245,9 +278,9 @@ void get_options(int argc, char **argv, struct options *options)
 				options->driver_id = "file";
 			}
 			break;
-		case OPT_FX9BUG:
+		/* case OPT_FX9BUG:
 			options->fx9bug = 1;
-			break;
+			break; */
 		case 'P':
 			options->mix = strtoul(optarg, NULL, 0);
 			if (options->mix < 0)

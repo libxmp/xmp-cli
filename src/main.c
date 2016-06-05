@@ -229,6 +229,7 @@ int main(int argc, char **argv)
 	opt.driver_id = NULL;
 	opt.interp = XMP_INTERP_SPLINE;
 	opt.dsp = XMP_DSP_LOWPASS;
+	opt.player_mode = XMP_MODE_AUTO;
 
 	/* read configuration file */
 	if (!opt.norc) {
@@ -246,6 +247,13 @@ int main(int argc, char **argv)
 
 	if (opt.interp < 0) {
 		fprintf(stderr, "%s: unknown interpolation type\n"
+			"Use `%s --help' for more information.\n",
+			argv[0], argv[0]);
+		exit(EXIT_FAILURE);
+	}
+
+	if (opt.player_mode < 0) {
+		fprintf(stderr, "%s: unknown player mode\n"
 			"Use `%s --help' for more information.\n",
 			argv[0], argv[0]);
 		exit(EXIT_FAILURE);
@@ -395,6 +403,7 @@ int main(int argc, char **argv)
 		if (xmp_start_player(xc, opt.rate, opt.format) == 0) {
 			xmp_set_player(xc, XMP_PLAYER_INTERP, opt.interp);
 			xmp_set_player(xc, XMP_PLAYER_DSP, opt.dsp);
+			xmp_set_player(xc, XMP_PLAYER_MODE, opt.player_mode);
 
 			played = 1;
 

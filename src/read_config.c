@@ -17,6 +17,8 @@
 #include <sys/unistd.h>
 #endif
 
+extern struct player_mode pmode[];
+
 static char driver[32];
 static char instrument_path[256];
 
@@ -190,6 +192,7 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 {
 	FILE *rc;
 	char *hash, *var, *val, line[256];
+	struct player_mode *pm;
 	int active = 0;
 
 	if ((rc = fopen(confname, "r")) == NULL)
@@ -248,6 +251,17 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 			} else {
 				fprintf(stderr, "%s: unknown interpolation "
 					"type \"%s\"\n", confname, val);
+			}
+		}
+
+		if (!strcmp(var, "mode")) {
+			for (pm = pmode; pm->name != NULL; pm++) {
+				if (!strcmp(val, pm->name)) {
+					o->player_mode = pm->mode;
+					break;
+				}
+				fprintf(stderr, "%s: unknown player mode "
+					"\"%s\"\n", confname, val);
 			}
 		}
 	}

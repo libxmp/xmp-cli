@@ -1,4 +1,4 @@
-.TH "XMP" "1" "Version 4\&.0\&.11" "Mar 2016" "Extended Module Player" 
+.TH "XMP" "1" "Version 4\&.1\&.0" "Jun 2016" "Extended Module Player" 
 .PP 
 .SH "NAME" 
 xmp - Extended Module Player
@@ -11,6 +11,7 @@ xmp - Extended Module Player
 [\fB\-c, \-\-stdout\fP]
 [\fB\-D\fP \fIdevice-specific parameters\fP]
 [\fB\-d, \-\-driver\fP \fIdriver\fP]
+[\fB\-e, \-\-player\-mode\fP \fImode\fP]
 [\fB\-F, \-\-nofilter\fP]
 [\fB\-f, \-\-frequency\fP \fIrate\fP]
 [\fB\-\-fix\-sample\-loop\fP]
@@ -26,7 +27,6 @@ xmp - Extended Module Player
 [\fB\-N, \-\-null\fP]
 [\fB\-\-nocmd\fP]
 [\fB\-o, \-\-output\-file\fP \fIfilename\fP]
-[\fB\-\-offset\-bug\-emulation\fP]
 [\fB\-P, \-\-pan\fP \fInum\fP]
 [\fB\-p, \-\-default\-pan\fP \fInum\fP]
 [\fB\-\-probe\-only\fP]
@@ -68,6 +68,16 @@ list of known parameters\&.
 .IP "\fB\-d, \-\-driver\fP \fIdriver\fP" 
 Select the output driver\&. If not specified, \fBxmp\fP will try to
 probe each available driver\&.
+.IP "\fB\-e, \-\-player\-mode\fP \fImode\fP" 
+Force play mode or emulation of a specific tracker\&. Valid player modes
+are\&: \fBauto\fP (autodetection)\&, \fBmod\fP (generic mod player mode)\&,
+\fBnoisetracker\fP\&, \fBprotracker\fP (Protracker 1/2)\&, \fBs3m\fP (generic
+S3M player mode)\&, \fBst3\fP (Scream Tracker 3)\&, \fBst3gus\fP (Scream
+Tracker 3 with GUS card)\&, \fBxm\fP (generic XM player mode)\&, \fBft2\fP
+(Fasttracker II)\&, \fBit\fP (Impulse Tracker)\&, or \fBitsmp\fP (Impulse
+Tracker in sample mode)\&. When a specific tracker is specified, \fBxmp\fP
+will try to emulate quirks and bugs for accurate replay\&. Default is
+autodetection.
 .IP "\fB\-F, \-\-nofilter\fP" 
 Disable IT lowpass filter effect and envelopes.
 .IP "\fB\-f, \-\-frequency\fP \fIrate\fP" 
@@ -81,9 +91,9 @@ Show a short summary of command-line options\&.
 .IP "\fB\-I, \-\-instrument\-path\fP \fIpath\fP" 
 Set the pathname to the directory containing external samples\&.
 .IP "\fB\-i, \-\-interpolation\fP \fItype\fP" 
-Select interpolation type. Available types are \fInearest\fP for
-nearest-neighbor interpolation\&, \fIlinear\fI for linear interpolation\&, and
-\fIspline\fI for cubic spline interpolation\&. Default is cubic spline\&.
+Select interpolation type. Available types are \fBnearest\fP for
+nearest-neighbor interpolation\&, \fBlinear\fP for linear interpolation\&, and
+\fBspline\fP for cubic spline interpolation\&. Default is cubic spline\&.
 .IP "\fB\-\-load\-only\fP" 
 Load module and exit\&.
 .IP "\fB\-L, \-\-list\-formats\fP" 
@@ -104,8 +114,6 @@ Disable interactive commands\&.
 .IP "\fB\-o, \-\-output\-file\fP \fIfilename\fP" 
 Set the output file name when mixing to raw or WAV files\&. If \'-\' is
 given as the file name, the output will be sent to stdout\&.
-.IP "\fB\-\-offset\-bug\-emulation\fP"
-Emulate Protracker 2.x handling of effect 0x09 (set sample offset)\&.
 .IP "\fB\-P, \-\-pan\fP \fInum\fP" 
 Set the percentual panning amplitude\&.
 .IP "\fB\-P, \-\-default\-pan\fP \fInum\fP" 
