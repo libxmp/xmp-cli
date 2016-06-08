@@ -231,6 +231,7 @@ int main(int argc, char **argv)
 	opt.interp = XMP_INTERP_SPLINE;
 	opt.dsp = XMP_DSP_LOWPASS;
 	opt.player_mode = XMP_MODE_AUTO;
+	opt.amplify = 1;
 
 	/* read configuration file */
 	if (!opt.norc) {
