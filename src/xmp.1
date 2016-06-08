@@ -39,8 +39,9 @@ xmp - Extended Module Player
 [\fB\-\-vblank\fP]
 [\fB\-V, \-\-version\fP]
 [\fB\-v, \-\-verbose\fP]
+[\fB\-x, \-\-classic\fP]
 [\fB\-Z, \-\-all\-sequences\fP]
-[\fB\-z, \-\-sequence\fP]
+[\fB\-z, \-\-sequence\fP \fInum\fP]
 \fImodules\fP
 .PP 
 .SH "DESCRIPTION" 
@@ -143,6 +144,10 @@ Print version information\&.
 Verbose mode (incremental)\&. If specified more than once, the
 verbosity level will be increased (no messages will be displayed
 when the player runs in background)\&.
+.IP "\fB\-x, \-\-classic\fP" 
+Use classic sound mixers\&, if available for the format being played\&.
+For Amiga formats such as Protracker, classic mode simulates the sound
+of an Amiga 500\&, with or without the led filter\&.
 .IP "\fB\-Z, \-\-all\-sequences\fP" 
 Play all hidden or alternative pattern sequences (subsongs) in module\&.
 .IP "\fB\-z, \-\-sequence\fP \fInum\fP" 

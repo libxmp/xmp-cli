@@ -2,7 +2,9 @@ Stable versions
 ---------------
 
 4.1.0 ():
-	- Add option to force tracker emulation (requires libxmp 4.4)
+	- Requires libxmp 4.4
+	- Add option to force tracker emulation
+	- Add option to enable classic sound mixers
 	- Remove option --offset-bug-emulation
 
 4.0.11 (20160306):

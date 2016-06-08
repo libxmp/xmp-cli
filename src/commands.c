@@ -185,6 +185,10 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		ctl->loop++;
 		ctl->loop %= 3;
 		break;
+	case 'x':
+		ctl->classic = !ctl->classic;
+		xmp_set_player(handle, XMP_FLAGS_CLASSIC, ctl->classic);
+		break;
 	case 'Z':
 		ctl->cur_seq = 1;
 		break;

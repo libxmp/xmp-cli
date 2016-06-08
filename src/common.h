@@ -51,6 +51,7 @@ struct options {
 	int explore;		/* play all sequences in module */
 	int show_comment;	/* show module comment text */
 	int player_mode;	/* force tracker emulation */
+	int classic;		/* enable classic mixers */
 	char *driver_id;	/* sound driver ID */
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */
@@ -67,6 +68,7 @@ struct control {
 	int sequence;		/* Current sequence */
 	int explore;		/* Play all sequences */
 	int cur_seq;		/* Display current sequence */
+	int classic;		/* Toggle classic mode */
 };
 
 extern struct player_mode pmode[];

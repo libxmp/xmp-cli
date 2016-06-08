@@ -331,6 +331,7 @@ int main(int argc, char **argv)
 
 	control.loop = opt.loop;
 	control.explore = opt.explore;
+	control.classic = opt.classic;
 	first = optind;
 
     play_all:
@@ -442,6 +443,7 @@ int main(int argc, char **argv)
 			set_flag(flags, opt.vblank, XMP_FLAGS_VBLANK);
 			set_flag(flags, opt.fx9bug, XMP_FLAGS_FX9BUG);
 			set_flag(flags, opt.fixloop, XMP_FLAGS_FIXLOOP);
+			set_flag(flags, opt.classic, XMP_FLAGS_CLASSIC);
 			xmp_set_player(xc, XMP_PLAYER_CFLAGS, flags);
 
 			/* Show module data */

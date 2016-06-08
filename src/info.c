@@ -29,6 +29,7 @@ void info_help(void)
 "      !         Unmute all channels\n"
 "      Z         Display current sequence\n"
 "      z         Toggle subsong explorer mode\n"
+"      x         Toggle classic mixers\n"
 "      l         Toggle loop mode\n"
 "      m         Display module information\n"
 "      i         Display combined instrument/sample list\n"
@@ -186,7 +187,7 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	       "%2.2s/%2.2s] Chn[%02X/%02X] %c%c%c",
 		rowstr, numrowstr, fi->virt_used, max_channels,
 		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ',
-		ctl->loop > 1 ? '*' : ' ');
+		ctl->classic ? 'X' : ' ');
 
     print_time:
 
