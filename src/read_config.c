@@ -121,6 +121,7 @@ int read_config(struct options *o)
 		getval_no("srate", o->rate);
 		/*getval_no("time", o->time);
 		getval_no("verbosity", o->verbosity);*/
+		getval_yn("classic", o->classic, 1);
 
 		if (!strcmp(var, "driver")) {
 			strncpy(driver, val, 31);
@@ -192,6 +193,7 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 	char *hash, *var, *val, line[256];
 	struct player_mode *pm;
 	int active = 0;
+	int mono = 0;
 
 	if ((rc = fopen(confname, "r")) == NULL)
 		return;
@@ -227,10 +229,9 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 
 		val = strtok(NULL, " \t\n");
 
-		getval_yn("8bit", o->format, XMP_FORMAT_8BIT);
-		getval_yn("mono", o->format, XMP_FORMAT_MONO);
 		getval_yn("filter", o->dsp, XMP_DSP_LOWPASS);
-		getval_yn("loop", o->loop, XMP_DSP_LOWPASS);
+		getval_yn("loop", o->loop, 1);
+		getval_yn("mono", mono, 1);
 		getval_yn("reverse", o->reverse, 1);
 		getval_no("amplify", o->amplify);
 		getval_no("mix", o->mix);
@@ -238,6 +239,7 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 		getval_tristate("fixloop", o->fixloop);
 		getval_tristate("fx9bug", o->fx9bug);
 		getval_tristate("vblank", o->vblank);
+		getval_tristate("classic", o->classic);
 
 		if (!strcmp(var, "interpolation")) {
 			if (!strcmp(val, "nearest")) {
@@ -262,6 +264,12 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 					"\"%s\"\n", confname, val);
 			}
 		}
+
+		fprintf(stderr, "%s: unknown option \"%s\"\n", confname, var);
+	}
+
+	if (mono) {
+		o->mix = 0;
 	}
 
 	fclose(rc);
