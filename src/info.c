@@ -134,6 +134,7 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	static int ord = -1, spd = -1, bpm = -1;
 	char rowstr[3], numrowstr[3];
 	int time;
+	char x;
 
 	if (fi->virt_used > max_channels)
 		max_channels = fi->virt_used;
@@ -143,16 +144,34 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 
 	time = fi->time / 100;
 
+	/* Show mixer type */
+	x = ' ';
+	if (ctl->classic) {
+		switch (ctl->mixer_type) {
+		case XMP_MIXER_STANDARD:
+			x = 's';
+			break;
+		case XMP_MIXER_A500:
+			x = 'A';
+			break;
+		case XMP_MIXER_A500F:
+			x = 'F';
+			break;
+		default:
+			x = 'x';
+		}
+	}
+
 	if (msg_timer > 0) {
 		report("\r%-61.61s %c%c%c", msg_text,
 			ctl->explore ? 'Z' : ' ',
-			ctl->loop ? 'L' : ' ',
-			ctl->loop > 1 ? '*' : ' ');
+			ctl->loop ? 'L' : ' ', x);
 		msg_timer -= fi->frame_time * fi->speed / 6;
-		if (msg_timer == 0)
+		if (msg_timer == 0) {
 			msg_timer--;
-		else
+		} else {
 			goto print_time;
+		}
 	}
 
 	if (msg_timer < 0) {
@@ -186,8 +205,7 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
 	       "%2.2s/%2.2s] Chn[%02X/%02X] %c%c%c",
 		rowstr, numrowstr, fi->virt_used, max_channels,
-		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ',
-		ctl->classic ? 'X' : ' ');
+		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ', x);
 
     print_time:
 

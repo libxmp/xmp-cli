@@ -155,9 +155,9 @@ static void check_pause(xmp_context xc, struct control *ctl,
 			usleep(100000);
 			read_command(xc, mi, ctl);
 			if (ctl->display) {
-				int mode = xmp_get_player(xc, XMP_PLAYER_MODE);
-				show_info(ctl->display, mi, mode);
 				if (verbose) {
+					int mode = xmp_get_player(xc, XMP_PLAYER_MODE);
+					show_info(ctl->display, mi, mode);
 					info_frame(mi, fi, ctl, 1);
 				}
 				ctl->display = 0;
@@ -475,6 +475,8 @@ int main(int argc, char **argv)
 				int old_loop = fi.loop_count;
 				
 				xmp_get_frame_info(xc, &fi);
+				control.mixer_type = xmp_get_player(
+						xc, XMP_PLAYER_MIXER_TYPE);
 
 				/* Check loop */
 

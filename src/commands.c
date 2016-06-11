@@ -186,8 +186,20 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		ctl->loop %= 3;
 		break;
 	case 'x': {
-		int f = xmp_get_player(handle, XMP_PLAYER_FLAGS);
+		int f;
+
 		ctl->classic = !ctl->classic;
+
+		f = xmp_get_player(handle, XMP_PLAYER_FLAGS);
+		if (ctl->classic) {
+			xmp_set_player(handle, XMP_PLAYER_FLAGS,
+						f | XMP_FLAGS_CLASSIC);
+		} else {
+			xmp_set_player(handle, XMP_PLAYER_FLAGS,
+						f &= ~XMP_FLAGS_CLASSIC);
+		}
+
+		f = xmp_get_player(handle, XMP_PLAYER_CFLAGS);
 		if (ctl->classic) {
 			xmp_set_player(handle, XMP_PLAYER_CFLAGS,
 						f | XMP_FLAGS_CLASSIC);

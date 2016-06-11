@@ -69,6 +69,7 @@ struct control {
 	int explore;		/* Play all sequences */
 	int cur_seq;		/* Display current sequence */
 	int classic;		/* Toggle classic mode */
+	int mixer_type;		/* Mixer type (from player) */
 };
 
 extern struct player_mode pmode[];
