@@ -114,7 +114,7 @@ static void usage(char *s, struct options *options)
 "   -p --default-pan       Percentual default pan setting (default %d%%)\n"
 "   -r --reverse           Reverse left/right stereo channels\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
-"   -x --classic           Use classic mixers if applicable\n"
+"   -x --classic           Use classic mixer (if available for format)\n"
 "\nEnvironment options:\n"
 "   -I --instrument-path   Set pathname to external samples\n"
 "\nInformation options:\n"
