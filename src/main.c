@@ -167,6 +167,41 @@ static void check_pause(xmp_context xc, struct control *ctl,
 	}
 }
 
+static void get_mixer_type(int t, struct options *opt, char *buf, size_t size)
+{
+	char *fmt;
+
+	fmt = opt->format & XMP_FORMAT_MONO ? "mono" : "stereo";
+
+	switch (t) {
+	case XMP_MIXER_STANDARD: {
+		char *itp;
+		switch (opt->interp) {
+		case XMP_INTERP_NEAREST:
+			itp = "non-interpolated";
+			break;
+		case XMP_INTERP_LINEAR:
+			itp = "linear interpolated";
+			break;
+		case XMP_INTERP_SPLINE:
+			itp = "cubic spline interpolated";
+			break;
+		default:
+			itp = "unknown interpolation";
+		}
+		snprintf(buf, size, "Std %s %s mixer", fmt, itp);
+		break; }
+	case XMP_MIXER_A500:
+		snprintf(buf, size, "Amiga 500 %s modeling mixer", fmt);
+		break;
+	case XMP_MIXER_A500F:
+		snprintf(buf, size, "Amiga 500 %s with led filter", fmt);
+		break;
+	default:
+		snprintf(buf, size, "unknown %s mixer", fmt);
+	}
+}
+
 static void load_error(char *name, char *filename, int val)
 {
 	char *msg;
@@ -514,9 +549,18 @@ int main(int argc, char **argv)
 						refresh_status = 1;
 					}
 
-					if (control.cur_seq) {
+					
+					switch (control.cur_info) {
+					case 'X': {
+						char buf[80];
+ 						get_mixer_type(control.mixer_type, &opt, buf, 80);
+						info_message("Mixer type: %s", buf);
+						control.cur_info = 0;
+						break; }
+					case 'Z':
 						info_message("Current sequence: %d (start at position %02X)", control.sequence, mi.seq_data[control.sequence].entry_point);
-						control.cur_seq = 0;
+						control.cur_info = 0;
+						break;
 					}
 				}
 

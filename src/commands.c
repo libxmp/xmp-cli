@@ -185,6 +185,9 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		ctl->loop++;
 		ctl->loop %= 3;
 		break;
+	case 'X':
+		ctl->cur_info = 'X';
+		break;
 	case 'x': {
 		int f;
 
@@ -209,7 +212,7 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		}
 		break; }
 	case 'Z':
-		ctl->cur_seq = 1;
+		ctl->cur_info = 'Z';
 		break;
 	case 'z':
 		ctl->explore ^= 1;

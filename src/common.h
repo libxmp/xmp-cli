@@ -67,7 +67,7 @@ struct control {
 	int display;		/* Info display flag */
 	int sequence;		/* Current sequence */
 	int explore;		/* Play all sequences */
-	int cur_seq;		/* Display current sequence */
+	int cur_info;		/* Display current sequence or mixer type */
 	int classic;		/* Toggle classic mode */
 	int mixer_type;		/* Mixer type (from player) */
 };

@@ -27,9 +27,10 @@ void info_help(void)
 "    h, ?        Display available commands\n"
 "    1 - 0       Mute/unmute channels\n"
 "      !         Unmute all channels\n"
+"      X         Display current mixer type\n"
+"      x         Enable classic mixers\n"
 "      Z         Display current sequence\n"
 "      z         Toggle subsong explorer mode\n"
-"      x         Toggle classic mixers\n"
 "      l         Toggle loop mode\n"
 "      m         Display module information\n"
 "      i         Display combined instrument/sample list\n"
@@ -124,7 +125,7 @@ void info_message(char *format, ...)
 	va_list ap;
 
 	va_start(ap, format);
-	msg_timer = 200000;
+	msg_timer = 300000;
 	vsnprintf(msg_text, MSG_SIZE, format, ap);
 	va_end(ap);
 }
