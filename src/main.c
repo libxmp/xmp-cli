@@ -189,7 +189,7 @@ static void get_mixer_type(int t, struct options *opt, char *buf, size_t size)
 		default:
 			itp = "unknown interpolation";
 		}
-		snprintf(buf, size, "Std %s %s mixer", fmt, itp);
+		snprintf(buf, size, "%s %s mixer", fmt, itp);
 		break; }
 	case XMP_MIXER_A500:
 		snprintf(buf, size, "Amiga 500 %s mixer", fmt);
