@@ -192,10 +192,10 @@ static void get_mixer_type(int t, struct options *opt, char *buf, size_t size)
 		snprintf(buf, size, "Std %s %s mixer", fmt, itp);
 		break; }
 	case XMP_MIXER_A500:
-		snprintf(buf, size, "Amiga 500 %s modeling mixer", fmt);
+		snprintf(buf, size, "Amiga 500 %s mixer", fmt);
 		break;
 	case XMP_MIXER_A500F:
-		snprintf(buf, size, "Amiga 500 %s with led filter", fmt);
+		snprintf(buf, size, "Amiga 500 %s mixer (led filter: on)", fmt);
 		break;
 	default:
 		snprintf(buf, size, "unknown %s mixer", fmt);
