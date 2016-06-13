@@ -9,7 +9,7 @@
                               \_/     \/|_|    
                 E x t e n d e d   M o d u l e   P l a y e r
 
-			      Version 4.0
+			      Version 4.1
 
 
 OVERVIEW
@@ -35,6 +35,8 @@ The following single key commands can be used during the playback:
           1 to 0      =>  mute/unmute channels 1 to 10
             !         =>  unmute all channels
             ?         =>  display available commands
+            X         =>  display current mixer type
+            x         =>  enable classic mixers
             Z         =>  display current sequence
             z         =>  toggle subsong explorer mode
             l         =>  toggle loop mode
