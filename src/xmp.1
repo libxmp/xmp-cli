@@ -24,6 +24,7 @@ xmp - Extended Module Player
 [\fB\-\-loop\-all\fP]
 [\fB\-M, \-\-mute\fP \fIchannel-list\fP]
 [\fB\-m, \-\-mono\fP]
+[\fB\-\-mixer_voices\fP \fInum\fP]
 [\fB\-N, \-\-null\fP]
 [\fB\-\-nocmd\fP]
 [\fB\-o, \-\-output\-file\fP \fIfilename\fP]
@@ -108,6 +109,8 @@ Mute the specified channels\&. \fIchannel-list\fP is a comma-separated
 list of decimal channel ranges\&. Example: 0,2-4,8-16\&.
 .IP "\fB\-m, \-\-mono\fP" 
 Force mono output (default is stereo in stereo-capable devices)\&.
+.IP "\fB\-\-mixer\-voices\fP \fInum\fP"
+Set the maximum number of virtual channels (default is 128)\&.
 .IP "\fB\-N, \-\-null\fP" 
 Load and mix module, but discard output data (same as \-\-device=null)\&.
 .IP "\fB\-\-nocmd\fP" 
