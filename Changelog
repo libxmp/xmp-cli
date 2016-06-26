@@ -10,6 +10,8 @@ Stable versions
 	- Add command to display current mixer type
 	- Fix default amplification factor
 	- Fix module-specific configuration file options
+	- Fix screen corruption when module uses more than 255 virtual
+	  channels (reported by Lionel Debroux)
 	- Remove option --offset-bug-emulation
 
 4.0.11 (20160306):
