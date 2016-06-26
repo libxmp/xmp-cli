@@ -115,6 +115,7 @@ int read_config(struct options *o)
 		getval_yn("reverse", o->reverse, 1);
 		getval_no("amplify", o->amplify);
 		getval_no("mix", o->mix);
+		getval_no("mixer_voices", o->numvoices);
 		getval_no("default_pan", o->defpan);
 		/*getval_no("chorus", o->chorus);
 		getval_no("reverb", o->reverb);*/
@@ -235,6 +236,7 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 		getval_yn("reverse", o->reverse, 1);
 		getval_no("amplify", o->amplify);
 		getval_no("mix", o->mix);
+		getval_no("mixer_voices", o->numvoices);
 
 		getval_tristate("fixloop", o->fixloop);
 		getval_tristate("fx9bug", o->fx9bug);

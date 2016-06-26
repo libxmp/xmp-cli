@@ -39,6 +39,7 @@ struct options {
 	int reverse;		/* reverse stereo channels */
 	int vblank;		/* vblank flag */
 	int fx9bug;		/* fx9bug flag -- DEPRECATED */
+	int numvoices;		/* maximum number of mixer voices */
 	int fixloop;		/* fixloop flag */
 	int verbose;		/* verbosity level */
 	int silent;		/* silent output */

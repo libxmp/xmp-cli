@@ -36,6 +36,7 @@ enum {
 	OPT_FIXLOOP,
 	OPT_NORC,
 	OPT_LOOPALL,
+	OPT_NUMVOICES,
 };
 
 struct player_mode pmode[] = {
@@ -106,6 +107,7 @@ static void usage(char *s, struct options *options)
 "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
 "   -i --interpolation {nearest|linear|spline}\n"
 "                          Select interpolation type (default spline)\n"
+"   --mixer-voices num     Maximum number of mixer voices (default %d)\n"
 "   -m --mono              Mono output\n"
 "   -n --null              Use null output driver (same as --driver=null)\n"
 "   -F --nofilter          Disable IT lowpass filters\n"
@@ -126,7 +128,7 @@ static void usage(char *s, struct options *options)
 "   -q --quiet             Quiet mode (verbosity level = 0)\n"
 "   -V --version           Print version information\n"
 "   -v --verbose           Verbose mode (incremental)\n",
-		options->defpan);
+		options->numvoices, options->defpan);
 }
 
 static const struct option lopt[] = {
@@ -143,6 +145,7 @@ static const struct option lopt[] = {
 	{ "list-formats",	0, 0, 'L' },
 	{ "loop",		0, 0, 'l' },
 	{ "loop-all",		0, 0, OPT_LOOPALL },
+	{ "mixer-voices",	1, 0, OPT_NUMVOICES },
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
 	{ "null",		0, 0, 'N' },
@@ -255,6 +258,9 @@ void get_options(int argc, char **argv, struct options *options)
 			break;
 		case OPT_LOOPALL:
 			options->loop = 2;
+			break;
+		case OPT_NUMVOICES:
+			options->numvoices = strtoul(optarg, NULL, 0);
 			break;
 		case 'm':
 			options->format |= XMP_FORMAT_MONO;

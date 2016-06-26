@@ -5,6 +5,7 @@ Stable versions
 	- Requires libxmp 4.4
 	- Add option to force tracker emulation
 	- Add option to enable classic sound mixers
+	- Add option to set the maximum number of virtual channels
 	- Add command to switch between standard and classic mixers
 	- Add command to display current mixer type
 	- Fix default amplification factor

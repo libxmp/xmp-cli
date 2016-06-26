@@ -262,6 +262,7 @@ int main(int argc, char **argv)
 	opt.rate = 44100;
 	opt.mix = -1;
 	opt.defpan = 50;
+	opt.numvoices = 128;
 	opt.driver_id = NULL;
 	opt.interp = XMP_INTERP_SPLINE;
 	opt.dsp = XMP_DSP_LOWPASS;
@@ -386,9 +387,8 @@ int main(int argc, char **argv)
 				argv[optind], optind - first + 1, argc - first);
 		}
 
-#if XMP_VERCODE >= 0x040300
+		/* these must be set before loading the module */
 		xmp_set_player(xc, XMP_PLAYER_DEFPAN, opt.defpan);
-#endif
 
 		/* load module */
 
@@ -411,6 +411,10 @@ int main(int argc, char **argv)
 		if (!opt.norc) {
 			read_modconf(&opt, mi.md5);
 		}
+
+
+		/* these must be set before xmp_start_player() */
+		xmp_set_player(xc, XMP_PLAYER_VOICES, opt.numvoices);
 
 		/* check sequence */
 
