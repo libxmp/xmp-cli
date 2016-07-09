@@ -314,7 +314,7 @@ void info_instruments(struct xmp_module_info *mi)
 				sub->vol,
 				sub->fin,
 				sub->xpo,
-				sub->pan,
+				sub->pan & 0xff,
 				sub->sid);
 		}
 
