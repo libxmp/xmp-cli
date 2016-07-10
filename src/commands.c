@@ -193,6 +193,7 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 
 		ctl->classic = !ctl->classic;
 
+		/* set player flags */
 		f = xmp_get_player(handle, XMP_PLAYER_FLAGS);
 		if (ctl->classic) {
 			xmp_set_player(handle, XMP_PLAYER_FLAGS,
@@ -202,6 +203,7 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 						f &= ~XMP_FLAGS_CLASSIC);
 		}
 
+		/* set current module flags */
 		f = xmp_get_player(handle, XMP_PLAYER_CFLAGS);
 		if (ctl->classic) {
 			xmp_set_player(handle, XMP_PLAYER_CFLAGS,
