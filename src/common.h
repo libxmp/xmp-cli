@@ -52,7 +52,7 @@ struct options {
 	int explore;		/* play all sequences in module */
 	int show_comment;	/* show module comment text */
 	int player_mode;	/* force tracker emulation */
-	int classic;		/* enable classic mixers */
+	int amiga;		/* enable amiga mixer */
 	char *driver_id;	/* sound driver ID */
 	char *out_file;		/* output file name */
 	char *ins_path;		/* instrument path */
@@ -69,7 +69,7 @@ struct control {
 	int sequence;		/* Current sequence */
 	int explore;		/* Play all sequences */
 	int cur_info;		/* Display current sequence or mixer type */
-	int classic;		/* Toggle classic mode */
+	int amiga;		/* Toggle amiga mixer mode */
 	int mixer_type;		/* Mixer type (from player) */
 };
 

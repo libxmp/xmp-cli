@@ -101,6 +101,7 @@ static void usage(char *s, struct options *options)
 "   -Z --all-sequences     Play all sequences (subsongs) in module\n"
 "   -z --sequence num      Play the specified sequence (0=main)\n" 
 "\nMixer options:\n"
+"   -A --amiga             Use Paula simulation mixer in Amiga formats\n"
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
 "   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
 "   -c --stdout            Mix the module to stdout\n"
@@ -116,7 +117,6 @@ static void usage(char *s, struct options *options)
 "   -p --default-pan       Percentual default pan setting (default %d%%)\n"
 "   -r --reverse           Reverse left/right stereo channels\n"
 "   -u --unsigned          Set the mixer to use unsigned samples\n"
-"   -x --classic           Use classic mixer (if available for format)\n"
 "\nEnvironment options:\n"
 "   -I --instrument-path   Set pathname to external samples\n"
 "\nInformation options:\n"
@@ -132,9 +132,9 @@ static void usage(char *s, struct options *options)
 }
 
 static const struct option lopt[] = {
+	{ "amiga",		0, 0, 'A' },
 	{ "amplify",		1, 0, 'a' },
 	{ "bits",		1, 0, 'b' },
-	{ "classic",		0, 0, 'x' },
 	{ "driver",		1, 0, 'd' },
 	{ "default-pan",	1, 0, 'p' },
 	{ "fix-sample-loops",	0, 0, OPT_FIXLOOP },
@@ -182,9 +182,12 @@ void get_options(int argc, char **argv, struct options *options)
 	int optidx = 0;
 	int o;
 
-#define OPTIONS "a:b:CcD:d:e:Ff:hI:i:LlM:mNo:P:p:qRrS:s:T:t:uVvxZz:"
+#define OPTIONS "Aa:b:CcD:d:e:Ff:hI:i:LlM:mNo:P:p:qRrS:s:T:t:uVvZz:"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
+		case 'A':
+			options->amiga = 1;
+			break;
 		case 'a':
 			options->amplify = atoi(optarg);
 			break;
@@ -359,9 +362,6 @@ void get_options(int argc, char **argv, struct options *options)
 			exit(0);
 		case 'v':
 			options->verbose++;
-			break;
-		case 'x':
-			options->classic = 1;
 			break;
 		case 'Z':
 			options->explore = 1;

@@ -188,29 +188,29 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 	case 'X':
 		ctl->cur_info = 'X';
 		break;
-	case 'x': {
+	case 'a': {
 		int f;
 
-		ctl->classic = !ctl->classic;
+		ctl->amiga = !ctl->amiga;
 
 		/* set player flags */
 		f = xmp_get_player(handle, XMP_PLAYER_FLAGS);
-		if (ctl->classic) {
+		if (ctl->amiga) {
 			xmp_set_player(handle, XMP_PLAYER_FLAGS,
-						f | XMP_FLAGS_CLASSIC);
+						f | XMP_FLAGS_A500);
 		} else {
 			xmp_set_player(handle, XMP_PLAYER_FLAGS,
-						f &= ~XMP_FLAGS_CLASSIC);
+						f &= ~XMP_FLAGS_A500);
 		}
 
 		/* set current module flags */
 		f = xmp_get_player(handle, XMP_PLAYER_CFLAGS);
-		if (ctl->classic) {
+		if (ctl->amiga) {
 			xmp_set_player(handle, XMP_PLAYER_CFLAGS,
-						f | XMP_FLAGS_CLASSIC);
+						f | XMP_FLAGS_A500);
 		} else {
 			xmp_set_player(handle, XMP_PLAYER_CFLAGS,
-						f &= ~XMP_FLAGS_CLASSIC);
+						f &= ~XMP_FLAGS_A500);
 		}
 		break; }
 	case 'Z':

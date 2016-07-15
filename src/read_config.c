@@ -122,7 +122,7 @@ int read_config(struct options *o)
 		getval_no("srate", o->rate);
 		/*getval_no("time", o->time);
 		getval_no("verbosity", o->verbosity);*/
-		getval_yn("classic", o->classic, 1);
+		getval_yn("amiga", o->amiga, 1);
 
 		if (!strcmp(var, "driver")) {
 			strncpy(driver, val, 31);
@@ -241,7 +241,7 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 		getval_tristate("fixloop", o->fixloop);
 		getval_tristate("fx9bug", o->fx9bug);
 		getval_tristate("vblank", o->vblank);
-		getval_tristate("classic", o->classic);
+		getval_tristate("amiga", o->amiga);
 
 		if (!strcmp(var, "interpolation")) {
 			if (!strcmp(val, "nearest")) {

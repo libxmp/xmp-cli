@@ -28,7 +28,7 @@ void info_help(void)
 "    1 - 0       Mute/unmute channels\n"
 "      !         Unmute all channels\n"
 "      X         Display current mixer type\n"
-"      x         Enable classic mixers\n"
+"      a         Enable amiga mixer\n"
 "      Z         Display current sequence\n"
 "      z         Toggle subsong explorer mode\n"
 "      l         Toggle loop mode\n"
@@ -159,10 +159,10 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 
 	/* Show mixer type */
 	x = ' ';
-	if (ctl->classic) {
+	if (ctl->amiga) {
 		switch (ctl->mixer_type) {
 		case XMP_MIXER_STANDARD:
-			x = 's';
+			x = '-';
 			break;
 		case XMP_MIXER_A500:
 			x = 'A';
