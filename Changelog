@@ -1,10 +1,10 @@
 Stable versions
 ---------------
 
-4.1.0 (20160710):
+4.1.0 (20160716):
 	- Requires libxmp 4.4
 	- Add option to force tracker emulation
-	- Add option to enable classic sound mixers
+	- Add option to use simulated Amiga mixers
 	- Add option to set the maximum number of virtual channels
 	- Add command to switch between standard and classic mixers
 	- Add command to display current mixer type
