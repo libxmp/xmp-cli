@@ -216,7 +216,7 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
     print_time:
 
 	if (ctl->pause) {
-		report(" [ PAUSED ]");
+		report(" - PAUSED -");
 	} else {
 		report("%3d:%02d:%02d.%d",
 			(int)(time / (60 * 600)), (int)((time / 600) % 60),
