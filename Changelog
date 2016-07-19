@@ -1,7 +1,7 @@
 Stable versions
 ---------------
 
-4.1.0 (20160716):
+4.1.0 (20160719):
 	- Requires libxmp 4.4
 	- Add option to force tracker emulation
 	- Add option to use simulated Amiga mixers
