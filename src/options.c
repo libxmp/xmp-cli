@@ -43,7 +43,7 @@ struct player_mode pmode[] = {
 	{ "auto",         "Autodetect",                XMP_MODE_AUTO },
 	{ "mod",          "Generic MOD player",        XMP_MODE_MOD },
 	{ "noisetracker", "Noisetracker",              XMP_MODE_NOISETRACKER },
-	{ "protracker",   "Protracker 1/2",            XMP_MODE_PROTRACKER },
+	{ "protracker",   "Protracker 2",              XMP_MODE_PROTRACKER },
 	{ "s3m",          "Generic S3M player",        XMP_MODE_S3M },
 	{ "st3",          "Scream Tracker 3",          XMP_MODE_ST3 },
 	{ "st3gus",       "Scream Tracker 3 with GUS", XMP_MODE_ST3GUS },
