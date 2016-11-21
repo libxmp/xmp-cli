@@ -29,8 +29,10 @@ esac
 AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
+old_LDFLAGS="${LDFLAGS}"
 PKG_CHECK_MODULES([libxmp], [libxmp >= 4.4],
-  AC_CHECK_LIB(xmp, xmp_version, [], [exit 1]),
+  LDFLAGS="${LDFLAGS} ${libxmp_LIBS}"
+  AC_CHECK_LIB(xmp, xmp_version, [LDFLAGS="${old_LDFLAGS}"], [exit 1]),
   [echo "You need libxmp version 4.4 or later to build this package"; exit 1])
 
 dnl Don't use things like /usr/etc or /usr/var
