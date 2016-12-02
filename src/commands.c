@@ -7,7 +7,7 @@
  */
 
 #include <unistd.h>
-#ifdef WIN32
+#if defined(_WIN32) || defined(__OS2__)
 #include <conio.h>
 #endif
 #include <xmp.h>
@@ -65,7 +65,7 @@ static int read_key(void)
 	if (stdin_ready_for_reading())
 #endif
 		ret = read(0, &key, 1);
-#elif defined WIN32
+#elif defined(_WIN32) || defined(__OS2__)
 	if (kbhit()) {
 		key = getch();
 		ret = 1;
