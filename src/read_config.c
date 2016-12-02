@@ -43,10 +43,11 @@ int read_config(struct options *o)
 	char *hash, *var, *val, line[256];
 	char cparm[512];
 
-#if defined __EMX__
-	char *home = getenv("HOME");
+#if defined(__OS2__) || defined(__EMX__)
+	const char *home = getenv("HOME");
+	if (!home) home = "C:";
 
-	snprintf(myrc, PATH_MAX, "%s\\.xmp\\xmp.conf", home);
+	snprintf(myrc, PATH_MAX, "%s\\xmp.conf", home);
 
 	if ((rc = fopen(myrc, "r")) == NULL) {
 		if ((rc = fopen("xmp.conf", "r")) == NULL) {
@@ -280,11 +281,12 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 
 void read_modconf(struct options *o, unsigned char *md5)
 {
-#if defined __EMX__
+#if defined(__OS2__) || defined(__EMX__)
 	char myrc[PATH_MAX];
-	char *home = getenv("HOME");
+	const char *home = getenv("HOME");
+	if (!home) home = "C:";
 
-	snprintf(myrc, PATH_MAX, "%s\\.xmp\\modules.conf", home);
+	snprintf(myrc, PATH_MAX, "%s\\modules.conf", home);
 	parse_modconf(o, "xmp-modules.conf", md5);
 	parse_modconf(o, myrc, md5);
 #elif defined __AMIGA__
