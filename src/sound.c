@@ -18,6 +18,7 @@ extern struct sound_driver sound_qnx;
 extern struct sound_driver sound_alsa05;
 extern struct sound_driver sound_oss;
 extern struct sound_driver sound_alsa;
+extern struct sound_driver sound_os2dart;
 extern struct sound_driver sound_win32;
 extern struct sound_driver sound_pulseaudio;
 extern struct sound_driver sound_coreaudio;
@@ -69,6 +70,9 @@ void init_sound_drivers(void)
 #endif
 #ifdef SOUND_COREAUDIO
 	register_sound_driver(&sound_coreaudio);
+#endif
+#ifdef SOUND_OS2DART
+	register_sound_driver(&sound_os2dart);
 #endif
 #ifdef SOUND_WIN32
 	register_sound_driver(&sound_win32);
