@@ -4,6 +4,7 @@ Stable versions
 4.2.0 ():
 	Changes by Ozkan Sezer:
 	- Fix libxmp detection in configuration script
+	- Fix OS/2 build
 
 4.1.0 (20160719):
 	- Requires libxmp 4.4
