@@ -1,0 +1,37 @@
+# Makefile for OS/2 using Watcom compiler.
+#
+# wmake -f Makefile.os2
+
+CC=wcc386
+INCLUDES=-I..\os2 -I..\src
+CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_SYS_TIME_H
+CPPFLAGS+= -DSOUND_OS2DART
+CPPFLAGS+= -DVERSION="4.2.0"
+# for an exe using libxmp.dll: link to libxmp.lib
+# for a statically linked exe: link to xmp_static.lib
+LIBS=libxmp.lib mmpm2.lib
+#LIBS=xmp_static.lib mmpm2.lib
+CFLAGS = -bt=os2 -bm -fp5 -fpi87 -mf -oeatxh -w4 -zp8 -ei -q
+# -5s  :  Pentium stack calling conventions.
+# -5r  :  Pentium register calling conventions.
+CFLAGS+= -5s
+
+.SUFFIXES:
+.SUFFIXES: .obj .c
+
+AOUT=xmp.exe
+COMPILE=$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES)
+
+OBJ = commands.obj getopt.obj getopt1.obj info.obj main.obj options.obj read_config.obj sound.obj sound_aiff.obj sound_file.obj sound_null.obj sound_wav.obj sound_dart.obj terminal.obj usleep.obj
+
+all: $(AOUT)
+
+$(AOUT): $(OBJ)
+	wlink N $(AOUT) SYS OS2V2 LIBR {$(LIBS)} F {$(OBJ)}
+
+clean:
+	FOR %F IN ( $(AOUT) $(OBJ) $(EXTRA_OBJ) ) DO IF EXIST %F ERASE %F
+
+.c: ..\src
+.c.obj:
+	$(COMPILE) -fo=$^@ $<

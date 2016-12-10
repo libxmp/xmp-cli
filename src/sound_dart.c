@@ -18,6 +18,8 @@
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
+#undef VERSION /* stop conflict with os2medef.h */
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -74,7 +76,7 @@ static int init(struct options *options)
 	int flags;
 	int i;
 	MCI_AMP_OPEN_PARMS AmpOpenParms;
-	char *token, **parm;
+	char *token;
 
 	parm_init(parm);
 	chkparm1("sharing", sharing = *token);
@@ -208,6 +210,18 @@ static void deinit(void)
 			       (PVOID) & GenericParms, 0);
 		DeviceID = 0;
 	}
+}
+
+static void flush(void)
+{
+}
+
+static void onpause(void)
+{
+}
+
+static void onresume(void)
+{
 }
 
 static const char *const help[] = {
