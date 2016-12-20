@@ -2,5 +2,5 @@
 #include <os2.h>
 void usleep (unsigned long usec)
 {
-	DosSleep(usec ? (usec/1000l) : 1l);
+	DosSleep((usec >= 1000)? (usec / 1000) : 1);
 }
