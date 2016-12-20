@@ -3,10 +3,15 @@
 # wmake -f Makefile.os2
 
 CC=wcc386
-INCLUDES=-I..\os2 -I..\src
 CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_SYS_TIME_H
 CPPFLAGS+= -DSOUND_OS2DART
+!ifndef __UNIX__
 CPPFLAGS+= -DVERSION="4.2.0"
+INCLUDES=-I..\os2 -I..\src
+!else
+CPPFLAGS+= -DVERSION=\"4.2.0\"
+INCLUDES=-I../os2 -I../src
+!endif
 # for an exe using libxmp.dll: link to libxmp.lib
 # for a statically linked exe: link to xmp_static.lib
 LIBS=libxmp.lib mmpm2.lib
@@ -29,9 +34,19 @@ all: $(AOUT)
 $(AOUT): $(OBJ)
 	wlink N $(AOUT) SYS OS2V2 LIBR {$(LIBS)} F {$(OBJ)}
 
-clean:
-	FOR %F IN ( $(AOUT) $(OBJ) $(EXTRA_OBJ) ) DO IF EXIST %F ERASE %F
-
-.c: ..\src
 .c.obj:
 	$(COMPILE) -fo=$^@ $<
+
+!ifndef __UNIX__
+.c: ..\src
+distclean: clean .symbolic
+	@if exist $(AOUT) del $(AOUT)
+clean: .symbolic
+	@if exist *.obj del *.obj
+!else
+.c: ../src
+distclean: clean .symbolic
+	rm -f $(AOUT)
+clean: .symbolic
+	rm -f *.obj
+!endif
