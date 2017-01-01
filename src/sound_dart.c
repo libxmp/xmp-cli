@@ -76,7 +76,6 @@ static int init(struct options *options)
 	int flags;
 	int i;
 	MCI_AMP_OPEN_PARMS AmpOpenParms;
-	char *token;
 
 	parm_init(parm);
 	chkparm1("sharing", sharing = *token);
