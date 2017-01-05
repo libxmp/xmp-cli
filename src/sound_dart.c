@@ -6,17 +6,11 @@
  * file for more information.
  */
 
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 /*
-    This should work for OS/2 Dart 
-
-    History: 
-		1.0 - By Kevin Langman
-
-*/
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
+ * This should work for OS/2 Dart
+ * History:
+ *	1.0 - By Kevin Langman
+ */
 
 #undef VERSION /* stop conflict with os2medef.h */
 
@@ -29,6 +23,7 @@
 #include <fcntl.h>
 
 #define INCL_DOS
+#define INCL_DOSERRORS
 #include <os2.h>
 #include <mcios2.h>
 #include <meerror.h>
@@ -52,7 +47,7 @@ static short ready = 1;
 
 static HMTX mutex;
 
-// Buffer update thread (created and called by DART) 
+/* Buffer update thread (created and called by DART) */
 static LONG APIENTRY OS2_Dart_UpdateBuffers
     (ULONG ulStatus, PMCI_MIX_BUFFER pBuffer, ULONG ulFlags) {
 
@@ -83,15 +78,14 @@ static int init(struct options *options)
 	chkparm1("buffer", bsize = strtoul(token, NULL, 0));
 	parm_end();
 
+	if (DosCreateMutexSem(NULL, &mutex, 0, 0) != NO_ERROR)
+		return -1;
+
 	if ((bsize < BUF_MIN || bsize > BUF_MAX) && bsize != 0) {
 		bsize = 16 * 1024;
 	} else {
 		bsize *= 1024;
 	}
-
-	//if( sharing < 1 || sharing > 0 ){
-	//     	sharing = 0;
-	//}
 
 	MixBuffers[0].pBuffer = NULL;	/* marker */
 	memset(&GenericParms, 0, sizeof(MCI_GENERIC_PARMS));
@@ -140,7 +134,7 @@ static int init(struct options *options)
 	if (bsize == 0) {
 		bsize = MixSetupParms.ulBufferSize;
 	}
-	//printf( "Dart Buffer Size = %d\n", bsize );
+	/*printf("Dart Buffer Size = %d\n", bsize);*/
 
 	BufferParms.ulNumBuffers = BUFFERCOUNT;
 	BufferParms.ulBufferSize = bsize;
