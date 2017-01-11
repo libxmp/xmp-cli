@@ -83,7 +83,7 @@ static void sigtstp_handler(int n)
 
 static void sigcont_handler(int sig)
 {
-#ifdef HAVE_TERMIOS_H
+#if defined(HAVE_TERMIOS_H) && defined(HAVE_TCGETPGRP)
 	unsigned int old_in = foreground_in;
 
 	foreground_in  = tcgetpgrp(STDIN_FILENO)  == getpgrp();

@@ -235,6 +235,6 @@ XMP_TRY_COMPILE(whether compiler understands -Wunused-result,
   int main(){}],
   CFLAGS="${CFLAGS} -Wno-unused-result")  
 
-AC_CHECK_FUNCS(kill getopt_long)
+AC_CHECK_FUNCS(kill getopt_long tcgetpgrp)
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
