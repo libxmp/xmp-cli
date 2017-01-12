@@ -11,6 +11,9 @@
 #include <conio.h>
 #endif
 #if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#ifdef __amigaos4__
+#define __USE_INLINE__
+#endif
 #include <proto/exec.h>
 #include <proto/dos.h>
 #endif
