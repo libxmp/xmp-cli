@@ -191,11 +191,11 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 	case 'a': {
 		int f;
 
-		ctl->amiga = !ctl->amiga;
+		ctl->amiga_mixer = !ctl->amiga_mixer;
 
 		/* set player flags */
 		f = xmp_get_player(handle, XMP_PLAYER_FLAGS);
-		if (ctl->amiga) {
+		if (ctl->amiga_mixer) {
 			xmp_set_player(handle, XMP_PLAYER_FLAGS,
 						f | XMP_FLAGS_A500);
 		} else {
@@ -205,7 +205,7 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 
 		/* set current module flags */
 		f = xmp_get_player(handle, XMP_PLAYER_CFLAGS);
-		if (ctl->amiga) {
+		if (ctl->amiga_mixer) {
 			xmp_set_player(handle, XMP_PLAYER_CFLAGS,
 						f | XMP_FLAGS_A500);
 		} else {

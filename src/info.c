@@ -159,7 +159,7 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 
 	/* Show mixer type */
 	x = ' ';
-	if (ctl->amiga) {
+	if (ctl->amiga_mixer) {
 		switch (ctl->mixer_type) {
 		case XMP_MIXER_STANDARD:
 			x = '-';

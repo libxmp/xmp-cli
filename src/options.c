@@ -186,7 +186,7 @@ void get_options(int argc, char **argv, struct options *options)
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'A':
-			options->amiga = 1;
+			options->amiga_mixer = 1;
 			break;
 		case 'a':
 			options->amplify = atoi(optarg);
