@@ -95,6 +95,9 @@ static void sigcont_handler(int sig)
 	}
 #else
 	foreground_in = foreground_out = 1;
+	#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+	set_tty();	/* amiga version -- sets stdin to raw mode. */
+	#endif
 #endif
 
 	if (sig != 0)

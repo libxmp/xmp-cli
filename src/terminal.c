@@ -10,7 +10,17 @@
 #include <xmp.h>
 #include "common.h"
 
-#ifdef HAVE_TERMIOS_H
+#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#ifdef __amigaos4__
+#define __USE_INLINE__
+#endif
+#include <proto/exec.h>
+#include <proto/dos.h>
+
+#define MODE_NORMAL 0
+#define MODE_RAW 1
+
+#elif defined HAVE_TERMIOS_H
 #include <termios.h>
 #include <unistd.h>
 
@@ -19,7 +29,10 @@ static struct termios term;
 
 int set_tty(void)
 {
-#ifdef HAVE_TERMIOS_H
+#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+	SetMode(Input(), MODE_RAW);
+
+#elif defined HAVE_TERMIOS_H
 	struct termios t;
 
 	if (!isatty(STDIN_FILENO))
@@ -40,7 +53,10 @@ int set_tty(void)
 
 int reset_tty(void)
 {
-#ifdef HAVE_TERMIOS_H
+#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+	SetMode(Input(), MODE_NORMAL);
+
+#elif defined HAVE_TERMIOS_H
 	if (!isatty(STDIN_FILENO))
 		return 0;
 	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) < 0) {
