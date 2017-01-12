@@ -29,7 +29,6 @@ extern struct sound_driver sound_solaris;
 extern struct sound_driver sound_netbsd;
 extern struct sound_driver sound_bsd;
 extern struct sound_driver sound_beos;
-extern struct sound_driver sound_amiga;
 extern struct sound_driver sound_aix;
 extern struct sound_driver sound_ahi;
 
