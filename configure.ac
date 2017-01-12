@@ -72,7 +72,12 @@ AC_DEFUN([AC_CHECK_DEFINED],[
   AS_VAR_POPDEF([ac_var])dnl
 ])
 
-AC_CHECK_HEADERS([getopt.h signal.h termios.h sys/time.h sys/audioio.h])
+AC_CHECK_HEADERS([getopt.h signal.h sys/time.h sys/audioio.h])
+case $host_os in
+dnl don't check half-baked termios for amiga targets.
+  amigaos*|aros*|morphos*) ;;
+  *) AC_CHECK_HEADERS([termios.h]) ;;
+esac
 
 case "$host_cpu" in
 powerpc64)

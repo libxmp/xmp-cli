@@ -10,6 +10,10 @@
 #if defined(_WIN32) || defined(__OS2__)
 #include <conio.h>
 #endif
+#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#include <proto/exec.h>
+#include <proto/dos.h>
+#endif
 #include <xmp.h>
 #include "common.h"
 
@@ -58,7 +62,7 @@ static int stdin_ready_for_reading(void)
 static int read_key(void)
 {
 	char key;
-	int ret;
+	int ret = 0;
 
 #if defined HAVE_TERMIOS_H && !defined WIN32
 #ifdef __CYGWIN__
@@ -70,7 +74,7 @@ static int read_key(void)
 		key = getch();
 		ret = 1;
 	}
-#elif defined __AMIGA__
+#elif defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
 	/* Amiga CLI */
 	{
 		BPTR in = Input();
