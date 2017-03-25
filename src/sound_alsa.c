@@ -103,10 +103,12 @@ static void flush(void)
 
 static void onpause(void)
 {
+	snd_pcm_pause(pcm_handle, 1);
 }
 
 static void onresume(void)
 {
+	snd_pcm_pause(pcm_handle, 0);
 }
 
 static const char *const help[] = {
