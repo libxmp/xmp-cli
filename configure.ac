@@ -154,7 +154,7 @@ darwin*)
     AC_SUBST([XMP_DARWIN_LDFLAGS])
   fi
   ;;
-openbsd*)
+openbsd*|freebsd*)
   AC_CHECK_HEADER(sndio.h)
   if test "${ac_cv_header_sndio_h}" = "yes"; then
     AC_DEFINE(SOUND_SNDIO)
