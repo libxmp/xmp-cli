@@ -8,7 +8,10 @@
  */
 
 #ifdef __amigaos4__
+#define SHAREDMEMFLAG MEMF_SHARED
 #define __USE_INLINE__
+#else
+#define SHAREDMEMFLAG MEMF_PUBLIC
 #endif
 
 #include <stdlib.h>
@@ -68,7 +71,7 @@ static int init(struct options *options) {
         AHIReq[0] = (struct AHIRequest *)CreateIORequest(AHImp, sizeof(struct AHIRequest));
         if (AHIReq[0]) {
             AHIReq[0]->ahir_Version = 4;
-            AHIReq[1] = AllocVec(sizeof(struct AHIRequest), MEMF_PUBLIC);
+            AHIReq[1] = AllocVec(sizeof(struct AHIRequest), SHAREDMEMFLAG);
             if (AHIReq[1]) {
                 if (!OpenDevice(AHINAME, AHI_DEFAULT_UNIT, (struct IORequest *)AHIReq[0], 0)) {
                     AHIReq[0]->ahir_Std.io_Command = CMD_WRITE;
@@ -83,9 +86,9 @@ static int init(struct options *options) {
 
                     CopyMem(AHIReq[0], AHIReq[1], sizeof(struct AHIRequest));
 
-                    AHIBuf[0] = AllocVec(BUFFERSIZE, MEMF_PUBLIC | MEMF_CLEAR);
+                    AHIBuf[0] = AllocVec(BUFFERSIZE, SHAREDMEMFLAG | MEMF_CLEAR);
                     if (AHIBuf[0]) {
-                        AHIBuf[1] = AllocVec(BUFFERSIZE, MEMF_PUBLIC | MEMF_CLEAR);
+                        AHIBuf[1] = AllocVec(BUFFERSIZE, SHAREDMEMFLAG | MEMF_CLEAR);
                         if (AHIBuf[1]) {
                             /* driver is initialized before calling libxmp, so this is OK : */
                             options->format &= ~XMP_FORMAT_UNSIGNED;/* no unsigned with AHI */
@@ -125,27 +128,24 @@ static void play(void *b, int len) {
     }
 }
 
-static void flush(void)
-{
+static void flush(void) {
 }
 
-static void onpause(void)
-{
+static void onpause(void) {
 }
 
-static void onresume(void)
-{
+static void onresume(void) {
 }
 
 struct sound_driver sound_ahi = {
-	"ahi",
-	"Amiga AHI audio",
-	NULL,
-	init,
-	deinit,
-	play,
-	flush,
-	onpause,
-	onresume
+    "ahi",
+    "Amiga AHI audio",
+    NULL,
+    init,
+    deinit,
+    play,
+    flush,
+    onpause,
+    onresume
 };
 
