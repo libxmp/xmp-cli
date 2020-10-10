@@ -252,6 +252,7 @@ int main(int argc, char **argv)
 	gettimeofday(&tv, &tz);
 	srand(tv.tv_usec);
 #else
+	setvbuf(stderr, NULL, _IONBF, 0);
 	srand(GetTickCount());
 #endif
 
