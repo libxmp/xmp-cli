@@ -4,7 +4,11 @@ Stable versions
 4.2.0 ():
 	Changes by Ozkan Sezer:
 	- Fix libxmp detection in configuration script
-	- Fix OS/2 build
+	- Fix OS/2 and Amiga builds
+	Changes by Emanuel Haupt:
+	- Make configure detect sndio on FreeBSD
+	Changes by Alice Rowan:
+	- Fix terminal output for MSYS2.
 
 4.1.0 (20160719):
 	- Requires libxmp 4.4
