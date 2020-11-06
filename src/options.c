@@ -248,7 +248,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->silent = 1;
 			break;
 		case 'L': {
-			char **list;
+			const char* const * list;
 			int i;
 			list = xmp_get_format_list();
 			for (i = 0; list[i] != NULL; i++) {
