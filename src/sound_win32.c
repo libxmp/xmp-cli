@@ -143,6 +143,8 @@ static void deinit(void)
 	int i;
 
 	if (hwaveout) {
+		waveOutReset(hwaveout);
+
 		for (i = 0; i < num_buffers; i++) {
 			if (header[i].dwFlags & WHDR_PREPARED)
 				waveOutUnprepareHeader(hwaveout, &header[i],
