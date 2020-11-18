@@ -29,10 +29,18 @@ esac
 AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
+AC_ARG_WITH([libxmp-lite],
+  AC_HELP_STRING([--with-libxmp-lite],[build against libxmp-lite instead of libxmp]),
+  [xmplib="$withval"],[xmplib=xmp])
+case "$xmplib" in
+  no|xmp) xmplib=xmp ;;
+  *) xmplib=xmp-lite ;;
+esac
+
 old_LDFLAGS="${LDFLAGS}"
-PKG_CHECK_MODULES([libxmp], [libxmp >= 4.4],
-  LDFLAGS="${LDFLAGS} ${libxmp_LIBS}"
-  AC_CHECK_LIB(xmp, xmp_set_player, [LDFLAGS="${old_LDFLAGS}"], [exit 1]),
+PKG_CHECK_MODULES([LIBXMP], [lib$xmplib >= 4.4],
+  LDFLAGS="${LDFLAGS} ${LIBXMP_LIBS}"
+  AC_CHECK_LIB($xmplib, xmp_set_player, [LDFLAGS="${old_LDFLAGS}"], [exit 1]),
   [echo "You need libxmp version 4.4 or later to build this package"; exit 1]
 )
 
