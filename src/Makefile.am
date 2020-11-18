@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 
-AM_CPPFLAGS = -DSYSCONFDIR=\"${sysconfdir}\" ${libxmp_CFLAGS} \
+AM_CPPFLAGS = -DSYSCONFDIR=\"${sysconfdir}\" ${LIBXMP_CFLAGS} \
               ${alsa_CFLAGS} ${pulseaudio_CFLAGS}
 AM_CFLAGS   = -Wall
 
@@ -10,7 +10,7 @@ xmp_SOURCES = \
 	commands.c common.h getopt.h list.h getopt.c getopt1.c info.c main.c \
 	options.c read_config.c sound.c sound.h sound_file.c sound_null.c \
 	sound_wav.c sound_aiff.c terminal.c
-xmp_LDADD   = ${libxmp_LIBS}
+xmp_LDADD   = ${LIBXMP_LIBS}
 xmp_LDFLAGS = ${XMP_DARWIN_LDFLAGS}
 
 if SOUND_OSS
