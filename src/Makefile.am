@@ -7,7 +7,7 @@ AM_CFLAGS   = -Wall
 bin_PROGRAMS = xmp
 
 xmp_SOURCES = \
-	commands.c common.h getopt.h list.h getopt.c getopt1.c info.c main.c \
+	commands.c common.h getopt_long.h list.h getopt_long.c info.c main.c \
 	options.c read_config.c sound.c sound.h sound_file.c sound_null.c \
 	sound_wav.c sound_aiff.c terminal.c
 xmp_LDADD   = ${LIBXMP_LIBS}

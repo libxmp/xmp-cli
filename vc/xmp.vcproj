@@ -116,11 +116,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\getopt.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\getopt1.c"
+				RelativePath="..\src\getopt_long.c"
 				>
 			</File>
 			<File

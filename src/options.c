@@ -11,7 +11,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
 #include <getopt.h>
+#else
+#include "getopt_long.h"
+#endif
 #include <xmp.h>
 
 #include "common.h"
