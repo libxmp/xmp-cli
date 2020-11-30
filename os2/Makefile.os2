@@ -5,17 +5,20 @@
 CC=wcc386
 CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_SYS_TIME_H
 CPPFLAGS+= -DSOUND_OS2DART
+
 !ifndef __UNIX__
 CPPFLAGS+= -DVERSION="4.2.0"
-INCLUDES=-I..\os2 -I..\src
 !else
 CPPFLAGS+= -DVERSION=\"4.2.0\"
-INCLUDES=-I../os2 -I../src
 !endif
-# for an exe using libxmp.dll: link to libxmp.lib
-# for a statically linked exe: link to xmp_static.lib
-LIBS=libxmp.lib mmpm2.lib
-#LIBS=xmp_static.lib mmpm2.lib
+INCLUDES=-I"../os2" -I"../src"
+
+#LIBXMP=libxmp_static.lib
+LIBXMP=libxmp.lib
+LIBS=$(LIBXMP)
+# for sound_dart:
+LIBS+= mmpm2.lib
+
 CFLAGS = -bt=os2 -bm -fp5 -fpi87 -mf -oeatxh -w4 -zp8 -ei -q
 # -5s  :  Pentium stack calling conventions.
 # -5r  :  Pentium register calling conventions.
@@ -32,21 +35,13 @@ OBJ = commands.obj getopt.obj getopt1.obj info.obj main.obj options.obj read_con
 all: $(AOUT)
 
 $(AOUT): $(OBJ)
-	wlink N $(AOUT) SYS OS2V2 LIBR {$(LIBS)} F {$(OBJ)}
+	wlink N $(AOUT) SYS OS2V2 OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
 
+.c: ../src
 .c.obj:
 	$(COMPILE) -fo=$^@ $<
 
-!ifndef __UNIX__
-.c: ..\src
 distclean: clean .symbolic
-	@if exist $(AOUT) del $(AOUT)
-clean: .symbolic
-	@if exist *.obj del *.obj
-!else
-.c: ../src
-distclean: clean .symbolic
-	rm -f $(AOUT)
+	rm -f $(AOUT) *.err
 clean: .symbolic
 	rm -f *.obj
-!endif
