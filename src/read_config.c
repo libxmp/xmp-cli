@@ -59,7 +59,7 @@ int read_config(struct options *o)
 
 	if ((rc = fopen(myrc, "r")) == NULL)
 		return -1;
-#elif defined WIN32
+#elif defined _WIN32
 	const char *home = getenv("USERPROFILE");
 	if (!home) home = "C:";
 
@@ -291,7 +291,7 @@ void read_modconf(struct options *o, unsigned char *md5)
 	parse_modconf(o, myrc, md5);
 #elif defined __AMIGA__
 	parse_modconf(o, "PROGDIR:modules.conf", md5);
-#elif defined WIN32
+#elif defined _WIN32
 	char myrc[PATH_MAX];
 	const char *home = getenv("USERPROFILE");
 	if (!home) home = "C:";

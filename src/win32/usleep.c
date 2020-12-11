@@ -19,7 +19,7 @@ void usleep(long usec)
         select(0, NULL, NULL, NULL, &tv);
 }
 
-#elif defined WIN32
+#elif defined(_WIN32)
 
 /* usleep implementation from FreeSCI */
 

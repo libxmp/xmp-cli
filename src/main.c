@@ -245,7 +245,7 @@ int main(int argc, char **argv)
 	int val, lf_flag;
 	int flags;
 	int played;
-#ifndef WIN32
+#ifndef _WIN32
 	struct timeval tv;
 	struct timezone tz;
 
