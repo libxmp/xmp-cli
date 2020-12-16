@@ -30,7 +30,7 @@ AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
 AC_ARG_WITH([libxmp-lite],
-  AC_HELP_STRING([--with-libxmp-lite],[build against libxmp-lite instead of libxmp]),
+  AS_HELP_STRING([--with-libxmp-lite],[build against libxmp-lite instead of libxmp]),
   [xmplib="$withval"],[xmplib=xmp])
 case "$xmplib" in
   no|xmp) xmplib=xmp ;;
@@ -115,7 +115,7 @@ AM_CONDITIONAL([SOUND_WIN32], [false])
 if test "${enable_oss}" != "no"; then
   AC_CHECK_HEADERS(sys/soundcard.h machine/soundcard.h)
   if test "${ac_cv_header_sys_soundcard_h}" = "yes" -o "${ac_cv_header_machine_soundcard_h}" = "yes"; then
-    AC_DEFINE(SOUND_OSS)
+    AC_DEFINE(SOUND_OSS, 1, [ ])
     AM_CONDITIONAL([SOUND_OSS], [true])
   fi
 fi
@@ -130,7 +130,7 @@ AS_IF([test "$enable_alsa" = "yes"], [
   ])
 ])
 AS_IF([test "$enable_alsa" = "yes"], [
-  AC_DEFINE(SOUND_ALSA)
+  AC_DEFINE(SOUND_ALSA, 1, [ ])
   AM_CONDITIONAL([SOUND_ALSA], [true])
 ])
 
@@ -144,19 +144,19 @@ AS_IF([test "$enable_pulseaudio" = "yes"], [
   ])
 ])
 AS_IF([test "$enable_pulseaudio" = "yes"], [
-  AC_DEFINE(SOUND_PULSEAUDIO)
+  AC_DEFINE(SOUND_PULSEAUDIO, 1, [ ])
   AM_CONDITIONAL([SOUND_PULSEAUDIO], [true])
 ])
 
 case "${host_os}" in
 amigaos*|aros)
-  AC_DEFINE(SOUND_AHI)
+  AC_DEFINE(SOUND_AHI, 1, [ ])
   AM_CONDITIONAL([SOUND_AHI], [true])
   ;;
 darwin*)
   AC_CHECK_HEADERS(AudioUnit/AudioComponent.h CoreAudio/CoreAudio.h)
   if test "${ac_cv_header_CoreAudio_CoreAudio_h}" = "yes"; then
-    AC_DEFINE(SOUND_COREAUDIO)
+    AC_DEFINE(SOUND_COREAUDIO, 1, [ ])
     AM_CONDITIONAL([SOUND_COREAUDIO], [true])
     XMP_DARWIN_LDFLAGS="-framework AudioToolbox -framework AudioUnit -framework CoreServices"
     AC_SUBST([XMP_DARWIN_LDFLAGS])
@@ -165,73 +165,73 @@ darwin*)
 openbsd*|freebsd*)
   AC_CHECK_HEADER(sndio.h)
   if test "${ac_cv_header_sndio_h}" = "yes"; then
-    AC_DEFINE(SOUND_SNDIO)
+    AC_DEFINE(SOUND_SNDIO, 1, [ ])
     AM_CONDITIONAL([SOUND_SNDIO], [true])
   fi
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
-    AC_DEFINE(SOUND_BSD)
+    AC_DEFINE(SOUND_BSD, 1, [ ])
     AM_CONDITIONAL([SOUND_BSD], [true])
   fi
   ;;
 netbsd*)
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
-    AC_DEFINE(SOUND_NETBSD)
+    AC_DEFINE(SOUND_NETBSD, 1, [ ])
     AM_CONDITIONAL([SOUND_NETBSD], [true])
   fi
   ;;
 solaris*)
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
-    AC_DEFINE(SOUND_SOLARIS)
+    AC_DEFINE(SOUND_SOLARIS, 1, [ ])
     AM_CONDITIONAL([SOUND_SOLARIS], [true])
   fi
   ;;
 hpux*)
   AC_CHECK_HEADER(sys/audio.h)
   if test "${ac_cv_header_sys_audio_h}" = "yes"; then
-    AC_DEFINE(SOUND_HPUX)
+    AC_DEFINE(SOUND_HPUX, 1, [ ])
     AM_CONDITIONAL([SOUND_HPUX], [true])
   fi
   ;;
 aix*)
   AC_CHECK_HEADER(audio.h)
   if test "${ac_cv_header_audio_h}" = "yes"; then
-    AC_DEFINE(SOUND_AIX)
+    AC_DEFINE(SOUND_AIX, 1, [ ])
     AM_CONDITIONAL([SOUND_AIX], [true])
   fi
   ;;
 irix*)
   AC_CHECK_HEADERS(dmedia/audio.h)
   if test "${ac_cv_header_dmedia_audio_h}" = "yes"; then
-    AC_DEFINE(SOUND_SGI)
+    AC_DEFINE(SOUND_SGI, 1, [ ])
     AM_CONDITIONAL([SOUND_SGI], [true])
   fi
   ;;
 qnx*)
   AC_CHECK_HEADERS(sys/audio.h)
   if test "${ac_cv_header_sys_audio_h}" = "yes"; then
-    AC_DEFINE(SOUND_QNX)
+    AC_DEFINE(SOUND_QNX, 1, [ ])
     AM_CONDITIONAL([SOUND_QNX], [true])
   fi
   ;;
 nto-qnx*)
   AC_CHECK_HEADERS(sys/asoundlib.h)
   if test "${ac_cv_header_sys_asoundlib_h}" = "yes"; then
-    AC_DEFINE(SOUND_ALSA05)
+    AC_DEFINE(SOUND_ALSA05, 1, [ ])
     AM_CONDITIONAL([SOUND_ALSA05], [true])
   fi
   ;;
 cygwin*|mingw*)
-  AC_DEFINE(SOUND_WIN32)
+  AC_DEFINE(SOUND_WIN32, 1, [ ])
   AM_CONDITIONAL([SOUND_WIN32], [true])
   ;;
 beos*|haiku*)
-  AC_DEFINE(SOUND_BEOS)
+  AC_DEFINE(SOUND_BEOS, 1, [ ])
   CFLAGS="${CFLAGS} -Wno-multichar"
   AM_CONDITIONAL([SOUND_BEOS], [true])
   ;;
 *)
   AS_IF([test "$ac_cv_header_sys_audioio_h" = "yes"], [
-    AC_DEFINE([SOUND_BSD])
+    AC_DEFINE([SOUND_BSD], 1, [ ])
     AM_CONDITIONAL([SOUND_BSD], [true])
   ])
   ;;
