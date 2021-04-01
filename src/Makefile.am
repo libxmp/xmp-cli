@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 
-AM_CPPFLAGS = -DSYSCONFDIR=\"${sysconfdir}\" ${LIBXMP_CFLAGS} \
+AM_CPPFLAGS = -DSYSCONFDIR=\"${sysconfdir}/${PACKAGE_NAME}\" ${LIBXMP_CFLAGS} \
               ${alsa_CFLAGS} ${pulseaudio_CFLAGS}
 AM_CFLAGS   = -Wall
 
