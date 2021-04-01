@@ -17,6 +17,10 @@
 #include <sys/unistd.h>
 #endif
 
+#if !defined(SYSCONFDIR)
+#define SYSCONFDIR "."
+#endif
+
 static char driver[32];
 static char instrument_path[256];
 
