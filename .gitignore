@@ -1,5 +1,8 @@
 # Binary files
 *.o
+*.obj
+*.exe
+*.dll
 *.gz
 
 # Modules
