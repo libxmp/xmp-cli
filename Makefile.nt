@@ -1,0 +1,49 @@
+# Makefile for Windows NT using Watcom compiler.
+#
+# wmake -f Makefile.nt
+
+CC=wcc386
+CPPFLAGS=-DHAVE_SIGNAL_H -DWIN32
+CPPFLAGS+= -DSOUND_WIN32
+
+!ifndef __UNIX__
+CPPFLAGS+= -DVERSION="4.2.0"
+!else
+CPPFLAGS+= -DVERSION=\"4.2.0\"
+!endif
+INCLUDES=-I"./src/win32" -I"./src" -I"../libxmp/include" -I"$(%WATCOM)/h/nt"
+
+#LIBXMP=../libxmp/xmp_static.lib
+LIBXMP=../libxmp/libxmp.lib
+LIBS=$(LIBXMP)
+# for sound_win32:
+LIBS+= winmm.lib
+
+CFLAGS = -bt=nt -bm -fp5 -fpi87 -mf -oeatxh -w4 -zp8 -ei -q
+# newer OpenWatcom versions enable W303 by default.
+CFLAGS += -wcd=303
+# -5s  :  Pentium stack calling conventions.
+# -5r  :  Pentium register calling conventions.
+CFLAGS+= -5s
+
+.SUFFIXES:
+.SUFFIXES: .obj .c
+
+AOUT=xmp.exe
+COMPILE=$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES)
+
+OBJ = commands.obj getopt_long.obj info.obj main.obj options.obj read_config.obj sound.obj sound_aiff.obj sound_file.obj sound_null.obj sound_wav.obj sound_win32.obj terminal.obj usleep.obj
+
+all: $(AOUT)
+
+$(AOUT): $(OBJ)
+	wlink N $(AOUT) SYS NT OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
+
+.c: ./src;./src/win32
+.c.obj:
+	$(COMPILE) -fo=$^@ $<
+
+distclean: clean .symbolic
+	rm -f $(AOUT)
+clean: .symbolic
+	rm -f *.obj *.err
