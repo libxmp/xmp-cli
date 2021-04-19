@@ -259,8 +259,8 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 	case '<':
 		change_sequence(handle, mi, ctl, -1);
 		break;
-	case 'C':
-		ctl->display = 'C';
+	case 0xC: // clear
+		ctl->display = 0xC;
 		break;
 	}
 }
