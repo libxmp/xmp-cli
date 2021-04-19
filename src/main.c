@@ -131,17 +131,8 @@ static void show_info(int what, struct xmp_module_info *mi, int mode)
 		info_mod(mi, mode);
 		break;
 	case 0xC:
-		//system("clear");
-		// for some reason the full line gets printed with the clear command
-		// but not with printf? why must the best solution always be bugged
-		
-		printf("\e[0;0H\e[J\n");
 		// https://www.amigawiki.org/doku.php?id=en:system:dos_commands_large
-		// these things are always messy and not cross platform :/
-		// so this works, but only with a *newline?*
-
-		//printf("%c%c%c%c%c%c%c%c%c%c\n",0x1b, 0x5b, 0x48, 0x1b, 0x5b, 0x4a, 0x1b, 0x5b, 0x33, 0x4a);
-		// this is *literally the clear command* what the fuck
+		report("\e[0;0H\e[J");
 		break;
 	}
 }
@@ -644,6 +635,5 @@ int main(int argc, char **argv)
 		reset_tty();
 
 	sound->deinit();
-
 	exit(EXIT_SUCCESS);
 }
