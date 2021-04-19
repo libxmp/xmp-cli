@@ -130,6 +130,9 @@ static void show_info(int what, struct xmp_module_info *mi, int mode)
 	case 'm':
 		info_mod(mi, mode);
 		break;
+	case 'C':
+		system("clear");
+		break;
 	}
 }
 
