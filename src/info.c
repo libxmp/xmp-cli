@@ -41,7 +41,15 @@ sprintf(helptext,
 "      %c         Display sample list\n"
 "      %c         Display comment, if any\n"
 "      %c         Play previous sequence\n"
-"      %c         Play next sequence\n",
+"      %c         Play next sequence\n"
+#ifdef XMP_CLEAR
+#if XMP_CLEAR >= 32 && XMP_CLEAR <= 126
+"      %c         Clear the screen\n"
+#else
+"      0x%X       Clear the screen\n"
+#endif
+#endif
+,
 	XMP_QUIT, XMP_PAT_NEXT, XMP_PAT_BACK,
 	XMP_PAT_NEXT, XMP_MOD_BACK, XMP_HELP, XMP_HELP_2,
 	XMP_MUTE_1, XMP_MUTE_10, XMP_MUTE_ALL,
@@ -49,6 +57,9 @@ sprintf(helptext,
 	XMP_EXPLORER, XMP_LOOP, XMP_MODULE_INFO,
 	XMP_FULL_INFO, XMP_INST_INFO, XMP_SAMPLE_INFO,
 	XMP_COMMENT, XMP_SEQ_BACK, XMP_SEQ_NEXT
+#ifdef XMP_CLEAR
+, XMP_CLEAR
+#endif
 
 );
 report(helptext);

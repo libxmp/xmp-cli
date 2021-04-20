@@ -250,6 +250,9 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		ctl->explore ^= 1;
 		break;
 	case XMP_PAUSE:		/* paused module */
+	#ifdef XMP_PAUSE_2
+	case XMP_PAUSE_2:
+	#endif
 		ctl->pause ^= 1;
 		break;
 #define mute(A) xmp_channel_mute(handle, A, 2); 
@@ -294,7 +297,9 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 	case XMP_FULL_INFO:
 	case XMP_INST_INFO:
 	case XMP_SAMPLE_INFO:
+	#ifdef XMP_CLEAR
 	case XMP_CLEAR:
+	#endif
 	case XMP_MODULE_INFO:
 		ctl->display = cmd;
 		break;

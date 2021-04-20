@@ -131,10 +131,12 @@ static void show_info(int what, struct xmp_module_info *mi, int mode)
 	case XMP_MODULE_INFO:
 		info_mod(mi, mode);
 		break;
+	#ifdef XMP_CLEAR
 	case XMP_CLEAR:
 		// https://www.amigawiki.org/doku.php?id=en:system:dos_commands_large
 		report("\e[0;0H\e[J");
 		break;
+	#endif
 	}
 }
 
