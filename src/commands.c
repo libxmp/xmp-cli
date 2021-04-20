@@ -127,7 +127,7 @@ static void change_sequence(xmp_context handle, struct xmp_module_info *mi, stru
  * ESC [ C - right arrow
  * ESC [ D - left arrow
  */
-void read_command(xmp_context handle, struct xmp_module_info *mi, struct control *ctl)
+void read_command(xmp_context handle, struct xmp_module_info *mi, struct xmp_frame_info *fi, struct control *ctl)
 {
 	int cmd;
 
@@ -305,6 +305,22 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		break;
 	case XMP_HELP:
 		ctl->display = '?';
+		break;
+	case XMP_COMPACT:
+		if(ctl->compact == 1) {
+			
+			report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
+			"Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
+			fi->speed, fi->bpm, fi->pos, mi->mod->len - 1,
+			fi->pattern, mi->mod->pat - 1);
+			
+			ctl->compact = 0;
+			break;
+		}
+		report("\r                                                                            ");
+		report("\r                       ");
+		report("\r[%02X/%02X]       0:00:00.0", fi->pattern, mi->mod->pat - 1);
+		ctl->compact = 1;
 		break;
 	case XMP_SEQ_NEXT:
 		change_sequence(handle, mi, ctl, 1);

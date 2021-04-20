@@ -66,6 +66,7 @@ struct control {
 	int loop;		/* Module is looped */
 	int pause;		/* Replay paused */
 	int display;		/* Info display flag */
+	int compact;		/* Compact prompt */
 	int sequence;		/* Current sequence */
 	int explore;		/* Play all sequences */
 	int cur_info;		/* Display current sequence or mixer type */
@@ -98,6 +99,6 @@ void info_comment(struct xmp_module_info *);
 void info_help(void);
 
 /* commands */
-void read_command(xmp_context, struct xmp_module_info *, struct control *);
+void read_command(xmp_context, struct xmp_module_info *, struct xmp_frame_info *, struct control *);
 
 #endif

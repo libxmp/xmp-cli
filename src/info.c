@@ -49,7 +49,15 @@ sprintf(helptext,
 "      0x%X       Clear the screen\n"
 #endif
 #endif
+#ifdef XMP_COMPACT
+#if XMP_COMPACT >= 32 && XMP_COMPACT <= 126
+"      %c         Use compact display\n"
+#else
+"      0x%X       Use compact display\n"
+#endif
+#endif
 ,
+
 	XMP_QUIT, XMP_PAT_NEXT, XMP_PAT_BACK,
 	XMP_PAT_NEXT, XMP_MOD_BACK, XMP_HELP, XMP_HELP_2,
 	XMP_MUTE_1, XMP_MUTE_10, XMP_MUTE_ALL,
@@ -59,6 +67,9 @@ sprintf(helptext,
 	XMP_COMMENT, XMP_SEQ_BACK, XMP_SEQ_NEXT
 #ifdef XMP_CLEAR
 , XMP_CLEAR
+#endif
+#ifdef XMP_CLEAR
+, XMP_COMPACT
 #endif
 
 );
@@ -216,7 +227,10 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	}
 
 	if (reprint || fi->pos != ord || fi->bpm != bpm || fi->speed != spd) {
-	        report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
+		if(ctl->compact == 1) {
+			report("\r[%02X/%02X]       0:00:00.0",
+			fi->pattern, mi->mod->pat - 1);
+		} else report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
 			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
 					fi->speed, fi->bpm,
 					fi->pos, mi->mod->len - 1,
@@ -231,7 +245,11 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	fix_info_02x(fi->virt_used, chnstr);
 	fix_info_02x(max_channels, maxchnstr);
 
-	report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+	if(ctl-> compact == 1) {
+	report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+	       "%c%c%c",
+		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ', x);
+	} else report("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
 	       "%2.2s/%2.2s] Chn[%2.2s/%2.2s] %c%c%c",
 		rowstr, numrowstr, chnstr, maxchnstr,
 		ctl->explore ? 'Z' : ' ', ctl->loop ? 'L' : ' ', x);

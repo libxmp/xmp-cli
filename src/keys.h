@@ -43,6 +43,7 @@
 #define XMP_MIXER	'X'
 #define XMP_EXPLORER	'z'
 #define XMP_CURR_SEQ	'Z'
+#define XMP_COMPACT	'v'
 
 
 // defaults
@@ -142,6 +143,9 @@
 #endif
 #ifndef XMP_CURR_SEQ
 #define XMP_CURR_SEQ	'Z'
+#endif
+#ifndef XMP_COMPACT
+#define XMP_COMPACT	'Z'
 #endif
 
 #endif

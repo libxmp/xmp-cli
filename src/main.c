@@ -163,7 +163,7 @@ static void check_pause(xmp_context xc, struct control *ctl,
 		}
 		while (ctl->pause) {
 			usleep(100000);
-			read_command(xc, mi, ctl);
+			read_command(xc, mi, fi, ctl);
 			if (ctl->display) {
 				if (verbose) {
 					int mode = xmp_get_player(xc, XMP_PLAYER_MODE);
@@ -553,7 +553,7 @@ int main(int argc, char **argv)
 				sound->play(fi.buffer, fi.buffer_size);
 
 				if (foreground_in && !opt.nocmd) {
-					read_command(xc, &mi, &control);
+					read_command(xc, &mi, &fi, &control);
 
 					if (control.display) {
 						int mode = xmp_get_player(xc,
