@@ -47,6 +47,8 @@ The following single key commands can be used during the playback:
             c         =>  display comment, if any
             <         =>  jump to previous sequence
             >         =>  jump to next sequence
+           ^L         =>  clear screen
+            v         =>  compact display mode
 
 Interactive mode can be disabled using the --nocmd command line option.
 
