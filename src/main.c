@@ -22,6 +22,7 @@
 #include "errno.h"
 #include "sound.h"
 #include "common.h"
+#include "keys.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -112,25 +113,25 @@ static void show_info(int what, struct xmp_module_info *mi, int mode)
 {
 	report("\r%78.78s\n", " ");
 	switch (what) {
-	case '?':
+	case XMP_HELP_2:
 		info_help();
 		break;
-	case 'i':
+	case XMP_FULL_INFO:
 		info_ins_smp(mi);
 		break;
-	case 'I':
+	case XMP_INST_INFO:
 		info_instruments(mi);
 		break;
-	case 'S':
+	case XMP_SAMPLE_INFO:
 		info_samples(mi);
 		break;
-	case 'c':
+	case XMP_COMMENT:
 		info_comment(mi);
 		break;
-	case 'm':
+	case XMP_MODULE_INFO:
 		info_mod(mi, mode);
 		break;
-	case 0xC:
+	case XMP_CLEAR:
 		// https://www.amigawiki.org/doku.php?id=en:system:dos_commands_large
 		report("\e[0;0H\e[J");
 		break;
@@ -337,7 +338,7 @@ int main(int argc, char **argv)
 		    opt.format & XMP_FORMAT_MONO ? "mono" : "stereo",
 		    opt.dsp & XMP_DSP_LOWPASS ? "" : " (no filter)");
 
-		report("Press 'h' for help\n\n");
+		report("Press '%c' or '%c' for help\n\n", XMP_HELP, XMP_HELP_2);
 	}
 
 	if (opt.probeonly) {
@@ -563,13 +564,13 @@ int main(int argc, char **argv)
 
 					
 					switch (control.cur_info) {
-					case 'X': {
+					case XMP_MIXER: {
 						char buf[80];
  						get_mixer_type(control.mixer_type, &opt, buf, 80);
 						info_message("Mixer type: %s", buf);
 						control.cur_info = 0;
 						break; }
-					case 'Z':
+					case XMP_CURR_SEQ:
 						info_message("Current sequence: %d (start at position %02X)", control.sequence, mi.seq_data[control.sequence].entry_point);
 						control.cur_info = 0;
 						break;

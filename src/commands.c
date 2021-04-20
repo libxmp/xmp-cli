@@ -19,6 +19,7 @@
 #endif
 #include <xmp.h>
 #include "common.h"
+#include "keys.h"
 
 #ifdef __CYGWIN__
 #include <sys/select.h>
@@ -152,42 +153,72 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 		}
 
 		break;
-	case 'q':		/* quit */
+
+	#ifdef XMP_MOD_NEXT_2
+	case XMP_MOD_NEXT_2:
+		goto cmd_next_mod;
+		break;
+	#endif
+	#ifdef XMP_MOD_BACK_2
+	case XMP_MOD_BACK_2:
+		goto cmd_prev_mod;
+		break;
+	#endif
+	#ifdef XMP_PAT_NEXT_2
+	case XMP_PAT_NEXT_2:
+		goto cmd_next_pos;
+		break;
+	#endif
+	#ifdef XMP_PAT_BACK_2
+	case XMP_PAT_BACK_2:
+		goto cmd_prev_pos;
+		break;
+	#endif
+
+	case XMP_QUIT:		/* quit */
+	#ifdef XMP_QUIT_2
+	case XMP_QUIT_2:
+	#endif
 	cmd_quit:
 		xmp_stop_module(handle);
 		ctl->pause = 0;
 		ctl->skip = -2;
 		break;
-	case 'f':		/* jump to next order */
+	case XMP_PAT_NEXT:		/* jump to next order */
 	cmd_next_pos:
 		xmp_next_position(handle);
 		ctl->pause = 0;
 		break;
-	case 'b':		/* jump to previous order */
+	case XMP_PAT_BACK:		/* jump to previous order */
 	cmd_prev_pos:
 		xmp_prev_position(handle);
 		ctl->pause = 0;
 		break;
-	case 'n':		/* skip to next module */
+	case XMP_MOD_NEXT:		/* skip to next module */
 	cmd_next_mod:
 		xmp_stop_module(handle);
 		ctl->pause = 0;
 		ctl->skip = 1;
 		break;
-	case 'p':		/* skip to previous module */
+	case XMP_MOD_BACK:		/* skip to previous module */
 	cmd_prev_mod:
 		xmp_stop_module(handle);
 		ctl->pause = 0;
 		ctl->skip = -1;
 		break;
-	case 'l':
-		ctl->loop++;
-		ctl->loop %= 3;
+	case XMP_LOOP:
+		/* this explains why the loop toggle was
+		 * broken, it was just poorly coded
+		 * ctl->loop++;
+		 * ctl->loop %= 3;
+		*/
+		if(ctl->loop == 0) ctl-> loop = 1;
+		else if(ctl->loop == 1) ctl-> loop = 0;
 		break;
-	case 'X':
-		ctl->cur_info = 'X';
+	case XMP_MIXER:
+		ctl->cur_info = XMP_MIXER;
 		break;
-	case 'a': {
+	case XMP_AMIGA: {
 		int f;
 
 		ctl->amiga_mixer = !ctl->amiga_mixer;
@@ -212,55 +243,69 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 						f &= ~XMP_FLAGS_A500);
 		}
 		break; }
-	case 'Z':
-		ctl->cur_info = 'Z';
+	case XMP_CURR_SEQ:
+		ctl->cur_info = XMP_CURR_SEQ;
 		break;
-	case 'z':
+	case XMP_EXPLORER:
 		ctl->explore ^= 1;
 		break;
-	case ' ':		/* paused module */
+	case XMP_PAUSE:		/* paused module */
 		ctl->pause ^= 1;
 		break;
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-		/* toggle mute */
-		xmp_channel_mute(handle, cmd - '1', 2);
+#define mute(A) xmp_channel_mute(handle, A, 2); 
+	case XMP_MUTE_1:
+		mute(0);
 		break;
-	case '0':
-		xmp_channel_mute(handle, 9, 2);
+	case XMP_MUTE_2:
+		mute(1);
 		break;
-	case '!': {
+	case XMP_MUTE_3:
+		mute(2);
+		break;
+	case XMP_MUTE_4:
+		mute(3);
+		break;
+	case XMP_MUTE_5:
+		mute(4);
+		break;
+	case XMP_MUTE_6:
+		mute(5);
+		break;
+	case XMP_MUTE_7:
+		mute(6);
+		break;
+	case XMP_MUTE_8:
+		mute(7);
+		break;
+	case XMP_MUTE_9:
+		mute(8);
+		break;
+	case XMP_MUTE_10:
+		mute(9);
+		break;
+	case XMP_MUTE_ALL: {
 		int i;
 		for (i = 0; i < 10; i++) {
 			xmp_channel_mute(handle, i, 0);
 		}
 		break; }
-	case '?':
-	case 'c':
-	case 'i':
-	case 'I':
-	case 'S':
-	case 'm':
+	case XMP_HELP_2:
+	case XMP_COMMENT:
+	case XMP_FULL_INFO:
+	case XMP_INST_INFO:
+	case XMP_SAMPLE_INFO:
+	case XMP_CLEAR:
+	case XMP_MODULE_INFO:
 		ctl->display = cmd;
 		break;
-	case 'h':
+	case XMP_HELP:
 		ctl->display = '?';
 		break;
-	case '>':
+	case XMP_SEQ_NEXT:
 		change_sequence(handle, mi, ctl, 1);
 		break;
-	case '<':
+	case XMP_SEQ_BACK:
 		change_sequence(handle, mi, ctl, -1);
-		break;
-	case 0xC: // clear
-		ctl->display = 0xC;
 		break;
 	}
 }

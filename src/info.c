@@ -11,35 +11,47 @@
 #include <stdarg.h>
 #include <xmp.h>
 #include "common.h"
+#include "keys.h"
 
 static int max_channels = -1;
 
 void info_help(void)
 {
-	report(
+char helptext[940];
+// TODO handle XMP_*_(BACK)|(NEXT)_2
+sprintf(helptext,
 "COMMAND KEYS SUMMARY\n"
 "     Space      Pause/unpause\n"
-"    q, Esc      Stop module and quit the player\n"
-"    f, Right    Advance to next order\n"
-"    b, Left     Return to previous order\n"
-"    n, Up       Advance to next module\n"
-"    p, Down     Return to previous module\n"
-"    h, ?        Display available commands\n"
-"    1 - 0       Mute/unmute channels\n"
-"      !         Unmute all channels\n"
-"      X         Display current mixer type\n"
-"      a         Enable amiga mixer\n"
-"      Z         Display current sequence\n"
-"      z         Toggle subsong explorer mode\n"
-"      l         Toggle loop mode\n"
-"      m         Display module information\n"
-"      i         Display combined instrument/sample list\n"
-"      I         Display instrument list\n"
-"      S         Display sample list\n"
-"      c         Display comment, if any\n"
-"      <         Play previous sequence\n"
-"      >         Play next sequence\n"
+"    %c, Esc      Stop module and quit the player\n"
+"    %c, Right    Advance to next order\n"
+"    %c, Left     Return to previous order\n"
+"    %c, Up       Advance to next module\n"
+"    %c, Down     Return to previous module\n"
+"    %c, %c        Display available commands\n"
+"    %c - %c       Mute/unmute channels\n"
+"      %c         Unmute all channels\n"
+"      %c         Display current mixer type\n"
+"      %c         Enable amiga mixer\n"
+"      %c         Display current sequence\n"
+"      %c         Toggle subsong explorer mode\n"
+"      %c         Toggle loop mode\n"
+"      %c         Display module information\n"
+"      %c         Display combined instrument/sample list\n"
+"      %c         Display instrument list\n"
+"      %c         Display sample list\n"
+"      %c         Display comment, if any\n"
+"      %c         Play previous sequence\n"
+"      %c         Play next sequence\n",
+	XMP_QUIT, XMP_PAT_NEXT, XMP_PAT_BACK,
+	XMP_PAT_NEXT, XMP_MOD_BACK, XMP_HELP, XMP_HELP_2,
+	XMP_MUTE_1, XMP_MUTE_10, XMP_MUTE_ALL,
+	XMP_MIXER, XMP_AMIGA, XMP_CURR_SEQ,
+	XMP_EXPLORER, XMP_LOOP, XMP_MODULE_INFO,
+	XMP_FULL_INFO, XMP_INST_INFO, XMP_SAMPLE_INFO,
+	XMP_COMMENT, XMP_SEQ_BACK, XMP_SEQ_NEXT
+
 );
+report(helptext);
 }
 
 void info_mod(struct xmp_module_info *mi, int mode)
