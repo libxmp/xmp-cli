@@ -2,7 +2,7 @@ Stable versions
 ---------------
 
 4.2.0 ():
-	Changes by Ozkan Sezer:
+	Changes by Özkan Sezer:
 	- Fix libxmp detection in configuration script
 	- Fix OS/2 and Amiga builds
 	Changes by Emanuel Haupt:
@@ -45,8 +45,8 @@ Stable versions
 	- Add command 'c' to display module comment
 	- Add command-line option -C to display module comment
 	- Fix ignored amplify option (by Dennis Lindroos)
-	- Fix Win64 compatibility (by Ozkan Sezer)
-	- Fix configuration file location in Windows (by Ozkan Sezer)
+	- Fix Win64 compatibility (by Özkan Sezer)
+	- Fix configuration file location in Windows (by Özkan Sezer)
 	- Fix screen corruption with large number of rows
 
 4.0.7 (20140224):
