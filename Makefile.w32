@@ -1,6 +1,6 @@
-# Makefile for Windows NT using Watcom compiler.
+# Makefile for Win32 using Watcom compiler.
 #
-# wmake -f Makefile.nt
+# wmake -f Makefile.w32
 
 CC=wcc386
 CPPFLAGS=-DHAVE_SIGNAL_H -DWIN32
