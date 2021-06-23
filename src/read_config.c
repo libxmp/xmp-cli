@@ -104,11 +104,13 @@ int read_config(struct options *o)
 
 #define getval_yn(x,w,y) { \
 	if (!strcmp(var,x)) { if (get_yesno (val)) w |= (y); \
-	    else w &= ~(y); continue; } }
+	    else w &= ~(y); \
+	    continue; } }
 
 #define getval_tristate(x,w) { \
 	if (!strcmp(var,x)) { if (get_yesno (val)) w = 1; \
-	    else w = -1; continue; } }
+	    else w = -1; \
+	    continue; } }
 
 #define getval_no(x,y) { \
 	if (!strcmp(var,x)) { y = atoi (val); continue; } }
