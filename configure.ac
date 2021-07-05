@@ -149,7 +149,7 @@ AS_IF([test "$enable_pulseaudio" = "yes"], [
 ])
 
 case "${host_os}" in
-amigaos*|aros)
+amigaos*|aros*|morphos*)
   AC_DEFINE(SOUND_AHI, 1, [ ])
   AM_CONDITIONAL([SOUND_AHI], [true])
   ;;
