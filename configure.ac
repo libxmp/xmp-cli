@@ -37,11 +37,26 @@ case "$xmplib" in
   *) xmplib=xmp-lite ;;
 esac
 
-old_LDFLAGS="${LDFLAGS}"
+old_LIBS="${LIBS}"
 PKG_CHECK_MODULES([LIBXMP], [lib$xmplib >= 4.4],
-  LDFLAGS="${LDFLAGS} ${LIBXMP_LIBS}"
-  AC_CHECK_LIB($xmplib, xmp_set_player, [LDFLAGS="${old_LDFLAGS}"], [exit 1]),
-  [echo "You need libxmp version 4.4 or later to build this package"; exit 1]
+  AC_MSG_CHECKING(linkage to lib$xmplib)
+  LIBS="${LIBXMP_LIBS}"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([], [[return xmp_set_player((char*)0,0,0);]])],
+    [LIBS="${old_LIBS}"
+     AC_MSG_RESULT(success)],
+dnl In case libxmp is a static build and depend on libm:
+dnl PKG_CHECK_MODULES_STATIC might not be present, so doing it
+dnl manually:
+ [AC_MSG_RESULT(failed:)
+  AC_MSG_CHECKING(linkage to lib$xmplib with -lm)
+  LIBS="${LIBS} -lm"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([], [[return xmp_set_player((char*)0,0,0);]])],
+    [LIBS="${old_LIBS} -lm"
+     AC_MSG_RESULT(success)],
+    [AC_MSG_RESULT(failed)
+     AC_MSG_FAILURE(linkage to lib$xmplib failed, 1)])]
+  ),
+ [echo "You need libxmp version 4.4 or later to build this package"; exit 1]
 )
 
 dnl Don't use things like /usr/etc or /usr/var
