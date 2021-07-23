@@ -125,6 +125,7 @@ AM_CONDITIONAL([SOUND_QNX], [false])
 AM_CONDITIONAL([SOUND_SGI], [false])
 AM_CONDITIONAL([SOUND_SNDIO], [false])
 AM_CONDITIONAL([SOUND_SOLARIS], [false])
+AM_CONDITIONAL([SOUND_OS2DART], [false])
 AM_CONDITIONAL([SOUND_WIN32], [false])
 
 if test "${enable_oss}" != "no"; then

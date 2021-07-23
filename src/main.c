@@ -15,6 +15,9 @@
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
+#if defined(__WATCOMC__)
+#include <time.h>
+#endif
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdarg.h>
@@ -23,7 +26,7 @@
 #include "sound.h"
 #include "common.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #endif
 
@@ -245,15 +248,17 @@ int main(int argc, char **argv)
 	int val, lf_flag;
 	int flags;
 	int played;
-#ifndef _WIN32
+#if defined(_WIN32)
+	setvbuf(stderr, NULL, _IONBF, 0);
+	srand(GetTickCount());
+#elif defined(__WATCOMC__)
+	srand(time(NULL));
+#else
 	struct timeval tv;
 	struct timezone tz;
 
 	gettimeofday(&tv, &tz);
 	srand(tv.tv_usec);
-#else
-	setvbuf(stderr, NULL, _IONBF, 0);
-	srand(GetTickCount());
 #endif
 
 	init_sound_drivers();

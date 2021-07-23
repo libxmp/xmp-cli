@@ -84,12 +84,17 @@ xmp_SOURCES += sound_beos.cpp
 xmp_LDADD   += -lmedia -lbe
 endif
 
+if SOUND_OS2DART
+xmp_SOURCES += sound_dart.c
+# for mciSendCommand()
+xmp_LDADD   += -lmmpm2
+endif
+
 man_MANS = xmp.1
 
 pkgsysconfdir   = ${sysconfdir}/${PACKAGE_NAME}
 pkgsysconf_DATA = modules.conf xmp.conf
 
-EXTRA_DIST = ${man_MANS} ${pkgsysconf_DATA} win32/usleep.c win32/unistd.h
-
-# unused sources
-EXTRA_DIST += sound_dart.c
+EXTRA_DIST = ${man_MANS} ${pkgsysconf_DATA} \
+	win32/usleep.c win32/unistd.h \
+	watcom/usleep.c watcom/unistd.h

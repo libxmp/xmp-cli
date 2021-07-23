@@ -3,7 +3,7 @@
 # wmake -f Makefile.os2
 
 CC=wcc386
-CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_SYS_TIME_H
+CPPFLAGS=-DHAVE_SIGNAL_H
 CPPFLAGS+= -DSOUND_OS2DART
 
 !ifndef __UNIX__
@@ -11,15 +11,17 @@ CPPFLAGS+= -DVERSION="4.2.0"
 !else
 CPPFLAGS+= -DVERSION=\"4.2.0\"
 !endif
-INCLUDES=-I"../os2" -I"../src"
+INCLUDES=-I"src/watcom" -Isrc
 
-#LIBXMP=libxmp_static.lib
+#LIBXMP=xmp_static.lib
 LIBXMP=libxmp.lib
 LIBS=$(LIBXMP)
 # for sound_dart:
 LIBS+= mmpm2.lib
 
 CFLAGS = -bt=os2 -bm -fp5 -fpi87 -mf -oeatxh -w4 -zp8 -ei -q
+# newer OpenWatcom versions enable W303 by default.
+CFLAGS += -wcd=303
 # -5s  :  Pentium stack calling conventions.
 # -5r  :  Pentium register calling conventions.
 CFLAGS+= -5s
@@ -37,7 +39,7 @@ all: $(AOUT)
 $(AOUT): $(OBJ)
 	wlink N $(AOUT) SYS OS2V2 OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
 
-.c: ../src
+.c: src;src/watcom
 .c.obj:
 	$(COMPILE) -fo=$^@ $<
 

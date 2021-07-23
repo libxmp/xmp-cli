@@ -3,7 +3,7 @@
 # wmake -f Makefile.w32
 
 CC=wcc386
-CPPFLAGS=-DHAVE_SIGNAL_H -DWIN32
+CPPFLAGS=-DHAVE_SIGNAL_H
 CPPFLAGS+= -DSOUND_WIN32
 
 !ifndef __UNIX__
@@ -11,10 +11,10 @@ CPPFLAGS+= -DVERSION="4.2.0"
 !else
 CPPFLAGS+= -DVERSION=\"4.2.0\"
 !endif
-INCLUDES=-I"./src/win32" -I"./src" -I"../libxmp/include" -I"$(%WATCOM)/h/nt"
+INCLUDES=-I"src/win32" -Isrc -I"$(%WATCOM)/h/nt"
 
-#LIBXMP=../libxmp/xmp_static.lib
-LIBXMP=../libxmp/libxmp.lib
+#LIBXMP=xmp_static.lib
+LIBXMP=libxmp.lib
 LIBS=$(LIBXMP)
 # for sound_win32:
 LIBS+= winmm.lib
@@ -39,11 +39,11 @@ all: $(AOUT)
 $(AOUT): $(OBJ)
 	wlink N $(AOUT) SYS NT OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
 
-.c: ./src;./src/win32
+.c: src;src/win32
 .c.obj:
 	$(COMPILE) -fo=$^@ $<
 
 distclean: clean .symbolic
-	rm -f $(AOUT)
+	rm -f $(AOUT) *.err
 clean: .symbolic
-	rm -f *.obj *.err
+	rm -f *.obj
