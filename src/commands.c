@@ -7,7 +7,7 @@
  */
 
 #include <unistd.h>
-#if defined(_WIN32) || defined(__OS2__)
+#if defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
 #include <conio.h>
 #endif
 #if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
@@ -67,12 +67,12 @@ static int read_key(void)
 	char key;
 	int ret = 0;
 
-#if defined(HAVE_TERMIOS_H) && !defined(_WIN32)
+#if defined(HAVE_TERMIOS_H) && !(defined(_WIN32) || defined(__DJGPP__) || defined(_DOS))
 #ifdef __CYGWIN__
 	if (stdin_ready_for_reading())
 #endif
 		ret = read(0, &key, 1);
-#elif defined(_WIN32) || defined(__OS2__)
+#elif defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
 	if (kbhit()) {
 		key = getch();
 		ret = 1;

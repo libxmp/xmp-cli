@@ -98,8 +98,8 @@ AC_DEFUN([AC_CHECK_DEFINED],[
 
 AC_CHECK_HEADERS([getopt.h signal.h sys/time.h sys/audioio.h])
 case $host_os in
-dnl don't check half-baked termios for amiga targets.
-  amigaos*|aros*|morphos*) ;;
+dnl don't check half-baked termios for amiga or dos targets.
+  amigaos*|aros*|morphos*|*djgpp) ;;
   *) AC_CHECK_HEADERS([termios.h]) ;;
 esac
 
