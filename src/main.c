@@ -158,7 +158,7 @@ static void check_pause(xmp_context xc, struct control *ctl,
 			info_frame(mi, fi, ctl, 1);
 		}
 		while (ctl->pause) {
-			usleep(100000);
+			delay_ms(100);
 			read_command(xc, mi, ctl);
 			if (ctl->display) {
 				if (verbose) {

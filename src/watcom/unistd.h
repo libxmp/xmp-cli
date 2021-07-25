@@ -3,6 +3,4 @@
 
 #include <io.h>  /* do not want Watcom unistd.h */
 
-void usleep (unsigned long usec);
-
 #endif

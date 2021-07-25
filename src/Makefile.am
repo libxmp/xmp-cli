@@ -7,8 +7,8 @@ AM_CFLAGS   = -Wall
 bin_PROGRAMS = xmp
 
 xmp_SOURCES = \
-	commands.c common.h getopt_long.h list.h getopt_long.c info.c main.c \
-	options.c read_config.c sound.c sound.h sound_file.c sound_null.c \
+	commands.c common.h delay.c getopt_long.h list.h getopt_long.c info.c \
+	main.c options.c read_config.c sound.c sound.h sound_file.c sound_null.c \
 	sound_wav.c sound_aiff.c terminal.c
 xmp_LDADD   = ${LIBXMP_LIBS}
 xmp_LDFLAGS = ${XMP_DARWIN_LDFLAGS}
@@ -96,5 +96,4 @@ pkgsysconfdir   = ${sysconfdir}/${PACKAGE_NAME}
 pkgsysconf_DATA = modules.conf xmp.conf
 
 EXTRA_DIST = ${man_MANS} ${pkgsysconf_DATA} \
-	win32/usleep.c win32/unistd.h \
-	watcom/usleep.c watcom/unistd.h
+	win32/unistd.h watcom/unistd.h
