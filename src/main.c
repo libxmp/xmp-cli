@@ -407,7 +407,7 @@ int main(int argc, char **argv)
 			load_error(argv[0], argv[optind], val);
 
 			if (skipprev) {
-		        	optind -= 2;
+				optind -= 2;
 				if (optind < (first - 1)) {
 					optind += 2;
 					skipprev = 0;
@@ -512,7 +512,7 @@ int main(int argc, char **argv)
 					info_comment(&mi);
 				}
 			}
-	
+
 			/* Play sequence */
 
 			refresh_status = 1;
@@ -562,11 +562,10 @@ int main(int argc, char **argv)
 						refresh_status = 1;
 					}
 
-					
 					switch (control.cur_info) {
 					case 'X': {
 						char buf[80];
- 						get_mixer_type(control.mixer_type, &opt, buf, 80);
+						get_mixer_type(control.mixer_type, &opt, buf, 80);
 						info_message("Mixer type: %s", buf);
 						control.cur_info = 0;
 						break; }

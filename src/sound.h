@@ -11,12 +11,12 @@ struct sound_driver {
 	char *description;
 	const char *const *help;
 	int (*init)(struct options *);
-        void (*deinit)(void);
+	void (*deinit)(void);
 	void (*play)(void *, int);
-        void (*flush)(void);
-        void (*pause)(void);
-        void (*resume)(void);
-        struct list_head list;
+	void (*flush)(void);
+	void (*pause)(void);
+	void (*resume)(void);
+	struct list_head list;
 };
 
 #define parm_init(p) { char *token; for (; *(p); (p)++) { \

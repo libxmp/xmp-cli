@@ -66,7 +66,7 @@ static void CALLBACK wave_callback(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance
                                   DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
 	if (uMsg == WOM_DONE) {
-        	freebuffer++;
+		freebuffer++;
 		freebuffer %= num_buffers;
 	}
 }
@@ -79,7 +79,7 @@ static int init(struct options *options)
 	int i;
 
 	num_buffers = 10;
-	
+
 	parm_init(parm);
 	chkparm1("buffers", num_buffers = strtoul(token, NULL, 0));
 	parm_end();
@@ -130,11 +130,11 @@ static void play(void *b, int len)
 	while ((nextbuffer + 1) % num_buffers == freebuffer)
 		Sleep(10);
 
-        header[nextbuffer].dwBufferLength = len;
+	header[nextbuffer].dwBufferLength = len;
 	waveOutPrepareHeader(hwaveout, &header[nextbuffer], sizeof(WAVEHDR));
-        waveOutWrite(hwaveout, &header[nextbuffer], sizeof(WAVEHDR));
+	waveOutWrite(hwaveout, &header[nextbuffer], sizeof(WAVEHDR));
 
-        nextbuffer++;
+	nextbuffer++;
 	nextbuffer %= num_buffers;
 }
 

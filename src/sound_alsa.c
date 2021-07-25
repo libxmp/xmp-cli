@@ -49,7 +49,7 @@ static int init(struct options *options)
 	snd_pcm_hw_params_alloca(&hwparams);
 	snd_pcm_hw_params_any(pcm_handle, hwparams);
 	snd_pcm_hw_params_set_access(pcm_handle, hwparams,
-				SND_PCM_ACCESS_RW_INTERLEAVED);
+						SND_PCM_ACCESS_RW_INTERLEAVED);
 	snd_pcm_hw_params_set_format(pcm_handle, hwparams, fmt);
 	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &rate, 0);
 	snd_pcm_hw_params_set_channels_near(pcm_handle, hwparams, &channels);
@@ -59,7 +59,7 @@ static int init(struct options *options)
 
 	if ((ret = snd_pcm_hw_params(pcm_handle, hwparams)) < 0) {
 		fprintf(stderr, "Unable to set ALSA output parameters: %s\n",
-					snd_strerror(ret));
+							snd_strerror(ret));
 		return -1;
 	}
 
@@ -68,7 +68,7 @@ static int init(struct options *options)
 					snd_strerror(ret));
 		return -1;
 	}
-  
+
 	if (channels == 1) {
 		format |= XMP_FORMAT_MONO;
 	} else {
@@ -77,7 +77,7 @@ static int init(struct options *options)
 
 	options->rate = rate;
 	options->format = format;
-	
+
 	return 0;
 }
 
@@ -125,5 +125,5 @@ struct sound_driver sound_alsa = {
 	play,
 	flush,
 	onpause,
-	onresume	
+	onresume
 };

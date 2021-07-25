@@ -48,7 +48,6 @@ static int init(struct options *options)
 		options->format &= ~XMP_FORMAT_UNSIGNED;
 	}
 
-
 	askpar = par;
 	if (!sio_setpar(hdl, &par) || !sio_getpar(hdl, &par)) {
 		fprintf(stderr, "%s: failed to set parameters\n", __func__);

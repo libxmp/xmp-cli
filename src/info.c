@@ -193,7 +193,7 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	}
 
 	if (reprint || fi->pos != ord || fi->bpm != bpm || fi->speed != spd) {
-	        report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
+		report("\rSpeed[%02X] BPM[%02X] Pos[%02X/%02X] "
 			 "Pat[%02X/%02X] Row[  /  ] Chn[  /  ]      0:00:00.0",
 					fi->speed, fi->bpm,
 					fi->pos, mi->mod->len - 1,
@@ -271,7 +271,6 @@ void info_ins_smp(struct xmp_module_info *mi)
 		if (j == 0) {
 			report("[  ] ----- ----- -----  --- ---- --- ---\n");
 		}
-
 	}
 }
 
@@ -321,7 +320,6 @@ void info_instruments(struct xmp_module_info *mi)
 		if (j == 0) {
 			report("[  ] -- -- ---- --- --- --\n");
 		}
-
 	}
 }
 
@@ -369,4 +367,3 @@ void info_comment(struct xmp_module_info *mi)
 	}		
 	report("\n\n");
 }
-
