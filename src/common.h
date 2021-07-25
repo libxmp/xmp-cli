@@ -77,6 +77,8 @@ extern struct player_mode pmode[];
 
 int report(char *, ...);
 
+void delay_ms(int msec);
+
 /* option */
 void get_options(int, char **, struct options *);
 int read_config(struct options *);

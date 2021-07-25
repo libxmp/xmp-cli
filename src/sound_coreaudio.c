@@ -10,7 +10,6 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AudioToolbox.h>
 #include <CoreServices/CoreServices.h>
-#include <unistd.h>
 #include "sound.h"
 
 static AudioUnit au;
@@ -230,7 +229,7 @@ static void play(void *b, int i)
 
 	/* block until we have enough free space in the buffer */
 	while (buf_free() < i)
-		usleep(100000);
+		delay_ms(100);
 
 	while (i) {
         	if ((j = write_buffer(b, i)) > 0) {

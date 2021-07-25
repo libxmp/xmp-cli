@@ -96,7 +96,7 @@ AC_DEFUN([AC_CHECK_DEFINED],[
   AS_VAR_POPDEF([ac_var])dnl
 ])
 
-AC_CHECK_HEADERS([getopt.h signal.h sys/time.h sys/audioio.h])
+AC_CHECK_HEADERS([getopt.h signal.h sys/select.h sys/time.h sys/audioio.h])
 case $host_os in
 dnl don't check half-baked termios for amiga or dos targets.
   amigaos*|aros*|morphos*|*djgpp) ;;
@@ -265,6 +265,6 @@ XMP_TRY_COMPILE(whether compiler understands -Wunused-result,
   int main(){}],
   CFLAGS="${CFLAGS} -Wno-unused-result")  
 
-AC_CHECK_FUNCS(kill getopt_long)
+AC_CHECK_FUNCS(kill getopt_long usleep select)
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT

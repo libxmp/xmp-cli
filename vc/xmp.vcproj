@@ -116,6 +116,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\delay.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\getopt_long.c"
 				>
 			</File>
@@ -157,10 +161,6 @@
 			</File>
 			<File
 				RelativePath="..\src\terminal.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\win32\usleep.c"
 				>
 			</File>
 		</Filter>

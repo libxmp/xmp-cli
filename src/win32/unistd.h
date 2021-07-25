@@ -3,6 +3,4 @@
 
 #include <io.h>
 
-void usleep(long usec);
-
 #endif
