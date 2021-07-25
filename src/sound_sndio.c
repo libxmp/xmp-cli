@@ -58,8 +58,8 @@ static int init(struct options *options)
 	    par.bits != askpar.bits ||
 	    par.sig != askpar.sig ||
 	    par.pchan != askpar.pchan ||
-	    ((par.rate * 1000 < askpar.rate * 995) ||
-	     (par.rate * 1000 > askpar.rate * 1005))) {
+	    (par.rate * 1000 < askpar.rate *  995) ||
+	    (par.rate * 1000 > askpar.rate * 1005)) {
 		fprintf(stderr, "%s: parameters not supported\n", __func__);
 		goto error;
 	}
