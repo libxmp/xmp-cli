@@ -121,7 +121,7 @@ static int read_buffer(unsigned char *data, int len)
 	return len;
 }
 
-void render_proc(void *theCookie, void *buffer, size_t req, 
+static void render_proc(void *theCookie, void *buffer, size_t req, 
 				const media_raw_audio_format &format)
 {
 	size_t amt;

@@ -103,7 +103,7 @@ static int read_buffer(unsigned char *data, int len)
 	return len;
 }
 
-OSStatus render_proc(void *inRefCon,
+static OSStatus render_proc(void *inRefCon,
 		AudioUnitRenderActionFlags *inActionFlags,
 		const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber,
 		UInt32 inNumFrames, AudioBufferList *ioData)
