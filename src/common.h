@@ -75,7 +75,7 @@ struct control {
 
 extern struct player_mode pmode[];
 
-int report(char *, ...);
+int report(const char *, ...);
 
 void delay_ms(int msec);
 
@@ -90,7 +90,7 @@ int reset_tty(void);
 
 /* info */
 void info_mod(struct xmp_module_info *, int);
-void info_message(char *, ...);
+void info_message(const char *, ...);
 void info_frame_init(void);
 void info_frame(struct xmp_module_info *, struct xmp_frame_info *, struct control *, int);
 void info_ins_smp(struct xmp_module_info *);

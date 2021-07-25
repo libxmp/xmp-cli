@@ -37,7 +37,7 @@ static unsigned int foreground_in, foreground_out;
 static int refresh_status;
 
 
-int report(char *fmt, ...)
+int report(const char *fmt, ...)
 {
 	va_list a;
 	int n;

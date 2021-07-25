@@ -120,7 +120,7 @@ void info_frame_init(void)
 static int msg_timer = 0;
 static char msg_text[MSG_SIZE];
 
-void info_message(char *format, ...)
+void info_message(const char *format, ...)
 {
 	va_list ap;
 
