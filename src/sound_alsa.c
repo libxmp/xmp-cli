@@ -20,7 +20,7 @@ static int init(struct options *options)
 	unsigned int channels, fmt;
 	unsigned int btime = 250000;	/* 250ms */
 	unsigned int ptime = 50000;	/* 50ms */
-	char *card_name = "default";
+	const char *card_name = "default";
 	unsigned int rate = options->rate;
 	int format = options->format;
 

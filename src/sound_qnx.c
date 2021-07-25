@@ -20,7 +20,7 @@ static int init(struct options *options)
 {
 	char **parm = options->driver_parm;
 	int rc, rate, bits, stereo, bsize;
-	char *dev;
+	const char *dev;
 
 	parm_init(parm);
 	chkparm1("dev", dev = token);

@@ -34,7 +34,7 @@ static int num_buffers;
 
 static void show_error(int res)
 {
-	char *msg;
+	const char *msg;
 
 	switch (res) {
 	case MMSYSERR_ALLOCATED:
