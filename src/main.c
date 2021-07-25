@@ -21,6 +21,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdarg.h>
+#if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
+#include <getopt.h>
+#else
+#include "getopt_long.h"
+#endif
 #include <xmp.h>
 #include "errno.h"
 #include "sound.h"
@@ -29,8 +34,6 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
-
-extern int optind;
 
 static struct sound_driver *sound;
 static unsigned int foreground_in, foreground_out;

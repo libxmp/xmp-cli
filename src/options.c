@@ -22,13 +22,6 @@
 #include "sound.h"
 #include "list.h"
 
-extern char *optarg;
-static char *token;
-
-#ifdef HAVE_SYS_RTPRIO_H
-extern int rt;
-#endif
-
 extern struct list_head sound_driver_list;
 
 enum {
@@ -179,6 +172,9 @@ static const struct option lopt[] = {
 	{ "sequence",		1, 0, 'z' },
 	{ NULL,			0, 0, 0   }
 };
+
+
+static char *token;
 
 void get_options(int argc, char **argv, struct options *options)
 {
