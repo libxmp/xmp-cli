@@ -148,7 +148,7 @@ static void deinit(void)
 		close(fd);
 	}
 
-	free(sound_wav.description);
+	free((void *)sound_wav.description);
 }
 
 static void flush(void)
@@ -175,4 +175,3 @@ struct sound_driver sound_wav = {
 	onpause,
 	onresume
 };
-

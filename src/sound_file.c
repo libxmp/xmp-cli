@@ -75,7 +75,7 @@ static void play(void *b, int len)
 
 static void deinit(void)
 {
-	free(sound_file.description);
+	free((void *)sound_file.description);
 }
 
 static void flush(void)
@@ -107,4 +107,3 @@ struct sound_driver sound_file = {
 	onpause,
 	onresume
 };
-

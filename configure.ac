@@ -259,6 +259,12 @@ XMP_TRY_COMPILE(whether compiler understands -Wall,
   int main(){}],
   CFLAGS="${CFLAGS} -Wall")
 
+XMP_TRY_COMPILE(whether compiler understands -Wwrite-strings,
+  ac_cv_c_flag_w_write_strings,
+  -Wwrite-strings,[
+  int main(){}],
+  CFLAGS="${CFLAGS} -Wwrite-strings")
+
 XMP_TRY_COMPILE(whether compiler understands -Wunused-result,
   ac_cv_c_flag_w_unused_result,
   -Wunused-result,[

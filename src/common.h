@@ -19,8 +19,8 @@
 #define MAX_DRV_PARM 20
 
 struct player_mode {
-	char *name;
-	char *desc;
+	const char *name;
+	const char *desc;
 	int mode;
 };
 
@@ -53,8 +53,8 @@ struct options {
 	int show_comment;	/* show module comment text */
 	int player_mode;	/* force tracker emulation */
 	int amiga_mixer;	/* enable amiga mixer */
-	char *driver_id;	/* sound driver ID */
-	char *out_file;		/* output file name */
+	const char *driver_id;	/* sound driver ID */
+	const char *out_file;	/* output file name */
 	char *ins_path;		/* instrument path */
 	char *driver_parm[MAX_DRV_PARM]; /* driver parameters */
 	char mute[XMP_MAX_CHANNELS];
@@ -82,7 +82,7 @@ void delay_ms(int msec);
 /* option */
 void get_options(int, char **, struct options *);
 int read_config(struct options *);
-void read_modconf(struct options *, unsigned char *);
+void read_modconf(struct options *, const unsigned char *);
 
 /* terminal */
 int set_tty(void);
