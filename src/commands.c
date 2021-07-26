@@ -130,7 +130,7 @@ void read_command(xmp_context handle, struct xmp_module_info *mi, struct control
 {
 	int cmd;
 
-	cmd = read_key();	
+	cmd = read_key();
 	if (cmd <= 0)
 		return;
 

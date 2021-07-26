@@ -21,6 +21,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdarg.h>
+#if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
+#include <getopt.h>
+#else
+#include "getopt_long.h"
+#endif
 #include <xmp.h>
 #include "errno.h"
 #include "sound.h"
@@ -30,14 +35,12 @@
 #include <windows.h>
 #endif
 
-extern int optind;
-
 static struct sound_driver *sound;
 static unsigned int foreground_in, foreground_out;
 static int refresh_status;
 
 
-int report(char *fmt, ...)
+int report(const char *fmt, ...)
 {
 	va_list a;
 	int n;
@@ -407,7 +410,7 @@ int main(int argc, char **argv)
 			load_error(argv[0], argv[optind], val);
 
 			if (skipprev) {
-		        	optind -= 2;
+				optind -= 2;
 				if (optind < (first - 1)) {
 					optind += 2;
 					skipprev = 0;
@@ -512,7 +515,7 @@ int main(int argc, char **argv)
 					info_comment(&mi);
 				}
 			}
-	
+
 			/* Play sequence */
 
 			refresh_status = 1;
@@ -562,11 +565,10 @@ int main(int argc, char **argv)
 						refresh_status = 1;
 					}
 
-					
 					switch (control.cur_info) {
 					case 'X': {
 						char buf[80];
- 						get_mixer_type(control.mixer_type, &opt, buf, 80);
+						get_mixer_type(control.mixer_type, &opt, buf, 80);
 						info_message("Mixer type: %s", buf);
 						control.cur_info = 0;
 						break; }

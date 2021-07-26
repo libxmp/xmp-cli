@@ -116,7 +116,7 @@ static int init(struct options *options)
 
 	fragnum = 16;		/* default number of fragments */
 	i = 1024;		/* default size of fragment */
-	
+
 	parm_init(parm);
 	chkparm2("frag", "%d,%d", &fragnum, &i);
 	chkparm1("dev", dev_audio[0] = token);
@@ -210,4 +210,3 @@ struct sound_driver sound_oss = {
 	onpause,
 	onresume
 };
-

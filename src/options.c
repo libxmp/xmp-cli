@@ -22,13 +22,6 @@
 #include "sound.h"
 #include "list.h"
 
-extern char *optarg;
-static char *token;
-
-#ifdef HAVE_SYS_RTPRIO_H
-extern int rt;
-#endif
-
 extern struct list_head sound_driver_list;
 
 enum {
@@ -180,6 +173,9 @@ static const struct option lopt[] = {
 	{ NULL,			0, 0, 0   }
 };
 
+
+static char *token;
+
 void get_options(int argc, char **argv, struct options *options)
 {
 	struct player_mode *pm;
@@ -222,7 +218,6 @@ void get_options(int argc, char **argv, struct options *options)
 				}
 				options->player_mode = -1;
 			}
-
 			break;
 		case 'F':
 			options->dsp &= ~XMP_DSP_LOWPASS;
@@ -293,9 +288,11 @@ void get_options(int argc, char **argv, struct options *options)
 				options->driver_id = "file";
 			}
 			break;
-		/* case OPT_FX9BUG:
+		/*
+		case OPT_FX9BUG:
 			options->fx9bug = 1;
-			break; */
+			break;
+		*/
 		case 'P':
 			options->mix = strtoul(optarg, NULL, 0);
 			if (options->mix < 0)

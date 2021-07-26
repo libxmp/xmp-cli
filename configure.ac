@@ -257,13 +257,13 @@ XMP_TRY_COMPILE(whether compiler understands -Wall,
   ac_cv_c_flag_w_all,
   -Wall,[
   int main(){}],
-  CFLAGS="${CFLAGS} -Wall") 
+  CFLAGS="${CFLAGS} -Wall")
 
 XMP_TRY_COMPILE(whether compiler understands -Wunused-result,
   ac_cv_c_flag_w_unused_result,
   -Wunused-result,[
   int main(){}],
-  CFLAGS="${CFLAGS} -Wno-unused-result")  
+  CFLAGS="${CFLAGS} -Wno-unused-result")
 
 AC_CHECK_FUNCS(kill getopt_long usleep select)
 AC_CONFIG_FILES([Makefile src/Makefile])

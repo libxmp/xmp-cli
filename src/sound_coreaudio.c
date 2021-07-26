@@ -103,7 +103,7 @@ static int read_buffer(unsigned char *data, int len)
 	return len;
 }
 
-OSStatus render_proc(void *inRefCon,
+static OSStatus render_proc(void *inRefCon,
 		AudioUnitRenderActionFlags *inActionFlags,
 		const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber,
 		UInt32 inNumFrames, AudioBufferList *ioData)
@@ -117,13 +117,12 @@ OSStatus render_proc(void *inRefCon,
 	read_buffer((unsigned char *)ioData->mBuffers[0].mData, amt);
 	ioData->mBuffers[0].mDataByteSize = amt;
 
-        return noErr;
+	return noErr;
 }
 
 /*
  * end of CoreAudio helpers
  */
-
 
 static int init(struct options *options)
 {
@@ -208,7 +207,7 @@ static int init(struct options *options)
 			kAudioUnitProperty_SetRenderCallback,
 			kAudioUnitScope_Input, 0, &rc, sizeof(rc))))
 		goto err2;
-	
+
 	return 0;
 
     err2:
@@ -248,7 +247,7 @@ static void play(void *b, int i)
 
 static void deinit(void)
 {
-        AudioOutputUnitStop(au);
+	AudioOutputUnitStop(au);
 	AudioUnitUninitialize(au);
 	AudioComponentInstanceDispose(au);
 	free(buffer);
@@ -260,7 +259,7 @@ static void flush(void)
 
 static void onpause(void)
 {
-        AudioOutputUnitStop(au);
+	AudioOutputUnitStop(au);
 }
 
 static void onresume(void)

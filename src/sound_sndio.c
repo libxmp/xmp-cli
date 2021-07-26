@@ -48,7 +48,6 @@ static int init(struct options *options)
 		options->format &= ~XMP_FORMAT_UNSIGNED;
 	}
 
-
 	askpar = par;
 	if (!sio_setpar(hdl, &par) || !sio_getpar(hdl, &par)) {
 		fprintf(stderr, "%s: failed to set parameters\n", __func__);
@@ -59,8 +58,8 @@ static int init(struct options *options)
 	    par.bits != askpar.bits ||
 	    par.sig != askpar.sig ||
 	    par.pchan != askpar.pchan ||
-	    ((par.rate * 1000 < askpar.rate * 995) ||
-	     (par.rate * 1000 > askpar.rate * 1005))) {
+	    (par.rate * 1000 < askpar.rate *  995) ||
+	    (par.rate * 1000 > askpar.rate * 1005)) {
 		fprintf(stderr, "%s: parameters not supported\n", __func__);
 		goto error;
 	}

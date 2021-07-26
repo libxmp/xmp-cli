@@ -6,11 +6,8 @@
 
 #include <stddef.h> /* offsetof */
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__WATCOMC__)
 #define __inline__ __inline
-#endif
-#ifdef __WATCOMC__
-#define __inline__   inline
 #endif
 
 /*

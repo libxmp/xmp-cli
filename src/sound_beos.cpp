@@ -22,12 +22,6 @@ extern "C" {
 static media_raw_audio_format fmt;
 static BSoundPlayer *player;
 
-
-/*
- * CoreAudio helpers from mplayer/libao
- * The player fills a ring buffer, BSP retrieves data from the buffer
- */
-
 static int paused;
 static uint8 *buffer;
 static int buffer_len;
@@ -127,22 +121,16 @@ static int read_buffer(unsigned char *data, int len)
 	return len;
 }
 
-/*
- * end of CoreAudio helpers
- */
-
-
-void render_proc(void *theCookie, void *buffer, size_t req, 
+static void render_proc(void *theCookie, void *buffer, size_t req, 
 				const media_raw_audio_format &format)
-{ 
-        size_t amt;
+{
+	size_t amt;
 
 	while ((amt = buf_used()) < req)
 		snooze(100000);
 
-        read_buffer((unsigned char *)buffer, req);
+	read_buffer((unsigned char *)buffer, req);
 }
-
 
 static int init(struct options *options)
 {
@@ -170,12 +158,11 @@ static int init(struct options *options)
 	buf_read_pos = 0;
 	buf_write_pos = 0;
 	paused = 1;
-	
+
 	player = new BSoundPlayer(&fmt, "xmp output", render_proc);
 
 	return 0;
 }
-
 
 static void play(void *b, int i)
 {
@@ -219,4 +206,3 @@ static void onpause(void)
 static void onresume(void)
 {
 }
-

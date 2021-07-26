@@ -13,10 +13,6 @@
 #include <xmp.h>
 #include "common.h"
 
-#ifdef __AMIGA__
-#include <sys/unistd.h>
-#endif
-
 #if !defined(SYSCONFDIR)
 #define SYSCONFDIR "."
 #endif
@@ -58,7 +54,7 @@ int read_config(struct options *o)
 			return -1;
 		}
 	}
-#elif defined __AMIGA__
+#elif defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
 	strncpy(myrc, "PROGDIR:xmp.conf", PATH_MAX);
 
 	if ((rc = fopen(myrc, "r")) == NULL)
@@ -295,7 +291,7 @@ void read_modconf(struct options *o, unsigned char *md5)
 	snprintf(myrc, PATH_MAX, "%s\\modules.conf", home);
 	parse_modconf(o, "xmp-modules.conf", md5);
 	parse_modconf(o, myrc, md5);
-#elif defined __AMIGA__
+#elif defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
 	parse_modconf(o, "PROGDIR:modules.conf", md5);
 #elif defined _WIN32
 	char myrc[PATH_MAX];
