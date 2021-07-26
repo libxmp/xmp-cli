@@ -178,13 +178,13 @@ static void check_pause(xmp_context xc, struct control *ctl,
 
 static void get_mixer_type(int t, struct options *opt, char *buf, size_t size)
 {
-	char *fmt;
+	const char *fmt;
 
 	fmt = opt->format & XMP_FORMAT_MONO ? "mono" : "stereo";
 
 	switch (t) {
 	case XMP_MIXER_STANDARD: {
-		char *itp;
+		const char *itp;
 		switch (opt->interp) {
 		case XMP_INTERP_NEAREST:
 			itp = "non-interpolated";
@@ -211,9 +211,9 @@ static void get_mixer_type(int t, struct options *opt, char *buf, size_t size)
 	}
 }
 
-static void load_error(char *name, char *filename, int val)
+static void load_error(const char *name, const char *filename, int val)
 {
-	char *msg;
+	const char *msg;
 
 	val = -val;
 	switch (val) {

@@ -174,7 +174,7 @@ int read_config(struct options *o)
 }
 
 
-static int compare_md5(unsigned char *d, char *digest)
+static int compare_md5(const unsigned char *d, const char *digest)
 {
 	int i;
 
@@ -191,7 +191,7 @@ static int compare_md5(unsigned char *d, char *digest)
 	return 0;
 }
 
-static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
+static void parse_modconf(struct options *o, const char *confname, const unsigned char *md5)
 {
 	FILE *rc;
 	char *hash, *var, *val, line[256];
@@ -281,7 +281,7 @@ static void parse_modconf(struct options *o, char *confname, unsigned char *md5)
 }
 
 
-void read_modconf(struct options *o, unsigned char *md5)
+void read_modconf(struct options *o, const unsigned char *md5)
 {
 #if defined(__OS2__) || defined(__EMX__)
 	char myrc[PATH_MAX];

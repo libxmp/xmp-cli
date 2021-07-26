@@ -8,7 +8,7 @@
 
 struct sound_driver {
 	const char *id;
-	char *description;
+	const char *description;
 	const char *const *help;
 	int (*init)(struct options *);
 	void (*deinit)(void);
