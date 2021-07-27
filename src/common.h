@@ -89,17 +89,17 @@ int set_tty(void);
 int reset_tty(void);
 
 /* info */
-void info_mod(struct xmp_module_info *, int);
+void info_mod(const struct xmp_module_info *, int);
 void info_message(const char *, ...);
 void info_frame_init(void);
-void info_frame(struct xmp_module_info *, struct xmp_frame_info *, struct control *, int);
-void info_ins_smp(struct xmp_module_info *);
-void info_instruments(struct xmp_module_info *);
-void info_samples(struct xmp_module_info *);
-void info_comment(struct xmp_module_info *);
+void info_frame(const struct xmp_module_info *, const struct xmp_frame_info *, struct control *, int);
+void info_ins_smp(const struct xmp_module_info *);
+void info_instruments(const struct xmp_module_info *);
+void info_samples(const struct xmp_module_info *);
+void info_comment(const struct xmp_module_info *);
 void info_help(void);
 
 /* commands */
-void read_command(xmp_context, struct xmp_module_info *, struct control *);
+void read_command(xmp_context, const struct xmp_module_info *, struct control *);
 
 #endif
