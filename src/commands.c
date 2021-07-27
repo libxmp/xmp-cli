@@ -97,7 +97,7 @@ static int read_key(void)
 	return key;
 }
 
-static void change_sequence(xmp_context handle, struct xmp_module_info *mi, struct control *ctl, int i)
+static void change_sequence(xmp_context handle, const struct xmp_module_info *mi, struct control *ctl, int i)
 {
 	int seq = ctl->sequence;
 
@@ -126,7 +126,7 @@ static void change_sequence(xmp_context handle, struct xmp_module_info *mi, stru
  * ESC [ C - right arrow
  * ESC [ D - left arrow
  */
-void read_command(xmp_context handle, struct xmp_module_info *mi, struct control *ctl)
+void read_command(xmp_context handle, const struct xmp_module_info *mi, struct control *ctl)
 {
 	int cmd;
 

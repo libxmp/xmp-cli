@@ -42,7 +42,7 @@ void info_help(void)
 );
 }
 
-void info_mod(struct xmp_module_info *mi, int mode)
+void info_mod(const struct xmp_module_info *mi, int mode)
 {
 	int i;
 	int num_seq;
@@ -141,7 +141,7 @@ static void fix_info_02x(int val, char *buf)
 	}
 }
 
-void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct control *ctl, int reprint)
+void info_frame(const struct xmp_module_info *mi, const struct xmp_frame_info *fi, struct control *ctl, int reprint)
 {
 	static int ord = -1, spd = -1, bpm = -1;
 	char rowstr[3], numrowstr[3];
@@ -226,15 +226,16 @@ void info_frame(struct xmp_module_info *mi, struct xmp_frame_info *fi, struct co
 	fflush(stdout);
 }
 
-void info_ins_smp(struct xmp_module_info *mi)
+void info_ins_smp(const struct xmp_module_info *mi)
 {
 	int i, j;
-	struct xmp_module *mod = mi->mod;
+	const struct xmp_module *mod = mi->mod;
 
 	report("Instruments and samples:\n");
 	report("   Instrument name                  Smp  Size  Loop  End    Vol Fine Xpo Pan\n");
 	for (i = 0; i < mod->ins; i++) {
 		struct xmp_instrument *ins = &mod->xxi[i];
+		int has_sub = 0;
 
 		if (strlen(ins->name) == 0 && ins->nsm == 0) {
 			continue;
@@ -243,8 +244,15 @@ void info_ins_smp(struct xmp_module_info *mi)
 		report("%02x %-32.32s ", i + 1, ins->name);
 
 		for (j = 0; j < ins->nsm; j++) {
-			struct xmp_subinstrument *sub = &ins->sub[j];
-			struct xmp_sample *smp = &mod->xxs[sub->sid];
+			const struct xmp_subinstrument *sub = &ins->sub[j];
+			const struct xmp_sample *smp;
+
+			/* Some instruments reference samples that don't exist
+			 * (see beek-substitutionology.it). */
+			if (sub->sid >= mod->smp) {
+				continue;
+			}
+			smp = &mod->xxs[sub->sid];
 
 			if (j > 0) {
 				if (smp->len == 0) {
@@ -253,6 +261,7 @@ void info_ins_smp(struct xmp_module_info *mi)
 				report("%36.36s", " ");
 			}
 
+			has_sub = 1;
 			report("[%02x] %05x%c%05x %05x%c V%02x %+04d %+03d P%02x\n",
 				sub->sid + 1,
 				smp->len,
@@ -268,21 +277,22 @@ void info_ins_smp(struct xmp_module_info *mi)
 				sub->pan & 0xff);
 		}
 
-		if (j == 0) {
+		if (has_sub == 0) {
 			report("[  ] ----- ----- -----  --- ---- --- ---\n");
 		}
 	}
 }
 
-void info_instruments(struct xmp_module_info *mi)
+void info_instruments(const struct xmp_module_info *mi)
 {
 	int i, j;
-	struct xmp_module *mod = mi->mod;
+	const struct xmp_module *mod = mi->mod;
 
 	report("Instruments:\n");
 	report("   Instrument name                  Vl Fade Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
 	for (i = 0; i < mod->ins; i++) {
-		struct xmp_instrument *ins = &mod->xxi[i];
+		const struct xmp_instrument *ins = &mod->xxi[i];
+		int has_sub = 0;
 
 		if (strlen(ins->name) == 0 && ins->nsm == 0) {
 			continue;
@@ -297,16 +307,24 @@ void info_instruments(struct xmp_module_info *mi)
 		);
 
 		for (j = 0; j < ins->nsm; j++) {
-			struct xmp_subinstrument *sub = &ins->sub[j];
-			struct xmp_sample *smp = &mod->xxs[sub->sid];
+			const struct xmp_subinstrument *sub = &ins->sub[j];
+			const struct xmp_sample *smp;
 
 			if (j > 0) {
+				/* Some instruments reference samples that don't exist
+				 * (see beek-substitutionology.it). */
+				if (sub->sid >= mod->smp) {
+					continue;
+				}
+				smp = &mod->xxs[sub->sid];
+
 				if (smp->len == 0) {
 					continue;
 				}
 				report("%51.51s", " ");
 			}
 
+			has_sub = 1;
 			report("[%02x] %02x %02x %+04d %+03d P%02x %02x\n",
 				j + 1,
 				sub->gvl,
@@ -317,21 +335,21 @@ void info_instruments(struct xmp_module_info *mi)
 				sub->sid);
 		}
 
-		if (j == 0) {
+		if (has_sub == 0) {
 			report("[  ] -- -- ---- --- --- --\n");
 		}
 	}
 }
 
-void info_samples(struct xmp_module_info *mi)
+void info_samples(const struct xmp_module_info *mi)
 {
 	int i;
-	struct xmp_module *mod = mi->mod;
+	const struct xmp_module *mod = mi->mod;
 
 	report("Samples:\n");
 	report("   Sample name                      Length Start  End    Flags\n");
 	for (i = 0; i < mod->smp; i++) {
-		struct xmp_sample *smp = &mod->xxs[i];
+		const struct xmp_sample *smp = &mod->xxs[i];
 
 		if (strlen(smp->name) == 0 && smp->len == 0) {
 			continue;
@@ -348,7 +366,7 @@ void info_samples(struct xmp_module_info *mi)
 	}
 }
 
-void info_comment(struct xmp_module_info *mi)
+void info_comment(const struct xmp_module_info *mi)
 {
 	char *c = mi->comment;
 
@@ -364,6 +382,6 @@ void info_comment(struct xmp_module_info *mi)
 				break;
 			report("%c", *c);
 		} while (*c++ != '\n');
-	}		
+	}
 	report("\n\n");
 }

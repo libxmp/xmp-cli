@@ -114,7 +114,7 @@ static void sigcont_handler(int sig)
 }
 #endif
 
-static void show_info(int what, struct xmp_module_info *mi, int mode)
+static void show_info(int what, const struct xmp_module_info *mi, int mode)
 {
 	report("\r%78.78s\n", " ");
 	switch (what) {
@@ -153,7 +153,7 @@ static void shuffle(int argc, char **argv)
 }
 
 static void check_pause(xmp_context xc, struct control *ctl,
-	struct xmp_module_info *mi, struct xmp_frame_info *fi, int verbose)
+	const struct xmp_module_info *mi, const struct xmp_frame_info *fi, int verbose)
 {
 	if (ctl->pause) {
 		sound->pause();
