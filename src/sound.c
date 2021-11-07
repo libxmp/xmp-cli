@@ -31,6 +31,7 @@ extern struct sound_driver sound_bsd;
 extern struct sound_driver sound_beos;
 extern struct sound_driver sound_aix;
 extern struct sound_driver sound_ahi;
+extern struct sound_driver sound_sb;
 
 LIST_HEAD(sound_driver_list);
 
@@ -91,6 +92,9 @@ void init_sound_drivers(void)
 #endif
 #ifdef SOUND_QNX
 	register_sound_driver(&sound_qnx);
+#endif
+#ifdef SOUND_SB
+	register_sound_driver(&sound_sb);
 #endif
 	register_sound_driver(&sound_wav);
 	register_sound_driver(&sound_aiff);
