@@ -181,8 +181,7 @@ void read_command(xmp_context handle, const struct xmp_module_info *mi, struct c
 		ctl->skip = -1;
 		break;
 	case 'l':
-		ctl->loop++;
-		ctl->loop %= 3;
+		ctl->loop ^= 1;
 		break;
 	case 'X':
 		ctl->cur_info = 'X';
