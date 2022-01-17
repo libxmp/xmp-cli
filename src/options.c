@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
 #include <stdlib.h>
 #include <unistd.h>
 #if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
