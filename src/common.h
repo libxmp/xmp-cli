@@ -3,7 +3,9 @@
 
 #ifdef _MSC_VER
 #define PATH_MAX 1024
+#ifndef __cplusplus
 #define inline __inline
+#endif
 #define open _open
 #define close _close
 #define write _write
