@@ -30,6 +30,7 @@
 #include "errno.h"
 #include "sound.h"
 #include "common.h"
+#include "xmp_version.h"
 
 #ifdef _WIN32
 #include <windows.h>

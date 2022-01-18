@@ -24,6 +24,7 @@
 #include "common.h"
 #include "sound.h"
 #include "list.h"
+#include "xmp_version.h"
 
 extern struct list_head sound_driver_list;
 
