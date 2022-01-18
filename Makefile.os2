@@ -5,12 +5,6 @@
 CC=wcc386
 CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_STRINGS_H
 CPPFLAGS+= -DSOUND_OS2DART
-
-!ifndef __UNIX__
-CPPFLAGS+= -DVERSION="4.2.0"
-!else
-CPPFLAGS+= -DVERSION=\"4.2.0\"
-!endif
 INCLUDES=-I"src/watcom" -Isrc
 
 #LIBXMP=xmp_static.lib
