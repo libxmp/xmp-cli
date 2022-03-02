@@ -1,14 +1,32 @@
 # Makefile for OS/2 using Watcom compiler.
 #
 # wmake -f Makefile.os2
+# - builds using libxmp.dll and its import lib (libxmp.lib)
+#
+# wmake -f Makefile.os2 target=static
+# - builds using the static library xmp_static.lib
+#
+!ifndef target
+target = dll
+!endif
+!ifndef libxmp_path
+libxmp_path = ../libxmp
+!endif
 
 CC=wcc386
+SYSTEM=os2v2
+
 CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_STRINGS_H
 CPPFLAGS+= -DSOUND_OS2DART
-INCLUDES=-I"src/watcom" -Isrc
+INCLUDES=-I"src/watcom" -Isrc -I"$(%WATCOM)/h" -I"$(%WATCOM)/h/os2"
 
-#LIBXMP=xmp_static.lib
-LIBXMP=libxmp.lib
+!ifeq target static
+CPPFLAGS+= -DBUILDING_STATIC
+LIBXMP=$(libxmp_path)/xmp_static.lib
+!else
+LIBXMP=$(libxmp_path)/libxmp.lib
+!endif
+INCLUDES+= -I"$(libxmp_path)/include"
 LIBS=$(LIBXMP)
 # for sound_dart:
 LIBS+= mmpm2.lib
@@ -30,8 +48,8 @@ OBJ = commands.obj delay.obj getopt_long.obj info.obj main.obj options.obj read_
 
 all: $(AOUT)
 
-$(AOUT): $(OBJ)
-	wlink N $(AOUT) SYS OS2V2 OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
+$(AOUT): $(OBJ) $(LIBXMP)
+	wlink N $(AOUT) SYS $(SYSTEM) OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
 
 .c: src
 .c.obj:
