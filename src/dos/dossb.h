@@ -15,6 +15,7 @@
 
 #include "dosdma.h"
 #include "dosirq.h"
+#include "dosutil.h"
 
 #define SB_FM_LEFT_STATUS		(sb.port + 0x00)	/* (r) Left FM status */
 #define SB_FM_LEFT_REGSEL		(sb.port + 0x00)	/* (w) Left FM register select */
@@ -202,6 +203,22 @@ typedef struct __sb_state_s {
 
 extern __sb_state sb;
 
+#if !defined(__GNUC__) || (__GNUC__ < 3) || (__GNUC__ == 3 && __GNUC_MINOR__ == 0)
+# define _func_noinline volatile /* match original code */
+# define _func_noclone
+#else
+/* avoid warnings from newer gcc:
+ * "function definition has qualified void return type" and
+ * function return types not compatible due to 'volatile' */
+# define _func_noinline __attribute__((__noinline__))
+# if (__GNUC__ < 4) || (__GNUC__ == 4 && __GNUC_MINOR__ < 5)
+#  define _func_noclone
+# else
+#  define _func_noclone __attribute__((__noclone__))
+# endif
+#endif
+_func_noinline
+_func_noclone
 extern void __sb_wait();
 
 static inline boolean __sb_dsp_ready_in()

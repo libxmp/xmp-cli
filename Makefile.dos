@@ -21,4 +21,10 @@ CFLAGS += -wcd=303
 CFLAGS += -5s
 INCLUDES = -I"src/watcom" -I"$(%WATCOM)/h"
 
+# for sound_sb:
+CPPFLAGS+= -DSOUND_SB
+OS_OBJS = sound_sb.obj dosdma.obj dosirq.obj dossb.obj dosutil.obj
+
 !include watcom.mif
+
+.c: src/dos
