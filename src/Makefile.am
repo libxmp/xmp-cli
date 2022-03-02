@@ -66,7 +66,7 @@ xmp_LDADD   += -laudio
 endif
 
 if SOUND_SB
-xmp_SOURCES += dos/dosdma.c dos/dosirq.c dos/dossb.c sound_sb.c
+xmp_SOURCES += dos/dosdma.c dos/dosirq.c dos/dossb.c dos/dosutil.c sound_sb.c
 endif
 
 if SOUND_QNX
@@ -100,5 +100,5 @@ pkgsysconfdir   = ${sysconfdir}/${PACKAGE_NAME}
 pkgsysconf_DATA = modules.conf xmp.conf
 
 EXTRA_DIST = ${man_MANS} ${pkgsysconf_DATA} \
-	dos/dosdma.h dos/dosirq.h dos/dossb.h \
+	dos/dosdma.h dos/dosirq.h dos/dossb.h dos/dosutil.h \
 	win32/unistd.h watcom/unistd.h

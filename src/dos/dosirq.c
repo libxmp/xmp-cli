@@ -10,13 +10,16 @@
  */
 
 #include "dosirq.h"
+#include "dosutil.h"
 
-#include <dpmi.h>
-#include <go32.h>
 #include <dos.h>
-#include <sys/nearptr.h>
 #include <malloc.h>
 #include <string.h>
+
+#ifdef __DJGPP__
+#include <dpmi.h>
+#include <go32.h>
+#include <sys/nearptr.h>
 
 unsigned int __irq_stack_size = 0x4000;
 unsigned int __irq_stack_count = 1;
@@ -126,12 +129,11 @@ static void _free_iret_wrapper(_go32_dpmi_seginfo * info)
 	free((void *)info->pm_offset);
 }
 
-struct irq_handle *irq_hook(int irqno, void (*handler)(), unsigned long size)
+struct irq_handle *irq_hook(int irqno, irq_handler handler, void (*end)())
 {
 	int interrupt;
 	struct irq_handle *irq;
 	__dpmi_version_ret version;
-	__dpmi_meminfo handler_info, struct_info;
 	_go32_dpmi_seginfo info;
 	unsigned long old_sel, old_ofs;
 
@@ -152,16 +154,14 @@ struct irq_handle *irq_hook(int irqno, void (*handler)(), unsigned long size)
 		return NULL;
 
 	/* Lock the interrupt handler in memory */
-	handler_info.address = __djgpp_base_address + (unsigned long)handler;
-	handler_info.size = size;
-	if (__dpmi_lock_linear_region(&handler_info)) {
+	if (dpmi_lock_linear_region_base(handler, (unsigned long)end - (unsigned long)handler)) {
 		_free_iret_wrapper(&info);
 		return NULL;
 	}
 
 	irq = (struct irq_handle *) malloc(sizeof(struct irq_handle));
 	irq->c_handler = handler;
-	irq->handler_size = size;
+	irq->handler_size = (unsigned long)end - (unsigned long)handler;
 	irq->handler = info.pm_offset;
 	irq->prev_selector = old_sel;
 	irq->prev_offset = old_ofs;
@@ -169,11 +169,9 @@ struct irq_handle *irq_hook(int irqno, void (*handler)(), unsigned long size)
 	irq->irq_num = irqno;
 	irq->pic_base = irqno < 8 ? PIC1_BASE : PIC2_BASE;
 
-	struct_info.address = __djgpp_base_address + (unsigned long)irq;
-	struct_info.size = sizeof(struct irq_handle);
-	if (__dpmi_lock_linear_region(&struct_info)) {
+	if (dpmi_lock_linear_region_base(irq, sizeof(struct irq_handle))) {
 		free(irq);
-		__dpmi_unlock_linear_region(&handler_info);
+		dpmi_unlock_linear_region_base(handler, irq->handler_size);
 		_free_iret_wrapper(&info);
 		return NULL;
 	}
@@ -187,7 +185,6 @@ struct irq_handle *irq_hook(int irqno, void (*handler)(), unsigned long size)
 void irq_unhook(struct irq_handle *irq)
 {
 	_go32_dpmi_seginfo info;
-	__dpmi_meminfo mem_info;
 
 	if (!irq)
 		return;
@@ -199,14 +196,10 @@ void irq_unhook(struct irq_handle *irq)
 	_go32_dpmi_set_protected_mode_interrupt_vector(irq->int_num, &info);
 
 	/* Unlock the interrupt handler */
-	mem_info.address = __djgpp_base_address + (unsigned long)irq->c_handler;
-	mem_info.size = irq->handler_size;
-	__dpmi_unlock_linear_region(&mem_info);
+	dpmi_unlock_linear_region_base(irq->c_handler, irq->handler_size);
 
 	/* Unlock the irq_handle structure */
-	mem_info.address = __djgpp_base_address + (unsigned long)irq;
-	mem_info.size = sizeof(struct irq_handle);
-	__dpmi_unlock_linear_region(&mem_info);
+	dpmi_unlock_linear_region_base(irq, sizeof(struct irq_handle));
 
 	info.pm_offset = irq->handler;
 	_free_iret_wrapper(&info);
@@ -220,6 +213,68 @@ void irq_unhook(struct irq_handle *irq)
 	free(irq);
 }
 
+#elif defined(__WATCOMC__)
+
+struct irq_handle *irq_hook(int irqno, irq_handler handler, void (*end)())
+{
+	unsigned long size = (char *)end - (char near *)handler;
+	int intno = (irqno > 7) ? (irqno + 104) : (irqno + 8);
+	struct irq_handle *irq;
+	irq_handler old_vect;
+
+	old_vect = _dos_getvect(intno);
+
+	/* Lock the interrupt handler in memory */
+	if (dpmi_lock_linear_region_base((void near *)handler, size)) {
+		return NULL;
+	}
+
+	irq = (struct irq_handle *) malloc(sizeof(struct irq_handle));
+	irq->c_handler = handler;
+	irq->handler_size = size;
+	irq->prev_vect = old_vect;
+	irq->int_num = intno;
+	irq->irq_num = irqno;
+	irq->pic_base = irqno < 8 ? PIC1_BASE : PIC2_BASE;
+
+	if (dpmi_lock_linear_region_base(irq, sizeof(struct irq_handle))) {
+		free(irq);
+		dpmi_unlock_linear_region_base((void near *)handler, size);
+		return NULL;
+	}
+
+	_dos_setvect(irq->int_num, irq->c_handler);
+
+	irq->pic_mask = irq_state(irq);
+	return irq;
+}
+
+void irq_unhook(struct irq_handle *irq)
+{
+	if (!irq)
+		return;
+
+	/* Restore the interrupt vector */
+	irq_disable(irq);
+	_dos_setvect(irq->int_num, irq->prev_vect);
+
+	/* Unlock the interrupt handler */
+	dpmi_unlock_linear_region_base((void near *)irq->c_handler, irq->handler_size);
+
+	/* Unlock the irq_handle structure */
+	dpmi_unlock_linear_region_base(irq, sizeof(struct irq_handle));
+
+	/* If IRQ was enabled before we hooked, restore enabled state */
+	if (irq->pic_mask)
+		irq_enable(irq);
+	else
+		irq_disable(irq);
+
+	free(irq);
+}
+#endif
+
+
 /*---------------------------------------------- IRQ detection mechanism -----*/
 static struct irq_handle *__irqs[16];
 static int (*__irq_confirm) (int irqno);
@@ -227,7 +282,7 @@ static volatile unsigned int __irq_mask;
 static volatile unsigned int __irq_count[16];
 
 #define DECLARE_IRQ_HANDLER(irqno)							\
-static void __irq##irqno##_handler ()						\
+static void INTERRUPT_ATTRIBUTES __irq##irqno##_handler ()						\
 {															\
   if (irq_check (__irqs [irqno]) && __irq_confirm (irqno))	\
   {															\
@@ -235,6 +290,9 @@ static void __irq##irqno##_handler ()						\
     __irq_mask |= (1 << irqno);								\
   }															\
   irq_ack (__irqs [irqno]);									\
+}															\
+static void __irq##irqno##_end(void)								\
+{															\
 }
 
 /* *INDENT-OFF* */
@@ -256,11 +314,27 @@ DECLARE_IRQ_HANDLER(14)
 DECLARE_IRQ_HANDLER(15)
 /* *INDENT-ON* */
 
-static void (*__irq_handlers[16]) () = {
-	__irq0_handler, __irq1_handler, __irq2_handler, __irq3_handler,
-	  __irq4_handler, __irq5_handler, __irq6_handler, __irq7_handler,
-	  __irq8_handler, __irq9_handler, __irq10_handler, __irq11_handler,
-	  __irq12_handler, __irq13_handler, __irq14_handler, __irq15_handler};
+static struct {
+	irq_handler handler;
+	void (*end)();
+} __irq_handlers[16] = {
+	{ __irq0_handler, __irq0_end },
+	{ __irq1_handler, __irq1_end },
+	{ __irq2_handler, __irq2_end },
+	{ __irq3_handler, __irq3_end },
+	{ __irq4_handler, __irq4_end },
+	{ __irq5_handler, __irq5_end },
+	{ __irq6_handler, __irq6_end },
+	{ __irq7_handler, __irq7_end },
+	{ __irq8_handler, __irq8_end },
+	{ __irq9_handler, __irq9_end },
+	{ __irq10_handler, __irq10_end },
+	{ __irq11_handler, __irq11_end },
+	{ __irq12_handler, __irq12_end },
+	{ __irq13_handler, __irq13_end },
+	{ __irq14_handler, __irq14_end },
+	{ __irq15_handler, __irq15_end }
+};
 
 void irq_detect_start(unsigned int irqs, int (*irq_confirm) (int irqno))
 {
@@ -274,7 +348,7 @@ void irq_detect_start(unsigned int irqs, int (*irq_confirm) (int irqno))
 	/* Hook all specified IRQs */
 	for (i = 1; i <= 15; i++)
 		if (irqs & (1 << i)) {
-			__irqs[i] = irq_hook(i, __irq_handlers[i], 200);
+			__irqs[i] = irq_hook(i, __irq_handlers[i].handler, __irq_handlers[i].end);
 			/* Enable the interrupt */
 			irq_enable(__irqs[i]);
 		}
