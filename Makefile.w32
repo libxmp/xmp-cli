@@ -1,14 +1,32 @@
 # Makefile for Win32 using Watcom compiler.
 #
 # wmake -f Makefile.w32
+# - builds using libxmp.dll and its import lib (libxmp.lib)
+#
+# wmake -f Makefile.w32 target=static
+# - builds using the static library xmp_static.lib
+#
+!ifndef target
+target = dll
+!endif
+!ifndef libxmp_path
+libxmp_path = ../libxmp
+!endif
 
 CC=wcc386
+SYSTEM=nt
+
 CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_STRINGS_H
 CPPFLAGS+= -DSOUND_WIN32
-INCLUDES=-I"src/win32" -Isrc -I"$(%WATCOM)/h/nt"
+INCLUDES=-I"src/win32" -Isrc -I"$(%WATCOM)/h" -I"$(%WATCOM)/h/nt"
 
-#LIBXMP=xmp_static.lib
-LIBXMP=libxmp.lib
+!ifeq target static
+CPPFLAGS+= -DBUILDING_STATIC
+LIBXMP=$(libxmp_path)/xmp_static.lib
+!else
+LIBXMP=$(libxmp_path)/libxmp.lib
+!endif
+INCLUDES+= -I"$(libxmp_path)/include"
 LIBS=$(LIBXMP)
 # for sound_win32:
 LIBS+= winmm.lib
@@ -30,8 +48,8 @@ OBJ = commands.obj delay.obj getopt_long.obj info.obj main.obj options.obj read_
 
 all: $(AOUT)
 
-$(AOUT): $(OBJ)
-	wlink N $(AOUT) SYS NT OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
+$(AOUT): $(OBJ) $(LIBXMP)
+	wlink N $(AOUT) SYS $(SYSTEM) OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
 
 .c: src
 .c.obj:
