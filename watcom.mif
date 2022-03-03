@@ -1,0 +1,33 @@
+CPPFLAGS+= -DHAVE_SIGNAL_H -DHAVE_STRINGS_H
+INCLUDES+= -Isrc
+
+!ifeq target static
+CPPFLAGS+= -DBUILDING_STATIC
+LIBXMP=$(libxmp_path)/xmp_static.lib
+!else
+LIBXMP=$(libxmp_path)/libxmp.lib
+!endif
+INCLUDES+= -I"$(libxmp_path)/include"
+LIBS+= $(LIBXMP)
+
+.SUFFIXES:
+.SUFFIXES: .obj .c
+
+AOUT=xmp.exe
+COMPILE=$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES)
+
+OBJ = commands.obj delay.obj getopt_long.obj info.obj main.obj options.obj read_config.obj sound.obj sound_aiff.obj sound_file.obj sound_null.obj sound_wav.obj terminal.obj
+
+all: $(AOUT)
+
+$(AOUT): $(OBJ) $(OS_OBJS) $(LIBXMP)
+	wlink N $(AOUT) SYS $(SYSTEM) OP QUIET LIBR {$(LIBS)} F {$(OBJ) $(OS_OBJS)}
+
+.c: src
+.c.obj:
+	$(COMPILE) -fo=$^@ $<
+
+distclean: clean .symbolic
+	rm -f $(AOUT) *.err
+clean: .symbolic
+	rm -f *.obj
