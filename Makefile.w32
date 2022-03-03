@@ -17,46 +17,17 @@ libxmp_path = ../libxmp
 CC=wcc386
 SYSTEM=nt
 
-CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_STRINGS_H
-CPPFLAGS+= -DSOUND_WIN32
-INCLUDES=-I"src/win32" -Isrc -I"$(%WATCOM)/h/nt" -I"$(%WATCOM)/h"
-
-!ifeq target static
-CPPFLAGS+= -DBUILDING_STATIC
-LIBXMP=$(libxmp_path)/xmp_static.lib
-!else
-LIBXMP=$(libxmp_path)/libxmp.lib
-!endif
-INCLUDES+= -I"$(libxmp_path)/include"
-LIBS=$(LIBXMP)
-# for sound_win32:
-LIBS+= winmm.lib
-
 CFLAGS = -bt=nt -bm -fp5 -fpi87 -mf -oeatxh -w4 -zp8 -ei -q
 # newer OpenWatcom versions enable W303 by default.
 CFLAGS += -wcd=303
 # -5s  :  Pentium stack calling conventions.
 # -5r  :  Pentium register calling conventions.
-CFLAGS+= -5s
+CFLAGS += -5s
+INCLUDES = -I"src/win32" -I"$(%WATCOM)/h/nt" -I"$(%WATCOM)/h"
 
-.SUFFIXES:
-.SUFFIXES: .obj .c
+# for sound_win32:
+CPPFLAGS = -DSOUND_WIN32
+OS_OBJS = sound_win32.obj
+LIBS = winmm.lib
 
-AOUT=xmp.exe
-COMPILE=$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES)
-
-OBJ = commands.obj delay.obj getopt_long.obj info.obj main.obj options.obj read_config.obj sound.obj sound_aiff.obj sound_file.obj sound_null.obj sound_wav.obj sound_win32.obj terminal.obj
-
-all: $(AOUT)
-
-$(AOUT): $(OBJ) $(LIBXMP)
-	wlink N $(AOUT) SYS $(SYSTEM) OP QUIET LIBR {$(LIBS)} F {$(OBJ)}
-
-.c: src
-.c.obj:
-	$(COMPILE) -fo=$^@ $<
-
-distclean: clean .symbolic
-	rm -f $(AOUT) *.err
-clean: .symbolic
-	rm -f *.obj
+!include watcom.mif
