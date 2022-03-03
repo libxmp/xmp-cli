@@ -9,6 +9,7 @@
 !ifndef target
 target = dll
 !endif
+# change libxmp_path as needed (or specify on the wmake cmdline)
 !ifndef libxmp_path
 libxmp_path = ../libxmp
 !endif
@@ -18,7 +19,7 @@ SYSTEM=nt
 
 CPPFLAGS=-DHAVE_SIGNAL_H -DHAVE_STRINGS_H
 CPPFLAGS+= -DSOUND_WIN32
-INCLUDES=-I"src/win32" -Isrc -I"$(%WATCOM)/h" -I"$(%WATCOM)/h/nt"
+INCLUDES=-I"src/win32" -Isrc -I"$(%WATCOM)/h/nt" -I"$(%WATCOM)/h"
 
 !ifeq target static
 CPPFLAGS+= -DBUILDING_STATIC
