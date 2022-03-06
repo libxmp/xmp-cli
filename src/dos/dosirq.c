@@ -282,7 +282,7 @@ static volatile unsigned int __irq_mask;
 static volatile unsigned int __irq_count[16];
 
 #define DECLARE_IRQ_HANDLER(irqno)							\
-static void INTERRUPT_ATTRIBUTES __irq##irqno##_handler ()						\
+static void INTERRUPT_ATTRIBUTES NO_REORDER __irq##irqno##_handler ()						\
 {															\
   if (irq_check (__irqs [irqno]) && __irq_confirm (irqno))	\
   {															\
@@ -291,7 +291,7 @@ static void INTERRUPT_ATTRIBUTES __irq##irqno##_handler ()						\
   }															\
   irq_ack (__irqs [irqno]);									\
 }															\
-static void __irq##irqno##_end(void)								\
+static void NO_REORDER __irq##irqno##_end(void)								\
 {															\
 }
 
