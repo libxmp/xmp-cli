@@ -42,7 +42,7 @@ _func_noclone
 	inportb(SB_DSP_RESET);
 }
 
-static void INTERRUPT_ATTRIBUTES sb_irq()
+static void INTERRUPT_ATTRIBUTES NO_REORDER sb_irq()
 {
 	/* Make sure its not a spurious IRQ */
 	if (!irq_check(sb.irq_handle))
@@ -68,7 +68,7 @@ static void INTERRUPT_ATTRIBUTES sb_irq()
 		sb.timer_callback();
 }
 
-static void sb_irq_end()
+static void NO_REORDER sb_irq_end()
 {
 }
 
@@ -109,7 +109,7 @@ static int __sb_irq_irqdetect(int irqno)
 	return 1;
 }
 
-static void INTERRUPT_ATTRIBUTES __sb_irq_dmadetect()
+static void INTERRUPT_ATTRIBUTES NO_REORDER __sb_irq_dmadetect()
 {
 	/* Make sure its not a spurious IRQ */
 	if (!irq_check(sb.irq_handle))
@@ -127,7 +127,7 @@ static void INTERRUPT_ATTRIBUTES __sb_irq_dmadetect()
 	irq_ack(sb.irq_handle);
 }
 
-static void __sb_irq_dmadetect_end()
+static void NO_REORDER __sb_irq_dmadetect_end()
 {
 }
 

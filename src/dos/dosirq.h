@@ -17,6 +17,12 @@
 #define PIC1_BASE	0x20		/* PIC1 base */
 #define PIC2_BASE	0xA0		/* PIC2 base */
 
+#ifdef __GNUC__
+#define NO_REORDER __attribute__((no_reorder))
+#else
+#define NO_REORDER
+#endif
+
 #ifdef __WATCOMC__
 #define INTERRUPT_ATTRIBUTES __interrupt __far
 #else
