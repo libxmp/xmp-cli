@@ -36,7 +36,6 @@ The following single key commands can be used during the playback:
             !         =>  unmute all channels
             ?         =>  display available commands
             X         =>  display current mixer type
-            x         =>  enable classic mixers
             Z         =>  display current sequence
             z         =>  toggle subsong explorer mode
             l         =>  toggle loop mode
