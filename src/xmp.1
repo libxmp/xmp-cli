@@ -6,6 +6,7 @@ xmp - Extended Module Player
 .SH "SYNOPSIS" 
 \fBxmp\fP
 [\fB\-a, \-\-amplify\fP \fIfactor\fP]
+[\fB\-A, \-\-amiga\fP]
 [\fB\-b, \-\-bits\fP \fIbits\fP]
 [\fB\-C, \-\-show\-comments\fP]
 [\fB\-c, \-\-stdout\fP]
@@ -40,7 +41,6 @@ xmp - Extended Module Player
 [\fB\-\-vblank\fP]
 [\fB\-V, \-\-version\fP]
 [\fB\-v, \-\-verbose\fP]
-[\fB\-x, \-\-classic\fP]
 [\fB\-Z, \-\-all\-sequences\fP]
 [\fB\-z, \-\-sequence\fP \fInum\fP]
 \fImodules\fP
@@ -56,6 +56,8 @@ Scream Tracker 3 (S3M) and Impulse Tracker (IT)\&. Run
 Amplification factor for the software mixer\&. Valid amplification factors
 range from 0 to 3. Default is 1. \&. Warning\&: higher amplification
 factors may cause distorted or noisy output\&.
+.IP "\fB\-A, \-\-amiga\fP" 
+Use a mixer which models the sound of an Amiga 500\&, with or without the led filter\&.
 .IP "\fB\-b, \-\-bits\fP \fIbits\fP" 
 Set the software mixer resolution (8 or 16 bits)\&. If omitted,
 The audio device will be opened at the highest resolution available\&.
@@ -148,10 +150,6 @@ Print version information\&.
 Verbose mode (incremental)\&. If specified more than once, the
 verbosity level will be increased (no messages will be displayed
 when the player runs in background)\&.
-.IP "\fB\-x, \-\-classic\fP" 
-Use classic sound mixers\&, if available for the format being played\&.
-For Amiga formats such as Protracker, the classic mode mixer models the
-sound of an Amiga 500\&, with or without the led filter\&.
 .IP "\fB\-Z, \-\-all\-sequences\fP" 
 Play all hidden or alternative pattern sequences (subsongs) in module\&.
 .IP "\fB\-z, \-\-sequence\fP \fInum\fP" 
