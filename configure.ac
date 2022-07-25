@@ -9,6 +9,8 @@ AC_ARG_ENABLE(alsa,
   [  --disable-alsa          don't compile ALSA support])
 AC_ARG_ENABLE(pulseaudio,
   [  --enable-pulseaudio     compile PulseAudio support])
+AC_ARG_ENABLE(sndio,
+  [  --disable-sndio         don't compile sndio support])
 
 AC_SUBST(LD_VERSCRIPT)
 AC_CANONICAL_HOST
@@ -164,6 +166,14 @@ AS_IF([test "$enable_pulseaudio" = "yes"], [
   AM_CONDITIONAL([SOUND_PULSEAUDIO], [true])
 ])
 
+if test "${enable_sndio}" != "no"; then
+  AC_CHECK_HEADER(sndio.h)
+  if test "${ac_cv_header_sndio_h}" = "yes"; then
+    AC_DEFINE(SOUND_SNDIO, 1, [ ])
+    AM_CONDITIONAL([SOUND_SNDIO], [true])
+  fi
+fi
+
 case "${host_os}" in
 amigaos*|aros*|morphos*)
   AC_DEFINE(SOUND_AHI, 1, [ ])
@@ -176,17 +186,6 @@ darwin*)
     AM_CONDITIONAL([SOUND_COREAUDIO], [true])
     XMP_DARWIN_LDFLAGS="-framework AudioToolbox -framework AudioUnit -framework CoreServices"
     AC_SUBST([XMP_DARWIN_LDFLAGS])
-  fi
-  ;;
-openbsd*|freebsd*)
-  AC_CHECK_HEADER(sndio.h)
-  if test "${ac_cv_header_sndio_h}" = "yes"; then
-    AC_DEFINE(SOUND_SNDIO, 1, [ ])
-    AM_CONDITIONAL([SOUND_SNDIO], [true])
-  fi
-  if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
-    AC_DEFINE(SOUND_BSD, 1, [ ])
-    AM_CONDITIONAL([SOUND_BSD], [true])
   fi
   ;;
 netbsd*)
