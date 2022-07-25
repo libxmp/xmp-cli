@@ -250,7 +250,7 @@ dnl Modern OpenBSD has sys/audioio.h but does not support this driver.
     AC_CHECK_MEMBER([audio_info_t.play],
       [ AC_DEFINE([SOUND_BSD], 1, [ ])
         AM_CONDITIONAL([SOUND_BSD], [true])
-      ], [ ], [[#include <sys/audioio.h>]])
+      ], , [[#include <sys/audioio.h>]])
   ])
   ;;
 esac
