@@ -193,6 +193,9 @@ netbsd*)
     AC_DEFINE(SOUND_NETBSD, 1, [ ])
     AM_CONDITIONAL([SOUND_NETBSD], [true])
   fi
+  if test "${ac_cv_header_sys_soundcard_h}" = "yes"; then
+    AC_CHECK_LIB(ossaudio, _oss_ioctl)
+  fi
   ;;
 solaris*)
   if test "${ac_cv_header_sys_audioio_h}" = "yes"; then
