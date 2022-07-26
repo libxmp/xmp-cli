@@ -245,9 +245,12 @@ beos*|haiku*)
   AM_CONDITIONAL([SOUND_BEOS], [true])
   ;;
 *)
+dnl Modern OpenBSD has sys/audioio.h but does not support this driver.
   AS_IF([test "$ac_cv_header_sys_audioio_h" = "yes"], [
-    AC_DEFINE([SOUND_BSD], 1, [ ])
-    AM_CONDITIONAL([SOUND_BSD], [true])
+    AC_CHECK_MEMBER([audio_info_t.play],
+      [ AC_DEFINE([SOUND_BSD], 1, [ ])
+        AM_CONDITIONAL([SOUND_BSD], [true])
+      ], , [[#include <sys/audioio.h>]])
   ])
   ;;
 esac
