@@ -36,7 +36,7 @@ static int init(struct options *options)
 	chkparm1("buffer", bsize = strtoul(token, NULL, 0));
 	parm_end();
 
-	if ((audio_fd = open("/dev/sound", O_WRONLY)) == -1)
+	if ((audio_fd = open("/dev/audio", O_WRONLY)) == -1)
 		return -1;
 
 	/* try to open audioctldevice */

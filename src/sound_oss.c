@@ -109,7 +109,14 @@ static void setaudio(int *rate, int *format)
 static int init(struct options *options)
 {
 	char **parm = options->driver_parm;
-	static const char *dev_audio[] = { "/dev/dsp", "/dev/sound/dsp" };
+	static const char *dev_audio[] = {
+#ifdef DEVOSSAUDIO
+		DEVOSSAUDIO,	/* pkgsrc */
+#endif
+		"/dev/dsp",
+		"/dev/sound/dsp",
+		"/dev/audio"	/* NetBSD and SunOS */
+	};
 	audio_buf_info info;
 	static char buf[80];
 	int i;
