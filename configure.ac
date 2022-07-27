@@ -20,13 +20,14 @@ case "$host_os" in
 beos*|haiku*)
 	AS_IF([! which "$CXX" >/dev/null 2>/dev/null],
 		[AC_MSG_ERROR([C++ compiler required on this platform ($host_os)])])
+	CXXLD='$(CXX)'
 	;;
 *)
 	# Do not error out on linking when g++ is absent.
-	CXXLD='${CCLD}'
-	AC_SUBST([CXXLD])
+	CXXLD='$(CCLD)'
 	;;
 esac
+AC_SUBST([CXXLD])
 
 AC_PROG_INSTALL
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
