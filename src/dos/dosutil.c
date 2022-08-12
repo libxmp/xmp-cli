@@ -2,7 +2,7 @@
 
 #if defined(__DJGPP__)
 
-#include <go32.h> /* includes sys/version.h (djgpp >= 2.02) */
+#include <sys/version.h>
 #include <dpmi.h>
 #include <sys/nearptr.h>
 
@@ -10,7 +10,7 @@
  * src/libc/dpmi/api/d0102.s loads the selector and allocsize
  * arguments in the wrong order.  DJGPP >= 2.02 have it fixed. */
 #if (!defined(__DJGPP_MINOR__) || (__DJGPP_MINOR__+0) < 2)
-#warning __dpmi_resize_dos_memory() from DJGPP <= 2.01 is broken!
+#error __dpmi_resize_dos_memory() from DJGPP <= 2.01 is broken!
 #endif
 
 int dpmi_allocate_dos_memory(int paragraphs, int *ret_selector_or_max) {
