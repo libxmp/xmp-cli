@@ -129,7 +129,7 @@ static void _free_iret_wrapper(_go32_dpmi_seginfo * info)
 	free((void *)info->pm_offset);
 }
 
-struct irq_handle *irq_hook(int irqno, irq_handler handler, void (*end)())
+struct irq_handle *irq_hook(int irqno, irq_handler handler, irq_handler end)
 {
 	int interrupt;
 	struct irq_handle *irq;
@@ -215,7 +215,7 @@ void irq_unhook(struct irq_handle *irq)
 
 #elif defined(__WATCOMC__)
 
-struct irq_handle *irq_hook(int irqno, irq_handler handler, void (*end)())
+struct irq_handle *irq_hook(int irqno, irq_handler handler, irq_handler end)
 {
 	unsigned long size = (char *)end - (char near *)handler;
 	int intno = (irqno > 7) ? (irqno + 104) : (irqno + 8);
@@ -290,9 +290,6 @@ static void INTERRUPT_ATTRIBUTES NO_REORDER __irq##irqno##_handler ()						\
     __irq_mask |= (1 << irqno);								\
   }															\
   irq_ack (__irqs [irqno]);									\
-}															\
-static void NO_REORDER __irq##irqno##_end(void)								\
-{															\
 }
 
 /* *INDENT-OFF* */
@@ -312,28 +309,28 @@ DECLARE_IRQ_HANDLER(12)
 DECLARE_IRQ_HANDLER(13)
 DECLARE_IRQ_HANDLER(14)
 DECLARE_IRQ_HANDLER(15)
+static void INTERRUPT_ATTRIBUTES NO_REORDER __irq_end(void) { }
 /* *INDENT-ON* */
 
 static struct {
-	irq_handler handler;
-	void (*end)();
+	irq_handler handler, end;
 } __irq_handlers[16] = {
-	{ __irq0_handler, __irq0_end },
-	{ __irq1_handler, __irq1_end },
-	{ __irq2_handler, __irq2_end },
-	{ __irq3_handler, __irq3_end },
-	{ __irq4_handler, __irq4_end },
-	{ __irq5_handler, __irq5_end },
-	{ __irq6_handler, __irq6_end },
-	{ __irq7_handler, __irq7_end },
-	{ __irq8_handler, __irq8_end },
-	{ __irq9_handler, __irq9_end },
-	{ __irq10_handler, __irq10_end },
-	{ __irq11_handler, __irq11_end },
-	{ __irq12_handler, __irq12_end },
-	{ __irq13_handler, __irq13_end },
-	{ __irq14_handler, __irq14_end },
-	{ __irq15_handler, __irq15_end }
+	{ __irq0_handler,  __irq1_handler  },
+	{ __irq1_handler,  __irq2_handler  },
+	{ __irq2_handler,  __irq3_handler  },
+	{ __irq3_handler,  __irq4_handler  },
+	{ __irq4_handler,  __irq5_handler  },
+	{ __irq5_handler,  __irq6_handler  },
+	{ __irq6_handler,  __irq7_handler  },
+	{ __irq7_handler,  __irq8_handler  },
+	{ __irq8_handler,  __irq9_handler  },
+	{ __irq9_handler,  __irq10_handler },
+	{ __irq10_handler, __irq11_handler },
+	{ __irq11_handler, __irq12_handler },
+	{ __irq12_handler, __irq13_handler },
+	{ __irq13_handler, __irq14_handler },
+	{ __irq14_handler, __irq15_handler },
+	{ __irq15_handler, __irq_end }
 };
 
 void irq_detect_start(unsigned int irqs, int (*irq_confirm) (int irqno))

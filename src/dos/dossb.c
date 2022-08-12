@@ -42,6 +42,13 @@ _func_noclone
 	inportb(SB_DSP_RESET);
 }
 
+#if defined(__WATCOMC__)
+static void nop (void);
+#pragma aux nop = "nop"
+#else
+#define nop()
+#endif
+
 static void INTERRUPT_ATTRIBUTES NO_REORDER sb_irq()
 {
 	/* Make sure its not a spurious IRQ */
@@ -68,8 +75,9 @@ static void INTERRUPT_ATTRIBUTES NO_REORDER sb_irq()
 		sb.timer_callback();
 }
 
-static void NO_REORDER sb_irq_end()
+static void NO_REORDER INTERRUPT_ATTRIBUTES sb_irq_end()
 {
+	nop();
 }
 
 static boolean __sb_reset()
@@ -127,8 +135,9 @@ static void INTERRUPT_ATTRIBUTES NO_REORDER __sb_irq_dmadetect()
 	irq_ack(sb.irq_handle);
 }
 
-static void NO_REORDER __sb_irq_dmadetect_end()
+static void INTERRUPT_ATTRIBUTES NO_REORDER __sb_irq_dmadetect_end()
 {
+	nop();
 }
 
 static boolean __sb_detect()
