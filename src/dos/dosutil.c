@@ -53,16 +53,6 @@ int dpmi_unlock_linear_region_base(void *address, unsigned long size) {
 
 #include <i86.h>
 
-int enable() {
-	_enable();
-	return 1;
-}
-
-int disable() {
-	_disable();
-	return 1;
-}
-
 int dpmi_allocate_dos_memory(int paragraphs, int *ret_selector_or_max) {
 	union REGS r;
 
