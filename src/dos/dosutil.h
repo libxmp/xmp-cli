@@ -18,6 +18,9 @@ extern int dpmi_unlock_linear_region_base(void *address, unsigned long size);
 
 extern int enable();
 extern int disable();
+#pragma aux enable = "sti" "mov eax,1"
+#pragma aux disable = "cli" "mov eax,1"
+
 #else
 #include <pc.h>
 #endif
