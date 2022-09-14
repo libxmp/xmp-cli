@@ -54,7 +54,7 @@ int read_config(struct options *o)
 			return -1;
 		}
 	}
-#elif defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#elif defined(XMP_AMIGA)
 	strncpy(myrc, "PROGDIR:xmp.conf", PATH_MAX);
 
 	if ((rc = fopen(myrc, "r")) == NULL)
@@ -291,7 +291,7 @@ void read_modconf(struct options *o, const unsigned char *md5)
 	snprintf(myrc, PATH_MAX, "%s\\modules.conf", home);
 	parse_modconf(o, "xmp-modules.conf", md5);
 	parse_modconf(o, myrc, md5);
-#elif defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#elif defined(XMP_AMIGA)
 	parse_modconf(o, "PROGDIR:modules.conf", md5);
 #elif defined _WIN32
 	char myrc[PATH_MAX];

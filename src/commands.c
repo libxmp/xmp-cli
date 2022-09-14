@@ -10,7 +10,7 @@
 #if defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
 #include <conio.h>
 #endif
-#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#if defined(XMP_AMIGA)
 #ifdef __amigaos4__
 #define __USE_INLINE__
 #endif
@@ -22,7 +22,6 @@
 
 #ifdef __CYGWIN__
 #include <sys/select.h>
-
 /*
  * from	daniel åkerud <daniel.akerud@gmail.com>
  * date	Tue, Jul 28, 2009 at 9:59 AM
@@ -36,7 +35,7 @@
  * typed out when running xmp. I have not investigated why this is
  * happening, but there is of course a reason why this mode is not
  * enabled by default.
- * 
+ *
  * 2. Do a select() before read()ing if the platform is Cygwin.
  * This makes Cygwin builds work out of the box with no fiddling around,
  * but does impose a neglectible cpu overhead (for Cygwin builds only).
@@ -72,7 +71,7 @@ static int read_key(void)
 		key = getch();
 		ret = 1;
 	}
-#elif defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#elif defined(XMP_AMIGA)
 	/* Amiga CLI */
 	{
 		BPTR in = Input();
