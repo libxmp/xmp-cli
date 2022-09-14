@@ -81,7 +81,7 @@ static int read_key(void)
 			ret = 1;
 		}
 	}
-#elif defined(HAVE_TERMIOS_H))
+#elif defined(HAVE_TERMIOS_H)
 #ifdef __CYGWIN__
 	if (stdin_ready_for_reading())
 #endif
