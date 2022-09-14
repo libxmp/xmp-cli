@@ -9,7 +9,7 @@ bin_PROGRAMS = xmp
 xmp_SOURCES = \
 	commands.c common.h delay.c getopt_long.h list.h getopt_long.c info.c \
 	main.c options.c read_config.c sound.c sound.h sound_file.c sound_null.c \
-	sound_wav.c sound_aiff.c terminal.c xmp_version.h
+	sound_wav.c sound_aiff.c terminal.c util.c xmp_version.h
 xmp_LDADD   = ${LIBXMP_LIBS}
 xmp_LDFLAGS = ${XMP_DARWIN_LDFLAGS}
 
@@ -90,7 +90,6 @@ endif
 
 if SOUND_OS2DART
 xmp_SOURCES += sound_dart.c
-# for mciSendCommand()
 xmp_LDADD   += -lmmpm2
 endif
 

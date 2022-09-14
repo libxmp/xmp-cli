@@ -163,6 +163,10 @@
 				RelativePath="..\src\terminal.c"
 				>
 			</File>
+			<File
+				RelativePath="..\src\util.c"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
