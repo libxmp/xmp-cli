@@ -6,7 +6,6 @@
 #ifndef __cplusplus
 #define inline __inline
 #endif
-#define strcasecmp _stricmp
 #define snprintf _snprintf
 #define kbhit _kbhit
 #define getch _getch
@@ -77,6 +76,7 @@ int report(const char *, ...);
 void delay_ms(int msec);
 
 char *xmp_strdup(const char *);
+int xmp_strcasecmp(const char *, const char *); /* locale-insensitive */
 
 /* option */
 void get_options(int, char **, struct options *);
