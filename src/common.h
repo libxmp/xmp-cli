@@ -6,10 +6,6 @@
 #ifndef __cplusplus
 #define inline __inline
 #endif
-#define open _open
-#define close _close
-#define write _write
-#define lseek _lseek
 #define strdup _strdup
 #define strcasecmp _stricmp
 #define snprintf _snprintf
