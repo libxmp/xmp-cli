@@ -15,12 +15,7 @@
 #undef VERSION /* stop conflict with os2medef.h */
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
 #define INCL_DOS
 #define INCL_DOSERRORS
