@@ -6,10 +6,13 @@
  * file for more information.
  */
 
-#include <unistd.h>
+#include <xmp.h>
+#include "common.h"
+
 #if defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
 #include <conio.h>
 #endif
+
 #if defined(XMP_AMIGA)
 #ifdef __amigaos4__
 #define __USE_INLINE__
@@ -17,8 +20,10 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #endif
-#include <xmp.h>
-#include "common.h"
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 #ifdef __CYGWIN__
 #include <sys/select.h>
