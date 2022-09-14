@@ -6,6 +6,9 @@
  * file for more information.
  */
 
+#include <xmp.h>
+#include "common.h"
+
 #if defined(_WIN32)
 #include <windows.h>
 
@@ -26,6 +29,121 @@ void delay_ms(unsigned int msec) {
 
 void delay_ms(unsigned int msec) {
 	delay(msec); /* doesn't seem to use int 15h. */
+}
+
+#elif defined(XMP_AMIGA)
+#ifdef __amigaos4__
+#define __USE_INLINE__
+#else
+#endif
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/timer.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+struct MsgPort *timerport;
+
+#ifdef __amigaos4__
+struct TimeRequest *timerio;
+struct TimerIFace *ITimer;
+#else
+struct timerequest *timerio;
+#endif
+
+#ifdef __amigaos4__
+struct Device *TimerBase = NULL;
+#elif defined(__MORPHOS__) || defined(__VBCC__)
+struct Library *TimerBase = NULL;
+#else
+struct Device *TimerBase = NULL;
+#endif
+
+static void amiga_atexit (void) {
+	#ifdef __amigaos4__
+	if (ITimer) {
+		DropInterface((struct Interface *)ITimer);
+	}
+	#endif
+	if (TimerBase) {
+		WaitIO((struct IORequest *) timerio);
+		CloseDevice((struct IORequest *) timerio);
+		DeleteIORequest((struct IORequest *) timerio);
+		DeleteMsgPort(timerport);
+		TimerBase = NULL;
+	}
+}
+
+void amiga_inittimer (void)
+{
+	timerport = CreateMsgPort();
+	if (timerport != NULL) {
+		#if defined(__amigaos4__)
+		timerio = (struct TimeRequest *) CreateIORequest(timerport, sizeof(struct TimeRequest));
+		#else
+		timerio = (struct timerequest *) CreateIORequest(timerport, sizeof(struct timerequest));
+		#endif
+		if (timerio != NULL) {
+			if (OpenDevice((STRPTR) TIMERNAME, UNIT_MICROHZ, (struct IORequest *) timerio, 0) == 0) {
+				#if defined(__amigaos4__)
+				TimerBase = timerio->Request.io_Device;
+				ITimer = (struct TimerIFace *) GetInterface(TimerBase, "main", 1, NULL);
+				#elif defined(__MORPHOS__) || defined(__VBCC__)
+				TimerBase = (struct Library *)timerio->tr_node.io_Device;
+				#else
+				TimerBase = timerio->tr_node.io_Device;
+				#endif
+			} else {
+				DeleteIORequest((struct IORequest *)timerio);
+				DeleteMsgPort(timerport);
+			}
+		} else {
+			DeleteMsgPort(timerport);
+		}
+	}
+	if (!TimerBase) {
+		fprintf(stderr, "Can't open timer.device\n");
+		exit (-1);
+	}
+
+	/* 1us wait, for timer cleanup success */
+	#if defined(__amigaos4__)
+	timerio->Request.io_Command = TR_ADDREQUEST;
+	timerio->Time.Seconds = 0;
+	timerio->Time.Microseconds = 1;
+	#else
+	timerio->tr_node.io_Command = TR_ADDREQUEST;
+	timerio->tr_time.tv_secs = 0;
+	timerio->tr_time.tv_micro = 1;
+	#endif
+	SendIO((struct IORequest *) timerio);
+	WaitIO((struct IORequest *) timerio);
+
+	atexit (amiga_atexit);
+}
+
+void amiga_getsystime(void *tv)
+{
+	#ifdef __amigaos4__
+	GetSysTime((struct TimeVal *)tv);
+	#else
+	GetSysTime((struct timeval *)tv);
+	#endif
+}
+
+void delay_ms(unsigned int msec) {
+	#if defined(__amigaos4__)
+	timerio->Request.io_Command = TR_ADDREQUEST;
+	timerio->Time.Seconds = msec / 1000000;
+	timerio->Time.Microseconds = msec % 1000000;
+	#else
+	timerio->tr_node.io_Command = TR_ADDREQUEST;
+	timerio->tr_time.tv_secs = msec / 1000000;
+	timerio->tr_time.tv_micro = msec % 1000000;
+	#endif
+	SendIO((struct IORequest *) timerio);
+	WaitIO((struct IORequest *) timerio);
 }
 
 #elif defined(HAVE_USLEEP)

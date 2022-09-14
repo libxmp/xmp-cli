@@ -6,6 +6,8 @@
  * file for more information.
  */
 
+#include <xmp.h>
+#include "common.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +16,10 @@
 #endif
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
+#if defined(XMP_AMIGA)
+#include <proto/timer.h>
+#include <time.h>
 #endif
 #if defined(__WATCOMC__)
 #include <time.h>
@@ -30,10 +36,8 @@
 #else
 #include "getopt_long.h"
 #endif
-#include <xmp.h>
 #include "errno.h"
 #include "sound.h"
-#include "common.h"
 #include "xmp_version.h"
 
 #ifdef _WIN32
@@ -260,6 +264,16 @@ int main(int argc, char **argv)
 	srand(GetTickCount());
 #elif defined(__WATCOMC__)
 	srand(time(NULL));
+#elif defined(__amigaos4__)
+	struct TimeVal tv;
+	amiga_inittimer();
+	amiga_getsystime(&tv);
+	srand(tv.Microseconds);
+#elif defined(XMP_AMIGA)
+	struct timeval tv;
+	amiga_inittimer();
+	amiga_getsystime(&tv);
+	srand(tv.tv_micro);
 #else
 	struct timeval tv;
 	gettimeofday(&tv, NULL);

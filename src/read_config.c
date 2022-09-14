@@ -17,6 +17,10 @@
 #define SYSCONFDIR "."
 #endif
 
+#if defined(XMP_AMIGA) && !defined(PATH_MAX)	/* e.g.: vbcc headers */
+#define PATH_MAX 1024
+#endif
+
 static char driver[32];
 static char instrument_path[256];
 
