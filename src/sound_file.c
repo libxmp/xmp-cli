@@ -49,7 +49,7 @@ static int init(struct options *options)
 						options->out_file);
 		sound_file.description = buf;
 	} else {
-		sound_file.description = strdup("stdout");
+		sound_file.description = xmp_strdup("stdout");
 	}
 
 	return 0;

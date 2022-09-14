@@ -164,7 +164,7 @@ int read_config(struct options *o)
 		 */
 		if (o->dparm < MAX_DRV_PARM) {
 			snprintf(cparm, 512, "%s=%s", var, val);
-			o->driver_parm[o->dparm++] = strdup(cparm);
+			o->driver_parm[o->dparm++] = xmp_strdup(cparm);
 		}
 	}
 

@@ -76,7 +76,7 @@ static int init(struct options *options)
 						options->out_file);
 		sound_wav.description = buf;
 	} else {
-		sound_wav.description = strdup("WAV writer: stdout");
+		sound_wav.description = xmp_strdup("WAV writer: stdout");
 		len = -1;
 	}
 
