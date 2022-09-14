@@ -67,12 +67,7 @@ static int read_key(void)
 	char key;
 	int ret = 0;
 
-#if defined(HAVE_TERMIOS_H) && !(defined(_WIN32) || defined(__DJGPP__) || defined(_DOS))
-#ifdef __CYGWIN__
-	if (stdin_ready_for_reading())
-#endif
-		ret = read(0, &key, 1);
-#elif defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
+#if defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
 	if (kbhit()) {
 		key = getch();
 		ret = 1;
@@ -86,6 +81,11 @@ static int read_key(void)
 			ret = 1;
 		}
 	}
+#elif defined(HAVE_TERMIOS_H))
+#ifdef __CYGWIN__
+	if (stdin_ready_for_reading())
+#endif
+		ret = read(0, &key, 1);
 #else
 	ret = 0;
 #endif
