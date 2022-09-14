@@ -10,7 +10,7 @@
 #include <xmp.h>
 #include "common.h"
 
-#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#if defined(XMP_AMIGA)
 #ifdef __amigaos4__
 #define __USE_INLINE__
 #endif
@@ -29,7 +29,7 @@ static struct termios term;
 
 int set_tty(void)
 {
-#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#if defined(XMP_AMIGA)
 	SetMode(Input(), MODE_RAW);
 
 #elif defined HAVE_TERMIOS_H
@@ -53,7 +53,7 @@ int set_tty(void)
 
 int reset_tty(void)
 {
-#if defined(AMIGA) || defined(__AMIGA__) || defined(__AROS__)
+#if defined(XMP_AMIGA)
 	SetMode(Input(), MODE_NORMAL);
 
 #elif defined HAVE_TERMIOS_H

@@ -11,6 +11,11 @@
 #define getch _getch
 #endif
 
+#if defined(__MORPHOS__) || defined(__AROS__) || defined(__AMIGA__) \
+ || defined(__amigaos__) || defined(__amigaos4__) || defined(AMIGA)
+#define XMP_AMIGA	1
+#endif
+
 #define NUM_MODES 13
 #define MAX_DRV_PARM 20
 
