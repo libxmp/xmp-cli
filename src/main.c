@@ -44,6 +44,15 @@ static struct sound_driver *sound;
 static unsigned int foreground_in, foreground_out;
 static int refresh_status;
 
+char *xmp_strdup(const char *in)
+{
+	size_t len = strlen(in) + 1;
+	char *out = (char *) malloc(len);
+	if (out) {
+		memcpy(out, in, len);
+	}
+	return out;
+}
 
 int report(const char *fmt, ...)
 {

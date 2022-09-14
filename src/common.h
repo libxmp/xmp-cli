@@ -6,7 +6,6 @@
 #ifndef __cplusplus
 #define inline __inline
 #endif
-#define strdup _strdup
 #define strcasecmp _stricmp
 #define snprintf _snprintf
 #define kbhit _kbhit
@@ -76,6 +75,8 @@ extern struct player_mode pmode[];
 int report(const char *, ...);
 
 void delay_ms(int msec);
+
+char *xmp_strdup(const char *);
 
 /* option */
 void get_options(int, char **, struct options *);
