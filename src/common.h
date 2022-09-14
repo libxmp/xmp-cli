@@ -78,7 +78,7 @@ extern struct player_mode pmode[];
 
 int report(const char *, ...);
 
-void delay_ms(int msec);
+void delay_ms(unsigned int msec);
 
 char *xmp_strdup(const char *);
 int xmp_strcasecmp(const char *, const char *); /* locale-insensitive */
