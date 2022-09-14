@@ -262,9 +262,7 @@ int main(int argc, char **argv)
 	srand(time(NULL));
 #else
 	struct timeval tv;
-	struct timezone tz;
-
-	gettimeofday(&tv, &tz);
+	gettimeofday(&tv, NULL);
 	srand(tv.tv_usec);
 #endif
 
