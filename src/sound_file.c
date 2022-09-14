@@ -7,18 +7,10 @@
  */
 
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <string.h>
-#include <unistd.h>
 #include "sound.h"
 
-#ifndef O_BINARY
-#define O_BINARY 0
-#endif
-
-static int fd;
+static FILE *fd;
 static long size;
 static int swap_endian;
 
@@ -41,12 +33,11 @@ static int init(struct options *options)
 	}
 
 	if (strcmp(options->out_file, "-")) {
-		fd = open(options->out_file, O_WRONLY | O_CREAT | O_TRUNC
-							| O_BINARY, 0644);
-		if (fd < 0)
+		fd = fopen(options->out_file, "wb");
+		if (fd == NULL)
 			return -1;
 	} else {
-		fd = 1;
+		fd = stdout;
 	}
 
 	if (strcmp(options->out_file, "-")) {
@@ -69,17 +60,24 @@ static void play(void *b, int len)
 	if (swap_endian) {
 		convert_endian(b, len);
 	}
-	write(fd, b, len);
+	fwrite(b, 1, len, fd);
 	size += len;
 }
 
 static void deinit(void)
 {
 	free((void *)sound_file.description);
+	if (fd && fd != stdout) {
+		fclose(fd);
+	}
+	fd = NULL;
 }
 
 static void flush(void)
 {
+	if (fd) {
+		fflush(fd);
+	}
 }
 
 static void onpause(void)

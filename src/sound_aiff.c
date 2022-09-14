@@ -7,10 +7,6 @@
  */
 
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <string.h>
 #include "sound.h"
 
@@ -23,7 +19,7 @@ typedef struct {
 } extended;
 
 
-static int fd;
+static FILE *fd;
 static int channels;
 static int bits;
 static int swap_endian;
@@ -44,17 +40,17 @@ static void ulong2extended(unsigned long in, extended *ex)
 	ex->mantissa[1] = 0;
 }
 
-static inline void write8(int fd, unsigned char c)
+static inline void write8(FILE *f, unsigned char c)
 {
-	write(fd, &c, 1);
+	fwrite(&c, 1, 1, f);
 }
 
-static void write32b(int fd, unsigned long w)
+static void write32b(FILE *f, unsigned long w)
 {
-	write8(fd, (w & 0xff000000) >> 24);
-	write8(fd, (w & 0x00ff0000) >> 16);
-	write8(fd, (w & 0x0000ff00) >> 8);
-	write8(fd,  w & 0x000000ff);
+	write8(f, (w & 0xff000000) >> 24);
+	write8(f, (w & 0x00ff0000) >> 16);
+	write8(f, (w & 0x0000ff00) >> 8);
+	write8(f,  w & 0x000000ff);
 }
 
 static int init(struct options *options) 
@@ -97,15 +93,15 @@ static int init(struct options *options)
 	}
 
 	if (strcmp(options->out_file, "-")) {
-		fd = open(options->out_file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
-		if (fd < 0)
+		fd = fopen(options->out_file, "wb");
+		if (fd == NULL)
 			return -1;
 	} else {
-		fd = 1;
+		fd = stdout;
 	}
 
-	write(fd, hed, 54);
-	
+	fwrite(hed, 1, 54, fd);
+
 	return 0;
 }
 
@@ -114,34 +110,38 @@ static void play(void *b, int len)
 	if (swap_endian && bits == 16) {
 		convert_endian(b, len);
 	}
-	write(fd, b, len);
+	fwrite(b, 1, len, fd);
 	size += len;
 }
 
 static void deinit(void) 
 {
 	if (size > 54) {
-		if (lseek(fd, 4, SEEK_SET) == 4) {	/* FORM chunk size */
+		if (fseek(fd, 4, SEEK_SET) == 0) {	/* FORM chunk size */
 			write32b(fd, size - 8);
 		}
 
-		if (lseek(fd, 22, SEEK_SET) == 22) {	/* COMM frames */
+		if (fseek(fd, 22, SEEK_SET) == 0) {	/* COMM frames */
 			unsigned long tmp = (size - 54) / (bits / 8) / channels;
 			write32b(fd, tmp);
 		}
 
-		if (lseek(fd, 42, SEEK_SET) == 42) {	/* SSND chunk size */
+		if (fseek(fd, 42, SEEK_SET) == 0) {	/* SSND chunk size */
 			write32b(fd, size - 48);	/* minus header + 8 */
 		}
 	}
 
-	if (fd > 0) {
-		close(fd);
+	if (fd && fd != stdout) {
+		fclose(fd);
 	}
+	fd = NULL;
 }
 
 static void flush(void) 
 {
+	if (fd) {
+		fflush(fd);
+	}
 }
 
 static void onpause(void) 

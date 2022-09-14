@@ -7,50 +7,42 @@
  */
 
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <string.h>
-#include <unistd.h>
 #include "sound.h"
 
-#ifndef O_BINARY
-#define O_BINARY 0
-#endif
-
-static int fd;
+static FILE *fd;
 static int format_16bit;
 static int swap_endian;
 static long size;
 
 struct sound_driver sound_wav;
 
-static void write_16l(int fd, unsigned short v)
+static void write_16l(FILE *f, unsigned short v)
 {
 	unsigned char x;
 
 	x = v & 0xff;
-	write(fd, &x, 1);
+	fwrite(&x, 1, 1, f);
 
 	x = v >> 8;
-	write(fd, &x, 1);
+	fwrite(&x, 1, 1, f);
 }
 
-static void write_32l(int fd, unsigned int v)
+static void write_32l(FILE *f, unsigned int v)
 {
 	unsigned char x;
 
 	x = v & 0xff;
-	write(fd, &x, 1);
+	fwrite(&x, 1, 1, f);
 
 	x = (v >> 8) & 0xff;
-	write(fd, &x, 1);
+	fwrite(&x, 1, 1, f);
 
 	x = (v >> 16) & 0xff;
-	write(fd, &x, 1);
+	fwrite(&x, 1, 1, f);
 
 	x = (v >> 24) & 0xff;
-	write(fd, &x, 1);
+	fwrite(&x, 1, 1, f);
 }
 
 static int init(struct options *options)
@@ -68,12 +60,11 @@ static int init(struct options *options)
 	}
 
 	if (strcmp(options->out_file, "-")) {
-		fd = open(options->out_file, O_WRONLY | O_CREAT | O_TRUNC
-							| O_BINARY, 0644);
-		if (fd < 0)
+		fd = fopen(options->out_file, "wb");
+		if (fd == NULL)
 			return -1;
 	} else {
-		fd = 1;
+		fd = stdout;
 	}
 
 	if (strcmp(options->out_file, "-")) {
@@ -89,9 +80,9 @@ static int init(struct options *options)
 		len = -1;
 	}
 
-	write(fd, "RIFF", 4);
+	fwrite("RIFF", 1, 4, fd);
 	write_32l(fd, len);
-	write(fd, "WAVE", 4);
+	fwrite("WAVE", 1, 4, fd);
 
 	chan = options->format & XMP_FORMAT_MONO ? 1 : 2;
 	sampling_rate = options->rate;
@@ -108,7 +99,7 @@ static int init(struct options *options)
 	bytes_per_frame = chan * bits_per_sample / 8;
 	bytes_per_second = sampling_rate * bytes_per_frame;
 
-	write(fd, "fmt ", 4);
+	fwrite("fmt ", 1, 4, fd);
 	write_32l(fd, 16);
 	write_16l(fd, 1);
 	write_16l(fd, chan);
@@ -117,7 +108,7 @@ static int init(struct options *options)
 	write_16l(fd, bytes_per_frame);
 	write_16l(fd, bits_per_sample);
 
-	write(fd, "data", 4);
+	fwrite("data", 1, 4, fd);
 	write_32l(fd, len);
 
 	size = 0;
@@ -130,29 +121,32 @@ static void play(void *b, int len)
 	if (swap_endian && format_16bit) {
 		convert_endian(b, len);
 	}
-	write(fd, b, len);
+	fwrite(b, 1, len, fd);
 	size += len;
 }
 
 static void deinit(void)
 {
-	if (lseek(fd, 40, SEEK_SET) == 40) {
+	if (fseek(fd, 40, SEEK_SET) == 0) {
 		write_32l(fd, size);
 	}
-
-	if (lseek(fd, 4, SEEK_SET) == 4) {
+	if (fseek(fd, 4, SEEK_SET) == 0) {
 		write_32l(fd, size + 40);
 	}
 
-	if (fd > 0) {
-		close(fd);
+	if (fd && fd != stdout) {
+		fclose(fd);
 	}
+	fd = NULL;
 
 	free((void *)sound_wav.description);
 }
 
 static void flush(void)
 {
+	if (fd) {
+		fflush(fd);
+	}
 }
 
 static void onpause(void)
