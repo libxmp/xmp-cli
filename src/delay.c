@@ -9,7 +9,7 @@
 #if defined(_WIN32)
 #include <windows.h>
 
-void delay_ms(int msec) {
+void delay_ms(unsigned int msec) {
 	Sleep(msec);
 }
 
@@ -17,21 +17,21 @@ void delay_ms(int msec) {
 #define INCL_DOSPROCESS
 #include <os2.h>
 
-void delay_ms(int msec) {
+void delay_ms(unsigned int msec) {
 	DosSleep(msec);
 }
 
 #elif defined(_DOS)
 #include <dos.h>
 
-void delay_ms(int msec) {
+void delay_ms(unsigned int msec) {
 	delay(msec); /* doesn't seem to use int 15h. */
 }
 
 #elif defined(HAVE_USLEEP)
 #include <unistd.h>
 
-void delay_ms(int msec) {
+void delay_ms(unsigned int msec) {
 	usleep(msec * 1000);
 }
 
@@ -52,7 +52,7 @@ void delay_ms(int msec) {
 #endif
 #include <stddef.h>
 
-void delay_ms(int msec) {
+void delay_ms(unsigned int msec) {
 	struct timeval tv;
 	long usec;
 
