@@ -100,5 +100,4 @@ pkgsysconfdir   = ${sysconfdir}/${PACKAGE_NAME}
 pkgsysconf_DATA = modules.conf xmp.conf
 
 EXTRA_DIST = ${man_MANS} ${pkgsysconf_DATA} \
-	dos/dosdma.h dos/dosirq.h dos/dossb.h dos/dosutil.h \
-	win32/unistd.h watcom/unistd.h
+	dos/dosdma.h dos/dosirq.h dos/dossb.h dos/dosutil.h

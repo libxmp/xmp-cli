@@ -13,7 +13,7 @@ void delay_ms(int msec) {
 	Sleep(msec);
 }
 
-#elif defined(__OS2__)
+#elif defined(__OS2__)||defined(__EMX__)
 #define INCL_DOSPROCESS
 #include <os2.h>
 
@@ -40,9 +40,15 @@ void delay_ms(int msec) {
 #ifdef HAVE_SYS_SELECT_H
 #  include <sys/select.h>
 #else
+#  ifdef HAVE_SYS_TIME_H
 #  include <sys/time.h>
+#  endif
+#  ifdef HAVE_SYS_TYPES_H
 #  include <sys/types.h>
+#  endif
+#  ifdef HAVE_UNISTD_H
 #  include <unistd.h>
+#  endif
 #endif
 #include <stddef.h>
 

@@ -23,7 +23,7 @@ CFLAGS += -wcd=303
 # -5s  :  Pentium stack calling conventions.
 # -5r  :  Pentium register calling conventions.
 CFLAGS += -5s
-INCLUDES = -I"src/watcom" -I"$(%WATCOM)/h/os2" -I"$(%WATCOM)/h"
+INCLUDES = -I"$(%WATCOM)/h/os2" -I"$(%WATCOM)/h"
 
 # for sound_dart:
 CPPFLAGS = -DSOUND_OS2DART
