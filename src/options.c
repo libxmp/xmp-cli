@@ -13,12 +13,16 @@
 #include <strings.h>
 #endif
 #include <stdlib.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
 #if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
 #include <getopt.h>
 #else
 #include "getopt_long.h"
 #endif
+
 #include <xmp.h>
 
 #include "common.h"
