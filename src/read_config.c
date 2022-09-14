@@ -17,8 +17,12 @@
 #define SYSCONFDIR "."
 #endif
 
-#if defined(XMP_AMIGA) && !defined(PATH_MAX)	/* e.g.: vbcc headers */
-#define PATH_MAX 1024
+#if defined(_MSC_VER) ||  defined(__WATCOMC__) || defined(__EMX__)
+#define XMP_MAXPATH _MAX_PATH
+#elif defined(PATH_MAX)
+#define XMP_MAXPATH  PATH_MAX
+#else
+#define XMP_MAXPATH  1024
 #endif
 
 static char driver[32];
@@ -43,7 +47,7 @@ static int get_yesno(char *s)
 int read_config(struct options *o)
 {
 	FILE *rc;
-	char myrc[PATH_MAX];
+	char myrc[XMP_MAXPATH];
 	char *hash, *var, *val, line[256];
 	char cparm[512];
 
@@ -51,7 +55,7 @@ int read_config(struct options *o)
 	const char *home = getenv("HOME");
 	if (!home) home = "C:";
 
-	snprintf(myrc, PATH_MAX, "%s\\xmp.conf", home);
+	snprintf(myrc, XMP_MAXPATH, "%s\\xmp.conf", home);
 
 	if ((rc = fopen(myrc, "r")) == NULL) {
 		if ((rc = fopen("xmp.conf", "r")) == NULL) {
@@ -59,7 +63,7 @@ int read_config(struct options *o)
 		}
 	}
 #elif defined(XMP_AMIGA)
-	strncpy(myrc, "PROGDIR:xmp.conf", PATH_MAX);
+	strncpy(myrc, "PROGDIR:xmp.conf", XMP_MAXPATH);
 
 	if ((rc = fopen(myrc, "r")) == NULL)
 		return -1;
@@ -67,17 +71,17 @@ int read_config(struct options *o)
 	const char *home = getenv("USERPROFILE");
 	if (!home) home = "C:";
 
-	snprintf(myrc, PATH_MAX, "%s/xmp.conf", home);
+	snprintf(myrc, XMP_MAXPATH, "%s/xmp.conf", home);
 
 	if ((rc = fopen(myrc, "r")) == NULL)
 		return -1;
 #else
 	char *home = getenv("HOME");
 
-	snprintf(myrc, PATH_MAX, "%s/.xmp/xmp.conf", home);
+	snprintf(myrc, XMP_MAXPATH, "%s/.xmp/xmp.conf", home);
 
 	if ((rc = fopen(myrc, "r")) == NULL) {
-		strncpy(myrc, SYSCONFDIR "/xmp.conf", PATH_MAX);
+		strncpy(myrc, SYSCONFDIR "/xmp.conf", XMP_MAXPATH);
 		if ((rc = fopen(myrc, "r")) == NULL) {
 			return -1;
 		}
@@ -288,27 +292,27 @@ static void parse_modconf(struct options *o, const char *confname, const unsigne
 void read_modconf(struct options *o, const unsigned char *md5)
 {
 #if defined(__OS2__) || defined(__EMX__)
-	char myrc[PATH_MAX];
+	char myrc[XMP_MAXPATH];
 	const char *home = getenv("HOME");
 	if (!home) home = "C:";
 
-	snprintf(myrc, PATH_MAX, "%s\\modules.conf", home);
+	snprintf(myrc, XMP_MAXPATH, "%s\\modules.conf", home);
 	parse_modconf(o, "xmp-modules.conf", md5);
 	parse_modconf(o, myrc, md5);
 #elif defined(XMP_AMIGA)
 	parse_modconf(o, "PROGDIR:modules.conf", md5);
 #elif defined _WIN32
-	char myrc[PATH_MAX];
+	char myrc[XMP_MAXPATH];
 	const char *home = getenv("USERPROFILE");
 	if (!home) home = "C:";
 
-	snprintf(myrc, PATH_MAX, "%s/modules.conf", home);
+	snprintf(myrc, XMP_MAXPATH, "%s/modules.conf", home);
 	parse_modconf(o, myrc, md5);
 #else
-	char myrc[PATH_MAX];
+	char myrc[XMP_MAXPATH];
 	char *home = getenv("HOME");
 
-	snprintf(myrc, PATH_MAX, "%s/.xmp/modules.conf", home);
+	snprintf(myrc, XMP_MAXPATH, "%s/.xmp/modules.conf", home);
 	parse_modconf(o, SYSCONFDIR "/modules.conf", md5);
 	parse_modconf(o, myrc, md5);
 #endif
