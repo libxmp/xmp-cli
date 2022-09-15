@@ -2,11 +2,11 @@
 #define XMP_COMMON_H
 
 #ifdef _MSC_VER
-#define PATH_MAX 1024
 #ifndef __cplusplus
 #define inline __inline
 #endif
 #define snprintf _snprintf
+#define vsnprintf _vsnprintf
 #define kbhit _kbhit
 #define getch _getch
 #endif
@@ -81,7 +81,7 @@ extern struct player_mode pmode[];
 
 int report(const char *, ...);
 
-void delay_ms(unsigned int msec);
+void delay_ms(unsigned int);
 #ifdef XMP_AMIGA
 void amiga_inittimer(void);
 void amiga_getsystime(void *);
