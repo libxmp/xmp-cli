@@ -1,8 +1,8 @@
 #ifndef XMP_SOUND_H
 #define XMP_SOUND_H
 
-#include <xmp.h>
 #include <stdio.h>
+
 #include "common.h"
 #include "list.h"
 

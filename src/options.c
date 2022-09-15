@@ -23,8 +23,6 @@
 #include "getopt_long.h"
 #endif
 
-#include <xmp.h>
-
 #include "common.h"
 #include "sound.h"
 #include "list.h"

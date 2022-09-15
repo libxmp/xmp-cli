@@ -6,9 +6,8 @@
  * file for more information.
  */
 
-#include <stdio.h>
-#include <xmp.h>
 #include "common.h"
+#include <stdio.h>
 
 #if defined(XMP_AMIGA)
 #ifdef __amigaos4__

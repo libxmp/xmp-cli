@@ -6,7 +6,6 @@
  * file for more information.
  */
 
-#include <xmp.h>
 #include "common.h"
 
 #if defined(_WIN32)

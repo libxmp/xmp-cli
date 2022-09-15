@@ -6,7 +6,6 @@
  * file for more information.
  */
 
-#include <xmp.h>
 #include "common.h"
 
 #if defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
@@ -86,10 +85,10 @@ static int read_key(void)
 		}
 	}
 #elif defined(HAVE_TERMIOS_H)
-#ifdef __CYGWIN__
+	#ifdef __CYGWIN__
 	if (stdin_ready_for_reading())
-#endif
-		ret = read(0, &key, 1);
+	#endif
+	    ret = read(0, &key, 1);
 #else
 	ret = 0;
 #endif

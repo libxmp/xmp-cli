@@ -6,8 +6,8 @@
  * file for more information.
  */
 
-#include <xmp.h>
 #include "common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,7 +36,8 @@
 #else
 #include "getopt_long.h"
 #endif
-#include "errno.h"
+#include <errno.h>
+
 #include "sound.h"
 #include "xmp_version.h"
 

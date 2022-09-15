@@ -15,7 +15,6 @@
 extern "C" {
 #include <string.h>
 #include <stdlib.h>
-#include "xmp.h"
 #include "sound.h"
 }
 
@@ -173,7 +172,7 @@ static void play(void *b, int i)
 		snooze(100000);
 
 	while (i) {
-        	if ((j = write_buffer((uint8 *)b, i)) > 0) {
+		if ((j = write_buffer((uint8 *)b, i)) > 0) {
 			i -= j;
 			b = (uint8 *)b + j;
 		} else {

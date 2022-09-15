@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include <xmp.h>
+
 #include "common.h"
 
 static int max_channels = -1;

@@ -19,6 +19,9 @@
 #define NUM_MODES 13
 #define MAX_DRV_PARM 20
 
+
+#include <xmp.h>
+
 struct player_mode {
 	const char *name;
 	const char *desc;

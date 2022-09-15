@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <xmp.h>
+
 #include "common.h"
 
 char *xmp_strdup(const char *in)
@@ -23,7 +23,7 @@ char *xmp_strdup(const char *in)
 }
 
 
-/* locale-insensitive tolower and strcasecmp : */
+/* locale-insensitive tolower and strcasecmp: */
 
 static inline int xmp_tolower(int c)
 {
@@ -49,4 +49,3 @@ int xmp_strcasecmp(const char *s1, const char *s2)
 
 	return (int)(c1 - c2);
 }
-
