@@ -49,18 +49,6 @@ static struct sound_driver *sound;
 static unsigned int foreground_in, foreground_out;
 static int refresh_status;
 
-int report(const char *fmt, ...)
-{
-	va_list a;
-	int n;
-
-	va_start(a, fmt);
-	n = vfprintf(stderr, fmt, a);
-	va_end(a);
-
-	return n;
-}
-
 #ifdef HAVE_SIGNAL_H
 static void cleanup(int sig)
 {

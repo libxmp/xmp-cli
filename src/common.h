@@ -79,8 +79,6 @@ struct control {
 
 extern struct player_mode pmode[];
 
-int report(const char *, ...);
-
 void delay_ms(unsigned int);
 #ifdef XMP_AMIGA
 void amiga_inittimer(void);
@@ -89,6 +87,7 @@ void amiga_getsystime(void *);
 
 char *xmp_strdup(const char *);
 int xmp_strcasecmp(const char *, const char *); /* locale-insensitive */
+int report(const char *, ...);
 
 /* option */
 void get_options(int, char **, struct options *);
