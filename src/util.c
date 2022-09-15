@@ -7,8 +7,10 @@
  */
 
 #include <stddef.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "common.h"
 
@@ -48,4 +50,17 @@ int xmp_strcasecmp(const char *s1, const char *s2)
 	} while (c1 == c2);
 
 	return (int)(c1 - c2);
+}
+
+
+int report(const char *fmt, ...)
+{
+	va_list a;
+	int n;
+
+	va_start(a, fmt);
+	n = vfprintf(stderr, fmt, a);
+	va_end(a);
+
+	return n;
 }
