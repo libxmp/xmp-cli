@@ -3,16 +3,18 @@ Stable versions
 
 4.2.0 ():
 	Changes by Özkan Sezer:
-	- Fix libxmp detection in configuration script
-	- Fix OS/2 and Amiga builds
+	- Fix OS/2 and Amiga builds. OS-specific tweaks.
+	- DOS Sound Blaster output, adapted from mikmod.
 	- Build system improvements.
 	Changes by Emanuel Haupt:
 	- Make configure detect sndio on FreeBSD
 	Changes by Alice Rowan:
 	- Fix terminal output for MSYS2.
 	- Fix crash-on-exit in Windows audio output.
+	- Fixes to BSD audio output modules.
 	Changes by Cameron Cawley:
 	- Support compiling for Windows with OpenWatcom.
+	- DOS Sound Blaster support using OpenWatcom.
 
 4.1.0 (20160719):
 	- Requires libxmp 4.4
