@@ -9,6 +9,7 @@ Stable versions
 	Changes by Emanuel Haupt:
 	- Make configure detect sndio on FreeBSD
 	Changes by Alice Rowan:
+	- Fix mod->xxs out-of-bounds read.
 	- Fix terminal output for MSYS2.
 	- Fix crash-on-exit in Windows audio output.
 	- Fixes to BSD audio output modules.
