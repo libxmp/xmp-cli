@@ -14,8 +14,6 @@ static FILE *fd;
 static long size;
 static int swap_endian;
 
-struct sound_driver sound_file;
-
 static int init(struct options *options)
 {
 	char **parm = options->driver_parm;

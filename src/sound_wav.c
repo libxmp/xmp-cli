@@ -15,8 +15,6 @@ static int format_16bit;
 static int swap_endian;
 static long size;
 
-struct sound_driver sound_wav;
-
 static void write_16l(FILE *f, unsigned short v)
 {
 	unsigned char x;
@@ -156,7 +154,6 @@ static void onpause(void)
 static void onresume(void)
 {
 }
-
 
 struct sound_driver sound_wav = {
 	"wav",

@@ -19,6 +19,29 @@ struct sound_driver {
 	struct list_head list;
 };
 
+extern struct sound_driver sound_null;
+extern struct sound_driver sound_wav;
+extern struct sound_driver sound_aiff;
+extern struct sound_driver sound_file;
+extern struct sound_driver sound_qnx;
+extern struct sound_driver sound_alsa05;
+extern struct sound_driver sound_oss;
+extern struct sound_driver sound_alsa;
+extern struct sound_driver sound_os2dart;
+extern struct sound_driver sound_win32;
+extern struct sound_driver sound_pulseaudio;
+extern struct sound_driver sound_coreaudio;
+extern struct sound_driver sound_hpux;
+extern struct sound_driver sound_sndio;
+extern struct sound_driver sound_sgi;
+extern struct sound_driver sound_solaris;
+extern struct sound_driver sound_netbsd;
+extern struct sound_driver sound_bsd;
+extern struct sound_driver sound_beos;
+extern struct sound_driver sound_aix;
+extern struct sound_driver sound_ahi;
+extern struct sound_driver sound_sb;
+
 #define parm_init(p) { char *token; for (; *(p); (p)++) { \
 	char s[80]; strncpy(s, *(p), 79); s[79] = 0; \
 	token = strtok(s, ":="); token = strtok(NULL, "");

@@ -36,8 +36,6 @@
 #  endif
 #endif
 
-struct sound_driver sound_oss;
-
 static int audio_fd;
 
 static int fragnum, fragsize;
