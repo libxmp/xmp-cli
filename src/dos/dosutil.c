@@ -1,3 +1,14 @@
+/* DOS glue code for DJGPP / Watcom compatibility
+ * Written by Cameron Cawley <ccawley2011@gmail.com>
+ *
+ * Extended Module Player
+ * Copyright (C) 1996-2021 Claudio Matsuoka and Hipolito Carraro Jr
+ *
+ * This file is part of the Extended Module Player and is distributed
+ * under the terms of the GNU General Public License. See the COPYING
+ * file for more information.
+ */
+
 #include "dosutil.h"
 
 #if defined(__DJGPP__)
