@@ -154,7 +154,7 @@ struct irq_handle *irq_hook(int irqno, irq_handler handler, irq_handler end)
 		return NULL;
 
 	/* Lock the interrupt handler in memory */
-	if (dpmi_lock_linear_region_base(handler, (unsigned long)end - (unsigned long)handler)) {
+	if (dpmi_lock_linear_region_base((void *)handler, (unsigned long)end - (unsigned long)handler)) {
 		_free_iret_wrapper(&info);
 		return NULL;
 	}
@@ -171,7 +171,7 @@ struct irq_handle *irq_hook(int irqno, irq_handler handler, irq_handler end)
 
 	if (dpmi_lock_linear_region_base(irq, sizeof(struct irq_handle))) {
 		free(irq);
-		dpmi_unlock_linear_region_base(handler, irq->handler_size);
+		dpmi_unlock_linear_region_base((void *)handler, irq->handler_size);
 		_free_iret_wrapper(&info);
 		return NULL;
 	}
@@ -196,7 +196,7 @@ void irq_unhook(struct irq_handle *irq)
 	_go32_dpmi_set_protected_mode_interrupt_vector(irq->int_num, &info);
 
 	/* Unlock the interrupt handler */
-	dpmi_unlock_linear_region_base(irq->c_handler, irq->handler_size);
+	dpmi_unlock_linear_region_base((void *)irq->c_handler, irq->handler_size);
 
 	/* Unlock the irq_handle structure */
 	dpmi_unlock_linear_region_base(irq, sizeof(struct irq_handle));
