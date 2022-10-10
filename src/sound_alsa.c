@@ -17,7 +17,8 @@ static int init(struct options *options)
 	char **parm = options->driver_parm;
 	snd_pcm_hw_params_t *hwparams;
 	int ret;
-	unsigned int channels, fmt;
+	unsigned int channels;
+	snd_pcm_format_t fmt;
 	unsigned int btime = 250000;	/* 250ms */
 	unsigned int ptime = 50000;	/* 50ms */
 	const char *card_name = "default";
@@ -83,9 +84,8 @@ static int init(struct options *options)
 
 static void play(void *b, int i)
 {
-	int frames;
+	int frames = snd_pcm_bytes_to_frames(pcm_handle, i);
 
-	frames = snd_pcm_bytes_to_frames(pcm_handle, i);
 	if (snd_pcm_writei(pcm_handle, b, frames) < 0) {
 		snd_pcm_prepare(pcm_handle);
 	}
