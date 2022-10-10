@@ -130,7 +130,7 @@ static void deinit(void)
 static void play(void *data, int siz) {
 	int i;
 	for (;;) {
-		i = write_sb_output(data, siz);
+		i = write_sb_output((char *)data, siz);
 		if ((siz -= i) <= 0) return;
 		data = (char *)data + i;
 		/*delay_ms(1);*/

@@ -108,7 +108,7 @@ static int init(struct options *options)
 static void play(void *b, int len) 
 {
 	if (swap_endian && bits == 16) {
-		convert_endian(b, len);
+		convert_endian((unsigned char *)b, len);
 	}
 	fwrite(b, 1, len, fd);
 	size += len;

@@ -109,7 +109,7 @@ static int init(struct options *options)
 	waveOutReset(hwaveout);
 
 	for (i = 0; i < num_buffers; i++) {
-		buffer[i] = malloc(OUT_MAXLEN);
+		buffer[i] = (LPSTR) malloc(OUT_MAXLEN);
 		header[i].lpData = buffer[i];
 
 		if (!buffer[i] || res != MMSYSERR_NOERROR) {

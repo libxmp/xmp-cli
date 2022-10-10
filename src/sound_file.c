@@ -41,7 +41,7 @@ static int init(struct options *options)
 	if (strcmp(options->out_file, "-")) {
 		int len = strlen(sound_file.description) +
 				strlen(options->out_file) + 8;
-		if ((buf = malloc(len)) == NULL)
+		if ((buf = (char *)malloc(len)) == NULL)
 			return -1;
 		snprintf(buf, len, "%s: %s", sound_file.description,
 						options->out_file);
@@ -56,7 +56,7 @@ static int init(struct options *options)
 static void play(void *b, int len)
 {
 	if (swap_endian) {
-		convert_endian(b, len);
+		convert_endian((unsigned char *)b, len);
 	}
 	fwrite(b, 1, len, fd);
 	size += len;

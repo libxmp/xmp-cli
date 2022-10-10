@@ -106,7 +106,7 @@ static int init(struct options *options)
 	//  dev = snd_defaults_pcm_device(); /* ? */
 	parm_end();
 
-	mybuffer = malloc(frag_size);
+	mybuffer = (char*)malloc(frag_size);
 	if (mybuffer) {
 		mybuffer_nextfree = mybuffer;
 	} else {
