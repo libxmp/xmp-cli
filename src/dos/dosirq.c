@@ -9,17 +9,18 @@
  * file for more information.
  */
 
-#include "dosirq.h"
-#include "dosutil.h"
-
 #include <dos.h>
 #include <malloc.h>
 #include <string.h>
-
 #ifdef __DJGPP__
 #include <dpmi.h>
 #include <go32.h>
 #include <sys/nearptr.h>
+#endif
+
+#include "dosirq.h"
+
+#if defined(__DJGPP__)
 
 unsigned int __irq_stack_size = 0x4000;
 unsigned int __irq_stack_count = 1;
@@ -64,8 +65,6 @@ static void __int_stub_template (void)
 		"	iret\n");
 /* *INDENT-ON* */
 }
-
-#include <stdio.h>
 
 static int _allocate_iret_wrapper(_go32_dpmi_seginfo * info)
 {
@@ -281,15 +280,14 @@ static int (*__irq_confirm) (int irqno);
 static volatile unsigned int __irq_mask;
 static volatile unsigned int __irq_count[16];
 
-#define DECLARE_IRQ_HANDLER(irqno)							\
-static void INTERRUPT_ATTRIBUTES NO_REORDER __irq##irqno##_handler ()						\
-{															\
-  if (irq_check (__irqs [irqno]) && __irq_confirm (irqno))	\
-  {															\
-    __irq_count [irqno]++;									\
-    __irq_mask |= (1 << irqno);								\
-  }															\
-  irq_ack (__irqs [irqno]);									\
+#define DECLARE_IRQ_HANDLER(irqno)					\
+static void INTERRUPT_ATTRIBUTES NO_REORDER __irq##irqno##_handler ()	\
+{									\
+  if (irq_check (__irqs [irqno]) && __irq_confirm (irqno)) {		\
+    __irq_count [irqno]++;						\
+    __irq_mask |= (1 << irqno);						\
+  }									\
+  irq_ack (__irqs [irqno]);						\
 }
 
 /* *INDENT-OFF* */

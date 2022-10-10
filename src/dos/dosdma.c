@@ -9,15 +9,14 @@
  * file for more information.
  */
 
-#include "dosdma.h"
-#include "dosutil.h"
-
 #include <dos.h>
 #include <malloc.h>
 
 #ifdef __DJGPP__
 #include <sys/nearptr.h>
 #endif
+
+#include "dosdma.h"
 
 __dma_regs dma[8] = {
 /* *INDENT-OFF* */

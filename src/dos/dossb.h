@@ -15,7 +15,6 @@
 
 #include "dosdma.h"
 #include "dosirq.h"
-#include "dosutil.h"
 
 #define SB_FM_LEFT_STATUS		(sb.port + 0x00)	/* (r) Left FM status */
 #define SB_FM_LEFT_REGSEL		(sb.port + 0x00)	/* (w) Left FM register select */

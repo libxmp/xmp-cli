@@ -20,7 +20,7 @@
 #include <sys/farptr.h>
 #else
 #define _farsetsel(seg)
-#define _farnspeekl(addr)        (*((unsigned long  *)(addr)))
+#define _farnspeekl(addr)  (*((unsigned long *)(addr)))
 #endif
 
 #include "dossb.h"
