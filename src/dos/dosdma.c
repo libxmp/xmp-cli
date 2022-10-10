@@ -57,7 +57,7 @@ int dma_initialize()
 	__djgpp_selector_limit = 0xffffffff;
 #endif
 
-	if (dpmi_lock_linear_region_base(&dma, sizeof(dma)))
+	if (dpmi_lock_linear_region_base(dma, sizeof(dma)))
 		return 0;
 
 	return (__initialized = 1);
@@ -67,7 +67,7 @@ void dma_finalize()
 {
 	if (!__initialized)
 		return;
-	dpmi_unlock_linear_region_base(&dma, sizeof(dma));
+	dpmi_unlock_linear_region_base(dma, sizeof(dma));
 #ifdef __DJGPP__
 	__djgpp_nearptr_disable();
 #endif
