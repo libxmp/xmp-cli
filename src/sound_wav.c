@@ -45,8 +45,6 @@ static void write_32l(FILE *f, unsigned int v)
 
 static int init(struct options *options)
 {
-	char *buf;
-	unsigned int len = 0;
 	unsigned short chan;
 	unsigned int sampling_rate, bytes_per_second;
 	unsigned short bytes_per_frame, bits_per_sample;
@@ -65,21 +63,8 @@ static int init(struct options *options)
 		fd = stdout;
 	}
 
-	if (strcmp(options->out_file, "-")) {
-		int len = strlen(sound_wav.description) +
-				strlen(options->out_file) + 8;
-		if ((buf = (char *)malloc(len)) == NULL)
-			return -1;
-		snprintf(buf, len, "%s: %s", sound_wav.description,
-						options->out_file);
-		sound_wav.description = buf;
-	} else {
-		sound_wav.description = xmp_strdup("WAV writer: stdout");
-		len = -1;
-	}
-
 	fwrite("RIFF", 1, 4, fd);
-	write_32l(fd, len);
+	write_32l(fd, 0);		/* will be written when finished */
 	fwrite("WAVE", 1, 4, fd);
 
 	chan = options->format & XMP_FORMAT_MONO ? 1 : 2;
@@ -107,7 +92,7 @@ static int init(struct options *options)
 	write_16l(fd, bits_per_sample);
 
 	fwrite("data", 1, 4, fd);
-	write_32l(fd, len);
+	write_32l(fd, 0);		/* will be written when finished */
 
 	size = 0;
 
@@ -136,8 +121,6 @@ static void deinit(void)
 		fclose(fd);
 	}
 	fd = NULL;
-
-	free((void *)sound_wav.description);
 }
 
 static void flush(void)

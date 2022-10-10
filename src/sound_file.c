@@ -17,7 +17,6 @@ static int swap_endian;
 static int init(struct options *options)
 {
 	char **parm = options->driver_parm;
-	char *buf;
 
 	swap_endian = 0;
 
@@ -38,18 +37,6 @@ static int init(struct options *options)
 		fd = stdout;
 	}
 
-	if (strcmp(options->out_file, "-")) {
-		int len = strlen(sound_file.description) +
-				strlen(options->out_file) + 8;
-		if ((buf = (char *)malloc(len)) == NULL)
-			return -1;
-		snprintf(buf, len, "%s: %s", sound_file.description,
-						options->out_file);
-		sound_file.description = buf;
-	} else {
-		sound_file.description = xmp_strdup("stdout");
-	}
-
 	return 0;
 }
 
@@ -64,7 +51,6 @@ static void play(void *b, int len)
 
 static void deinit(void)
 {
-	free((void *)sound_file.description);
 	if (fd && fd != stdout) {
 		fclose(fd);
 	}
@@ -86,7 +72,7 @@ static void onresume(void)
 {
 }
 
-static const char *const help[] = {
+static const char * const help[] = {
 	"endian=big", "Force big-endian 16-bit samples",
 	"endian=little", "Force little-endian 16-bit samples",
 	NULL
