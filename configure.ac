@@ -30,7 +30,7 @@ esac
 AC_SUBST([CXXLD])
 
 AC_PROG_INSTALL
-AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
+AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 AC_ARG_WITH([libxmp-lite],
   AS_HELP_STRING([--with-libxmp-lite],[build against libxmp-lite instead of libxmp]),
@@ -41,10 +41,12 @@ case "$xmplib" in
 esac
 
 old_LIBS="${LIBS}"
+old_CPPFLAGS="${CPPFLAGS}"
 PKG_CHECK_MODULES([LIBXMP], [lib$xmplib >= 4.4],
   AC_MSG_CHECKING(linkage to lib$xmplib)
   LIBS="${LIBXMP_LIBS}"
-  AC_LINK_IFELSE([AC_LANG_PROGRAM([], [[return xmp_set_player((char*)0,0,0);]])],
+  CPPFLAGS="${CPPFLAGS} ${LIBXMP_CFLAGS}"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <xmp.h>]], [[return xmp_set_player((char*)0,0,0);]])],
     [LIBS="${old_LIBS}"
      AC_MSG_RESULT(success)],
 dnl In case libxmp is a static build and depend on libm:
@@ -53,7 +55,7 @@ dnl manually:
  [AC_MSG_RESULT(failed:)
   AC_MSG_CHECKING(linkage to lib$xmplib with -lm)
   LIBS="${LIBS} -lm"
-  AC_LINK_IFELSE([AC_LANG_PROGRAM([], [[return xmp_set_player((char*)0,0,0);]])],
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <xmp.h>]], [[return xmp_set_player((char*)0,0,0);]])],
     [LIBS="${old_LIBS} -lm"
      AC_MSG_RESULT(success)],
     [AC_MSG_RESULT(failed)
@@ -61,6 +63,7 @@ dnl manually:
   ),
  [echo "You need libxmp version 4.4 or later to build this package"; exit 1]
 )
+CPPFLAGS="${old_CPPFLAGS}"
 
 dnl Don't use things like /usr/etc or /usr/var
 
