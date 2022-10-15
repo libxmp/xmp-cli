@@ -16,7 +16,7 @@ static AudioUnit au;
 
 #ifndef HAVE_AUDIOUNIT_AUDIOCOMPONENT_H
 #define AudioComponent Component
-#define	AudioComponentDescription ComponentDescription
+#define AudioComponentDescription ComponentDescription
 #define AudioComponentFindNext FindNextComponent
 #define AudioComponentInstanceNew OpenAComponent
 #define AudioComponentInstanceDispose CloseComponent
@@ -162,7 +162,7 @@ static int init(struct options *options)
 	ad.mBytesPerPacket = ad.mBytesPerFrame;
 	ad.mFramesPerPacket = 1;
 
-        packet_size = ad.mFramesPerPacket * ad.mChannelsPerFrame *
+	packet_size = ad.mFramesPerPacket * ad.mChannelsPerFrame *
 						(ad.mBitsPerChannel / 8);
 
 	cd.componentType = kAudioUnitType_Output;
@@ -190,17 +190,17 @@ static int init(struct options *options)
 		goto err1;
 
 	chunk_size = max_frames;
-        num_chunks = (options->rate * ad.mBytesPerFrame * latency / 1000
+	num_chunks = (options->rate * ad.mBytesPerFrame * latency / 1000
 						+ chunk_size - 1) / chunk_size;
-        buffer_len = (num_chunks + 1) * chunk_size;
+	buffer_len = (num_chunks + 1) * chunk_size;
 	if ((buffer = calloc(num_chunks + 1, chunk_size)) == NULL)
 		goto err;
 
 	rc.inputProc = render_proc;
 	rc.inputProcRefCon = 0;
 
-        buf_read_pos = 0;
-        buf_write_pos = 0;
+	buf_read_pos = 0;
+	buf_write_pos = 0;
 	paused = 1;
 
 	if ((status = AudioUnitSetProperty(au,
@@ -231,7 +231,7 @@ static void play(void *b, int i)
 		delay_ms(100);
 
 	while (i) {
-        	if ((j = write_buffer(b, i)) > 0) {
+		if ((j = write_buffer(b, i)) > 0) {
 			i -= j;
 			b += j;
 		} else
