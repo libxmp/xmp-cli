@@ -80,7 +80,7 @@ static void play(void *b, int i)
 	do {
 		if ((j = write(fd_audio, b, i)) > 0) {
 			i -= j;
-			b += j;
+			b = (char *)b + j;
 		} else {
 			break;
 		}

@@ -233,7 +233,7 @@ static void play(void *b, int i)
 	while (i) {
 		if ((j = write_buffer(b, i)) > 0) {
 			i -= j;
-			b += j;
+			b = (char *)b + j;
 		} else
 			break;
 	}

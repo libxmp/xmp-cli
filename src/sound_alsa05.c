@@ -171,7 +171,7 @@ static void play(void *b, int i)
 		size_t to_copy = (f < i) ? f : i;
 
 		memcpy(mybuffer_nextfree, b, to_copy);
-		b += to_copy;
+		b = (char *)b + to_copy;
 		mybuffer_nextfree += to_copy;
 		f -= to_copy;
 		i -= to_copy;
@@ -211,4 +211,3 @@ struct sound_driver sound_alsa05 = {
 	bufdump,		/* bufdump */
 	NULL
 };
-
