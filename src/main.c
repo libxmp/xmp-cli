@@ -529,7 +529,7 @@ int main(int argc, char **argv)
     play_sequence:
 			while (!opt.info && xmp_play_frame(xc) == 0) {
 				int old_loop = fi.loop_count;
-				
+
 				xmp_get_frame_info(xc, &fi);
 				control.mixer_type = xmp_get_player(
 						xc, XMP_PLAYER_MIXER_TYPE);
@@ -537,7 +537,9 @@ int main(int argc, char **argv)
 				/* Check loop */
 
 				if (old_loop != fi.loop_count) {
-					if (control.loop == 1) {
+					if (control.loop == 1 ||
+					    (opt.loop_time > 0 &&
+					     control.time < opt.loop_time)) {
 						info_message("Loop sequence %d", control.sequence);
 					} else {
 						break;

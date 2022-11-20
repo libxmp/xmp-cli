@@ -39,6 +39,7 @@ struct options {
 	int interp;		/* interpolation type */
 	int dsp;		/* dsp effects */
 	int loop;		/* loop module */
+	int loop_time;		/* loop until time */
 	int random;		/* play in random order */
 	int reverse;		/* reverse stereo channels */
 	int vblank;		/* vblank flag */
