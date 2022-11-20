@@ -92,9 +92,10 @@ static void usage(char *s, struct options *options)
 "   -S --solo ch-list      Set channels to solo mode\n"
 "   -s --start num         Start from the specified order\n"
 "   -t --time num          Maximum playing time in seconds\n"
+"   -U --loop-until num    Loop until time in seconds exceeded\n"
 "   --vblank               Force vblank timing in Amiga modules\n"
 "   -Z --all-sequences     Play all sequences (subsongs) in module\n"
-"   -z --sequence num      Play the specified sequence (0=main)\n" 
+"   -z --sequence num      Play the specified sequence (0=main)\n"
 "\nMixer options:\n"
 "   -A --amiga             Use Paula simulation mixer in Amiga formats\n"
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
@@ -140,6 +141,7 @@ static const struct option lopt[] = {
 	{ "list-formats",	0, 0, 'L' },
 	{ "loop",		0, 0, 'l' },
 	{ "loop-all",		0, 0, OPT_LOOPALL },
+	{ "loop-until",		1, 0, 'U' },
 	{ "mixer-voices",	1, 0, OPT_NUMVOICES },
 	{ "mono",		0, 0, 'm' },
 	{ "mute",		1, 0, 'M' },
@@ -179,8 +181,9 @@ void get_options(int argc, char **argv, struct options *options)
 	struct player_mode *pm;
 	int optidx = 0;
 	int o;
+	char const* driver_guess = NULL;
 
-#define OPTIONS "Aa:b:CcD:d:e:Ff:hI:i:LlM:mNo:P:p:qRrS:s:T:t:uVvZz:"
+#define OPTIONS "Aa:b:CcD:d:e:Ff:hI:i:LlM:mNo:P:p:qRrS:s:T:t:U:uVvZz:"
 	while ((o = getopt_long(argc, argv, OPTIONS, lopt, &optidx)) != -1) {
 		switch (o) {
 		case 'A':
@@ -198,7 +201,7 @@ void get_options(int argc, char **argv, struct options *options)
 			options->show_comment = 1;
 			break;
 		case 'c':
-			options->driver_id = "file";
+			driver_guess = "file";
 			options->out_file = "-";
 			break;
 		case 'D':
@@ -278,12 +281,12 @@ void get_options(int argc, char **argv, struct options *options)
 			options->out_file = optarg;
 			if (strlen(optarg) >= 4 &&
 			    !xmp_strcasecmp(optarg + strlen(optarg) - 4, ".wav")) {
-				options->driver_id = "wav";
+				driver_guess = "wav";
 			} else if (strlen(optarg) >= 5 &&
 			    !xmp_strcasecmp(optarg + strlen(optarg) - 5, ".aiff")) {
-				options->driver_id = "aiff";
+				driver_guess = "aiff";
 			} else {
-				options->driver_id = "file";
+				driver_guess = "file";
 			}
 			break;
 		/*
@@ -353,6 +356,9 @@ void get_options(int argc, char **argv, struct options *options)
 		case 'u':
 			options->format |= XMP_FORMAT_UNSIGNED;
 			break;
+		case 'U':
+			options->loop_time = strtoul(optarg, NULL, 0) * 1000;
+			break;
 		case OPT_VBLANK:
 			options->vblank = 1;
 			break;
@@ -381,4 +387,8 @@ void get_options(int argc, char **argv, struct options *options)
 		options->rate = 1000;	/* Min. rate 1 kHz */
 	if (options->rate > 48000)
 		options->rate = 48000;	/* Max. rate 48 kHz */
+
+	/* apply guess if no driver selected */
+	if (!options->driver_id)
+		options->driver_id = driver_guess;
 }
