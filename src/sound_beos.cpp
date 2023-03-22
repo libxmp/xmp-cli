@@ -150,9 +150,9 @@ static int init(struct options *options)
 				B_AUDIO_CHAR : B_AUDIO_SHORT;
 	fmt.byte_order = B_HOST_IS_LENDIAN ?
 				B_MEDIA_LITTLE_ENDIAN : B_MEDIA_BIG_ENDIAN;
-	fmt.buffer_size = chunk_size * chunk_num;
+	fmt.buffer_size = chunk_size;
 
-	buffer_len = chunk_size;
+	buffer_len = chunk_size * chunk_num;
 	buffer = (uint8 *)calloc(1, buffer_len);
 	buf_read_pos = 0;
 	buf_write_pos = 0;
