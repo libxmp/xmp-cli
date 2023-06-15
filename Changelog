@@ -1,7 +1,7 @@
 Stable versions
 ---------------
 
-4.2.0 ():
+4.2.0 (20230615):
 	Changes by Özkan Sezer:
 	- Fix OS/2 and Amiga builds. OS-specific tweaks.
 	- DOS Sound Blaster output, adapted from mikmod.
