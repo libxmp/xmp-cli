@@ -61,7 +61,8 @@ void info_mod(const struct xmp_module_info *mi, int mode)
 		}
 	}
 
-	report("\nModule length: %d patterns\n", mi->mod->len);
+	report("\nModule size  : %d bytes (%d KB)\n", mi->size, (mi->size + 1023) / 1024);
+	report("Module length: %d patterns\n", mi->mod->len);
 	report("Patterns     : %d\n", mi->mod->pat);
 	report("Instruments  : %d\n", mi->mod->ins);
 	report("Samples      : %d\n", mi->mod->smp);
