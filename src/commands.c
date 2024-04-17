@@ -8,6 +8,20 @@
 
 #include "common.h"
 
+#ifdef __EMX__
+#define INCL_DOS
+#define INCL_KBD
+#define INCL_VIO
+#include <os2.h>
+#include <stdlib.h>
+#include <conio.h>
+int kbhit (void) {
+    KBDKEYINFO k;
+    if (KbdPeek(&k, 0))
+        return 0;
+    return (k.fbStatus & KBDTRF_FINAL_CHAR_IN);
+}
+#endif
 #if defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
 #include <conio.h>
 #endif
@@ -70,7 +84,7 @@ static int read_key(void)
 	char key;
 	int ret = 0;
 
-#if defined(_WIN32) || defined(__OS2__) || defined(__DJGPP__) || defined(_DOS)
+#if defined(_WIN32) || defined(__OS2__) || defined(__EMX__) || defined(__DJGPP__) || defined(_DOS)
 	if (kbhit()) {
 		key = getch();
 		ret = 1;
