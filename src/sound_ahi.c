@@ -137,7 +137,7 @@ static void onpause(void) {
 static void onresume(void) {
 }
 
-struct sound_driver sound_ahi = {
+const struct sound_driver sound_ahi = {
     "ahi",
     "Amiga AHI audio",
     NULL,

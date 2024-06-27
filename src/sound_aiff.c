@@ -152,7 +152,7 @@ static void onresume(void)
 {
 }
 
-struct sound_driver sound_aiff = {
+const struct sound_driver sound_aiff = {
 	"aiff",
 	"AIFF writer",
 	NULL,

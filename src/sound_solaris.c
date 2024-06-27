@@ -177,7 +177,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_solaris = {
+const struct sound_driver sound_solaris = {
 	"solaris",
 	"Solaris PCM audio",
 	help,

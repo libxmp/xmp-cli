@@ -124,7 +124,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_bsd = {
+const struct sound_driver sound_bsd = {
 	"aix",
 	"AIX PCM audio",
 	help,

@@ -35,7 +35,7 @@ static void onresume(void)
 }
 
 
-struct sound_driver sound_null = {
+const struct sound_driver sound_null = {
 	"null",
 	"null output",
 	NULL,

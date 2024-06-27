@@ -100,7 +100,7 @@ static void onresume(void)
 {
 }
 
-struct sound_driver sound_sndio = {
+const struct sound_driver sound_sndio = {
 	"sndio",
 	"OpenBSD sndio",
 	NULL,

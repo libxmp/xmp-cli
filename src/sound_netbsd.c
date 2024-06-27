@@ -130,7 +130,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_netbsd = {
+const struct sound_driver sound_netbsd = {
 	"netbsd",
 	"NetBSD PCM audio",
 	help,

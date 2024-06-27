@@ -10,84 +10,77 @@
 #include <string.h>
 #include "sound.h"
 
-LIST_HEAD(sound_driver_list);
-
-static void register_sound_driver(struct sound_driver *sd)
-{
-	list_add_tail(&sd->list, &sound_driver_list);	
-}
-
-void init_sound_drivers(void)
-{
+const struct sound_driver *const sound_driver_list[] = {
 #ifdef SOUND_AHI
-	register_sound_driver(&sound_ahi);
+	&sound_ahi,
 #endif
 #ifdef SOUND_BEOS
-	register_sound_driver(&sound_beos);
+	&sound_beos,
 #endif
 #ifdef SOUND_SNDIO
-	register_sound_driver(&sound_sndio);
+	&sound_sndio,
 #endif
 #ifdef SOUND_NETBSD
-	register_sound_driver(&sound_netbsd);
+	&sound_netbsd,
 #endif
 #ifdef SOUND_BSD
-	register_sound_driver(&sound_bsd);
+	&sound_bsd,
 #endif
 #ifdef SOUND_SOLARIS
-	register_sound_driver(&sound_solaris);
+	&sound_solaris,
 #endif
 #ifdef SOUND_SGI
-	register_sound_driver(&sound_sgi);
+	&sound_sgi,
 #endif
 #ifdef SOUND_HPUX
-	register_sound_driver(&sound_hpux);
+	&sound_hpux,
 #endif
 #ifdef SOUND_AIX
-	register_sound_driver(&sound_aix);
+	&sound_aix,
 #endif
 #ifdef SOUND_COREAUDIO
-	register_sound_driver(&sound_coreaudio);
+	&sound_coreaudio,
 #endif
 #ifdef SOUND_OS2DART
-	register_sound_driver(&sound_os2dart);
+	&sound_os2dart,
 #endif
 #ifdef SOUND_WIN32
-	register_sound_driver(&sound_win32);
+	&sound_win32,
 #endif
 #ifdef SOUND_PULSEAUDIO
-	register_sound_driver(&sound_pulseaudio);
+	&sound_pulseaudio,
 #endif
 #ifdef SOUND_ALSA
-	register_sound_driver(&sound_alsa);
+	&sound_alsa,
 #endif
 #ifdef SOUND_ALSA05
-	register_sound_driver(&sound_alsa05);
+	&sound_alsa05,
 #endif
 #ifdef SOUND_OSS
-	register_sound_driver(&sound_oss);
+	&sound_oss,
 #endif
 #ifdef SOUND_QNX
-	register_sound_driver(&sound_qnx);
+	&sound_qnx,
 #endif
 #ifdef SOUND_SB
-	register_sound_driver(&sound_sb);
+	&sound_sb,
 #endif
-	register_sound_driver(&sound_wav);
-	register_sound_driver(&sound_aiff);
-	register_sound_driver(&sound_file);
-	register_sound_driver(&sound_null);
-}
+	&sound_wav,
+	&sound_aiff,
+	&sound_file,
+	&sound_null,
+	NULL
+};
 
-struct sound_driver *select_sound_driver(struct options *options)
+const struct sound_driver *select_sound_driver(struct options *options)
 {
-	struct list_head *head;
-	struct sound_driver *sd;
+	const struct sound_driver *sd;
 	const char *pref = options->driver_id;
+	int i;
 
 	if (pref) {
-		list_for_each(head, &sound_driver_list) {
-			sd = list_entry(head, struct sound_driver, list);
+		for (i = 0; sound_driver_list[i] != NULL; i++) {
+			sd = sound_driver_list[i];
 			if (strcmp(sd->id, pref) == 0) {
 				if (sd->init(options) == 0) {
 					return sd;
@@ -95,8 +88,8 @@ struct sound_driver *select_sound_driver(struct options *options)
 			}
 		}
 	} else {
-		list_for_each(head, &sound_driver_list) {
-			sd = list_entry(head, struct sound_driver, list);
+		for (i = 0; sound_driver_list[i] != NULL; i++) {
+			sd = sound_driver_list[i];
 			/* Probing */
 			if (sd->init(options) == 0) {
 				/* found */

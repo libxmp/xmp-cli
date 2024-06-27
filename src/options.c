@@ -17,10 +17,7 @@
 
 #include "common.h"
 #include "sound.h"
-#include "list.h"
 #include "xmp_version.h"
-
-extern struct list_head sound_driver_list;
 
 enum {
 	OPT_FX9BUG = 0x105,
@@ -51,22 +48,22 @@ struct player_mode pmode[] = {
 
 static void usage(char *s, struct options *options)
 {
-	struct list_head *head;
-	struct sound_driver *sd;
+	const struct sound_driver *sd;
 	struct player_mode *pm;
 	const char *const *hlp;
+	int i;
 
 	printf("Usage: %s [options] [modules]\n", s);
 
 	printf("\nAvailable drivers:\n");
 
-	list_for_each(head, &sound_driver_list) {
-		sd = list_entry(head, struct sound_driver, list);
+	for (i = 0; sound_driver_list[i] != NULL; i++) {
+		sd = sound_driver_list[i];
 		printf("    %s (%s)\n", sd->id, sd->description);
 	}
 
-	list_for_each(head, &sound_driver_list) {
-		sd = list_entry(head, struct sound_driver, list);
+	for (i = 0; sound_driver_list[i] != NULL; i++) {
+		sd = sound_driver_list[i];
 		if (sd->help)
 			printf("\n%s options:\n", sd->description);
 		for (hlp = sd->help; hlp && *hlp; hlp += 2)

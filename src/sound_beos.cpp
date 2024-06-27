@@ -42,7 +42,7 @@ static void flush(void);
 static void onpause(void);
 static void onresume(void);
 
-struct sound_driver sound_beos = {
+const struct sound_driver sound_beos = {
 	"beos",
 	"BeOS PCM audio",
 	help,

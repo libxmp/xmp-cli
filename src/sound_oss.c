@@ -204,6 +204,7 @@ static const char *const help[] = {
 	NULL
 };
 
+/* TODO: Make this const to match the other drivers */
 struct sound_driver sound_oss = {
 	"oss",
 	"OSS PCM audio",

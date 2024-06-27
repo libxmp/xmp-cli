@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 #include "common.h"
-#include "list.h"
 
 struct sound_driver {
 	const char *id;
@@ -16,31 +15,32 @@ struct sound_driver {
 	void (*flush)(void);
 	void (*pause)(void);
 	void (*resume)(void);
-	struct list_head list;
 };
 
-extern struct sound_driver sound_null;
-extern struct sound_driver sound_wav;
-extern struct sound_driver sound_aiff;
-extern struct sound_driver sound_file;
-extern struct sound_driver sound_qnx;
-extern struct sound_driver sound_alsa05;
-extern struct sound_driver sound_oss;
-extern struct sound_driver sound_alsa;
-extern struct sound_driver sound_os2dart;
-extern struct sound_driver sound_win32;
-extern struct sound_driver sound_pulseaudio;
-extern struct sound_driver sound_coreaudio;
-extern struct sound_driver sound_hpux;
-extern struct sound_driver sound_sndio;
-extern struct sound_driver sound_sgi;
-extern struct sound_driver sound_solaris;
-extern struct sound_driver sound_netbsd;
-extern struct sound_driver sound_bsd;
-extern struct sound_driver sound_beos;
-extern struct sound_driver sound_aix;
-extern struct sound_driver sound_ahi;
-extern struct sound_driver sound_sb;
+extern const struct sound_driver sound_null;
+extern const struct sound_driver sound_wav;
+extern const struct sound_driver sound_aiff;
+extern const struct sound_driver sound_file;
+extern const struct sound_driver sound_qnx;
+extern const struct sound_driver sound_alsa05;
+extern       struct sound_driver sound_oss;
+extern const struct sound_driver sound_alsa;
+extern const struct sound_driver sound_os2dart;
+extern const struct sound_driver sound_win32;
+extern const struct sound_driver sound_pulseaudio;
+extern const struct sound_driver sound_coreaudio;
+extern const struct sound_driver sound_hpux;
+extern const struct sound_driver sound_sndio;
+extern const struct sound_driver sound_sgi;
+extern const struct sound_driver sound_solaris;
+extern const struct sound_driver sound_netbsd;
+extern const struct sound_driver sound_bsd;
+extern const struct sound_driver sound_beos;
+extern const struct sound_driver sound_aix;
+extern const struct sound_driver sound_ahi;
+extern const struct sound_driver sound_sb;
+
+extern const struct sound_driver *const sound_driver_list[];
 
 #define parm_init(p) { char *token; for (; *(p); (p)++) { \
 	char s[80]; strncpy(s, *(p), 79); s[79] = 0; \
@@ -64,7 +64,7 @@ static inline int is_big_endian(void) {
 }
 
 void init_sound_drivers(void);
-struct sound_driver *select_sound_driver(struct options *);
+const struct sound_driver *select_sound_driver(struct options *);
 void convert_endian(unsigned char *, int);
 
 #endif

@@ -78,7 +78,7 @@ static const char * const help[] = {
 	NULL
 };
 
-struct sound_driver sound_file = {
+const struct sound_driver sound_file = {
 	"file",
 	"Raw file writer",
 	help,
