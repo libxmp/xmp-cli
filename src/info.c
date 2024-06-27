@@ -52,7 +52,7 @@ void info_mod(const struct xmp_module_info *mi, int mode)
 	report("Module type  : %s", mi->mod->type);
 
 	if (mode != XMP_MODE_AUTO) {
-		struct player_mode *pm;
+		const struct player_mode *pm;
 		for (pm = pmode; pm->name != NULL; pm++) {
 			if (pm->mode == mode) {
 				report(" [play as:%s]", pm->desc);

@@ -78,7 +78,7 @@ struct control {
 	int mixer_type;		/* Mixer type (from player) */
 };
 
-extern struct player_mode pmode[];
+extern const struct player_mode pmode[];
 
 void delay_ms(unsigned int);
 #ifdef XMP_AMIGA

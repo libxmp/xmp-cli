@@ -31,7 +31,7 @@ enum {
 	OPT_NUMVOICES,
 };
 
-struct player_mode pmode[] = {
+const struct player_mode pmode[] = {
 	{ "auto",         "Autodetect",                XMP_MODE_AUTO },
 	{ "mod",          "Generic MOD player",        XMP_MODE_MOD },
 	{ "noisetracker", "Noisetracker",              XMP_MODE_NOISETRACKER },
@@ -49,7 +49,7 @@ struct player_mode pmode[] = {
 static void usage(char *s, struct options *options)
 {
 	const struct sound_driver *sd;
-	struct player_mode *pm;
+	const struct player_mode *pm;
 	const char *const *hlp;
 	int i;
 
@@ -175,7 +175,7 @@ static char *token;
 
 void get_options(int argc, char **argv, struct options *options)
 {
-	struct player_mode *pm;
+	const struct player_mode *pm;
 	int optidx = 0;
 	int o;
 	char const* driver_guess = NULL;
