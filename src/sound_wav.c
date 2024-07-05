@@ -138,7 +138,7 @@ static void onresume(void)
 {
 }
 
-struct sound_driver sound_wav = {
+const struct sound_driver sound_wav = {
 	"wav",
 	"WAV writer",
 	NULL,

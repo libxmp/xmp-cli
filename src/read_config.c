@@ -203,7 +203,7 @@ static void parse_modconf(struct options *o, const char *confname, const unsigne
 {
 	FILE *rc;
 	char *hash, *var, *val, line[256];
-	struct player_mode *pm;
+	const struct player_mode *pm;
 	int active = 0;
 	int mono = 0;
 

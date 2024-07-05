@@ -172,7 +172,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_sgi = {
+const struct sound_driver sound_sgi = {
 	"sgi",
 	"SGI IRIX PCM audio",
 	help,

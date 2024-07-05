@@ -111,7 +111,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_qnx = {
+const struct sound_driver sound_qnx = {
 	"QNX",
 	"QNX PCM audio",
 	help,

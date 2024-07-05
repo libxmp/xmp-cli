@@ -150,7 +150,7 @@ static void onresume(void)
 {
 }
 
-struct sound_driver sound_sb = {
+const struct sound_driver sound_sb = {
 	"sb",
 	"Sound Blaster for DOS",
 	NULL,

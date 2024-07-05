@@ -45,7 +45,7 @@
 #include <windows.h>
 #endif
 
-static struct sound_driver *sound;
+static const struct sound_driver *sound;
 static unsigned int foreground_in, foreground_out;
 static int refresh_status;
 
@@ -268,8 +268,6 @@ int main(int argc, char **argv)
 	gettimeofday(&tv, NULL);
 	srand(tv.tv_usec);
 #endif
-
-	init_sound_drivers();
 
 	memset(&opt, 0, sizeof (struct options));
 	memset(&control, 0, sizeof (struct control));

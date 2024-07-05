@@ -267,7 +267,7 @@ static void onresume(void)
 	AudioOutputUnitStart(au);
 }
 
-struct sound_driver sound_coreaudio = {
+const struct sound_driver sound_coreaudio = {
 	"coreaudio",
 	"CoreAudio sound output",
 	NULL,

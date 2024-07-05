@@ -219,7 +219,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_os2dart = {
+const struct sound_driver sound_os2dart = {
 	"dart",
 	"OS/2 Direct Audio Realtime",
 	help,

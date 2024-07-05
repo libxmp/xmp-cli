@@ -82,7 +82,7 @@ static void onresume(void)
 {
 }
 
-struct sound_driver sound_pulseaudio = {
+const struct sound_driver sound_pulseaudio = {
 	"pulseaudio",
 	"PulseAudio sound output",
 	NULL,

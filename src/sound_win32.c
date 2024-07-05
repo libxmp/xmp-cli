@@ -174,7 +174,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_win32 = {
+const struct sound_driver sound_win32 = {
 	"win32",
 	"Windows WinMM sound output",
 	help,

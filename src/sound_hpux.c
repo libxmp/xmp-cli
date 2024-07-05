@@ -146,7 +146,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_hpux = {
+const struct sound_driver sound_hpux = {
 	"hpux",
 	"HP-UX PCM audio",
 	help,

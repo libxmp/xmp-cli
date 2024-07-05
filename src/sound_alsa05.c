@@ -200,7 +200,7 @@ static const char *const help[] = {
 	NULL
 };
 
-struct sound_driver sound_alsa05 = {
+const struct sound_driver sound_alsa05 = {
 	"alsa05",		/* driver ID */
 	"ALSA 0.5 PCM audio",	/* driver description */
 	help,			/* help */
