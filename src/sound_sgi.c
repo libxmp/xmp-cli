@@ -167,6 +167,11 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "SGI IRIX PCM audio";
+}
+
 static const char *const help[] = {
 	"buffer=val", "Audio buffer size",
 	NULL
@@ -174,8 +179,8 @@ static const char *const help[] = {
 
 const struct sound_driver sound_sgi = {
 	"sgi",
-	"SGI IRIX PCM audio",
 	help,
+	description,
 	init,
 	deinit,
 	play,

@@ -109,6 +109,11 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "ALSA PCM audio";
+}
+
 static const char *const help[] = {
 	"buffer=num", "Set the ALSA buffer time in milliseconds",
 	"period=num", "Set the ALSA period time in milliseconds",
@@ -118,8 +123,8 @@ static const char *const help[] = {
 
 const struct sound_driver sound_alsa = {
 	"alsa",
-	"ALSA PCM audio",
 	help,
+	description,
 	init,
 	deinit,
 	play,
@@ -127,3 +132,4 @@ const struct sound_driver sound_alsa = {
 	onpause,
 	onresume
 };
+

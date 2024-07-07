@@ -170,6 +170,11 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "Solaris PCM audio";
+}
+
 static const char *const help[] = {
 	"gain=val", "Audio output gain (0 to 255)",
 	"port={s|h|l}", "Audio port (s[peaker], h[eadphones], l[ineout])",
@@ -179,8 +184,8 @@ static const char *const help[] = {
 
 const struct sound_driver sound_solaris = {
 	"solaris",
-	"Solaris PCM audio",
 	help,
+	description,
 	init,
 	deinit,
 	play,

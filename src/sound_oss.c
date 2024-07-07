@@ -41,6 +41,9 @@ static int audio_fd;
 static int fragnum, fragsize;
 static int do_sync = 1;
 
+static const char *desc_default = "OSS PCM audio";
+static char descbuf[80] = {0};
+
 static int to_fmt(int format)
 {
 	int fmt;
@@ -116,7 +119,6 @@ static int init(struct options *options)
 		"/dev/audio"	/* NetBSD and SunOS */
 	};
 	audio_buf_info info;
-	static char buf[80];
 	int i;
 
 	fragnum = 16;		/* default number of fragments */
@@ -141,10 +143,9 @@ static int init(struct options *options)
 	setaudio(&options->rate, &options->format);
 
 	if (ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &info) == 0) {
-		snprintf(buf, 80, "%s [%d fragments of %d bytes]",
-			 sound_oss.description, info.fragstotal,
+		snprintf(descbuf, sizeof(descbuf), "%s [%d fragments of %d bytes]",
+			 desc_default, info.fragstotal,
 			 info.fragsize);
-		sound_oss.description = buf;
 	}
 
 	return 0;
@@ -168,6 +169,7 @@ static void play(void *b, int i)
 
 static void deinit(void)
 {
+	descbuf[0] = 0;
 	ioctl(audio_fd, SNDCTL_DSP_RESET, NULL);
 	close(audio_fd);
 }
@@ -197,6 +199,13 @@ static void onresume(void)
 #endif
 }
 
+static const char *description(void)
+{
+	if (descbuf[0])
+		return descbuf;
+	return desc_default;
+}
+
 static const char *const help[] = {
 	"frag=num,size", "Set the number and size of fragments",
 	"dev=<device_name>", "Audio device to use (default /dev/dsp)",
@@ -204,11 +213,10 @@ static const char *const help[] = {
 	NULL
 };
 
-/* TODO: Make this const to match the other drivers */
-struct sound_driver sound_oss = {
+const struct sound_driver sound_oss = {
 	"oss",
-	"OSS PCM audio",
 	help,
+	description,
 	init,
 	deinit,
 	play,

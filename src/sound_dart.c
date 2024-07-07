@@ -212,6 +212,11 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "OS/2 Direct Audio Realtime";
+}
+
 static const char *const help[] = {
 	"sharing={Y,N}", "Device Sharing    (default is N)",
 	"device=val", "OS/2 Audio Device (default is 0 auto-detect)",
@@ -221,8 +226,8 @@ static const char *const help[] = {
 
 const struct sound_driver sound_os2dart = {
 	"dart",
-	"OS/2 Direct Audio Realtime",
 	help,
+	description,
 	init,
 	deinit,
 	play,

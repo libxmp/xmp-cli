@@ -152,10 +152,15 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "AIFF writer";
+}
+
 const struct sound_driver sound_aiff = {
 	"aiff",
-	"AIFF writer",
 	NULL,
+	description,
 	init,
 	deinit,
 	play,

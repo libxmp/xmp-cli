@@ -94,6 +94,11 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "BSD PCM audio";
+}
+
 static const char *const help[] = {
 	"gain=val", "Audio output gain (0 to 255)",
 	"buffer=val", "Audio buffer size (default is 32768)",
@@ -102,8 +107,8 @@ static const char *const help[] = {
 
 const struct sound_driver sound_bsd = {
 	"bsd",
-	"BSD PCM audio",
 	help,
+	description,
 	init,
 	deinit,
 	play,

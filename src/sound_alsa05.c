@@ -194,6 +194,11 @@ static void flush(void)
 	prepare_driver();
 }
 
+static const char *description(void)
+{
+	return "ALSA 0.5 PCM audio";
+}
+
 static const char *const help[] = {
 	"frag=num,size", "Set the number and size (bytes) of fragments",
 	"card <name>", "Select sound card to use",
@@ -202,8 +207,8 @@ static const char *const help[] = {
 
 const struct sound_driver sound_alsa05 = {
 	"alsa05",		/* driver ID */
-	"ALSA 0.5 PCM audio",	/* driver description */
 	help,			/* help */
+	description,		/* driver description */
 	init,			/* init */
 	dshutdown,		/* shutdown */
 	dummy,			/* starttimer */

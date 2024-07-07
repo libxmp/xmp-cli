@@ -137,10 +137,14 @@ static void onpause(void) {
 static void onresume(void) {
 }
 
+static const char *description(void) {
+    return "Amiga AHI audio";
+}
+
 const struct sound_driver sound_ahi = {
     "ahi",
-    "Amiga AHI audio",
     NULL,
+    description,
     init,
     deinit,
     play,
@@ -148,4 +152,3 @@ const struct sound_driver sound_ahi = {
     onpause,
     onresume
 };
-
