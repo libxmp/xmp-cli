@@ -35,6 +35,7 @@ static const char *const help[] = {
 	NULL
 };
 
+static const char *description(void);
 static int init(struct options *options);
 static void deinit(void);
 static void play(void *b, int i);
@@ -44,8 +45,8 @@ static void onresume(void);
 
 const struct sound_driver sound_beos = {
 	"beos",
-	"BeOS PCM audio",
 	help,
+	description,
 	init,
 	deinit,
 	play,
@@ -204,4 +205,9 @@ static void onpause(void)
 
 static void onresume(void)
 {
+}
+
+static const char *description(void)
+{
+	return "BeOS PCM audio";
 }

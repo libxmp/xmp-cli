@@ -105,6 +105,11 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "QNX PCM audio";
+}
+
 static const char *const help[] = {
 	"dev=<device_name>", "Audio device name (default is /dev/dsp)",
 	"buffer=val", "Audio buffer size (default is 32768)",
@@ -113,8 +118,8 @@ static const char *const help[] = {
 
 const struct sound_driver sound_qnx = {
 	"QNX",
-	"QNX PCM audio",
 	help,
+	description,
 	init,
 	deinit,
 	play,

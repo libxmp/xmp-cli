@@ -59,13 +59,13 @@ static void usage(char *s, struct options *options)
 
 	for (i = 0; sound_driver_list[i] != NULL; i++) {
 		sd = sound_driver_list[i];
-		printf("    %s (%s)\n", sd->id, sd->description);
+		printf("    %s (%s)\n", sd->id, sd->description());
 	}
 
 	for (i = 0; sound_driver_list[i] != NULL; i++) {
 		sd = sound_driver_list[i];
 		if (sd->help)
-			printf("\n%s options:\n", sd->description);
+			printf("\n%s options:\n", sd->description());
 		for (hlp = sd->help; hlp && *hlp; hlp += 2)
 			printf("   -D%-20.20s %s\n", hlp[0], hlp[1]);
 	}

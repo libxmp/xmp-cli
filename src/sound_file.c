@@ -72,6 +72,11 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "Raw file writer";
+}
+
 static const char * const help[] = {
 	"endian=big", "Force big-endian 16-bit samples",
 	"endian=little", "Force little-endian 16-bit samples",
@@ -80,8 +85,8 @@ static const char * const help[] = {
 
 const struct sound_driver sound_file = {
 	"file",
-	"Raw file writer",
 	help,
+	description,
 	init,
 	deinit,
 	play,

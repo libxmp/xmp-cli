@@ -7,8 +7,8 @@
 
 struct sound_driver {
 	const char *id;
-	const char *description;
 	const char *const *help;
+	const char * (*description)(void);
 	int (*init)(struct options *);
 	void (*deinit)(void);
 	void (*play)(void *, int);
@@ -23,7 +23,7 @@ extern const struct sound_driver sound_aiff;
 extern const struct sound_driver sound_file;
 extern const struct sound_driver sound_qnx;
 extern const struct sound_driver sound_alsa05;
-extern       struct sound_driver sound_oss;
+extern const struct sound_driver sound_oss;
 extern const struct sound_driver sound_alsa;
 extern const struct sound_driver sound_os2dart;
 extern const struct sound_driver sound_win32;

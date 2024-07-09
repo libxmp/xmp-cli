@@ -82,10 +82,15 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "PulseAudio sound output";
+}
+
 const struct sound_driver sound_pulseaudio = {
 	"pulseaudio",
-	"PulseAudio sound output",
 	NULL,
+	description,
 	init,
 	deinit,
 	play,

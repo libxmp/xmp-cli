@@ -267,10 +267,15 @@ static void onresume(void)
 	AudioOutputUnitStart(au);
 }
 
+static const char *description(void)
+{
+	return "CoreAudio sound output";
+}
+
 const struct sound_driver sound_coreaudio = {
 	"coreaudio",
-	"CoreAudio sound output",
 	NULL,
+	description,
 	init,
 	deinit,
 	play,
