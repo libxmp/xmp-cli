@@ -138,10 +138,15 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "WAV writer";
+}
+
 const struct sound_driver sound_wav = {
 	"wav",
-	"WAV writer",
 	NULL,
+	description,
 	init,
 	deinit,
 	play,

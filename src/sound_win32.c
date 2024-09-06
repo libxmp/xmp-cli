@@ -169,6 +169,11 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "Windows WinMM sound output";
+}
+
 static const char *const help[] = {
 	"buffers=val", "Number of buffers (default 10)",
 	NULL
@@ -176,8 +181,8 @@ static const char *const help[] = {
 
 const struct sound_driver sound_win32 = {
 	"win32",
-	"Windows WinMM sound output",
 	help,
+	description,
 	init,
 	deinit,
 	play,
@@ -185,4 +190,3 @@ const struct sound_driver sound_win32 = {
 	onpause,
 	onresume
 };
-

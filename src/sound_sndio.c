@@ -100,10 +100,15 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "OpenBSD sndio";
+}
+
 const struct sound_driver sound_sndio = {
 	"sndio",
-	"OpenBSD sndio",
 	NULL,
+	description,
 	init,
 	deinit,
 	play,

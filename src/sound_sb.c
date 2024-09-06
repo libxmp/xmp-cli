@@ -150,10 +150,15 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "Sound Blaster for DOS";
+}
+
 const struct sound_driver sound_sb = {
 	"sb",
-	"Sound Blaster for DOS",
 	NULL,
+	description,
 	init,
 	deinit,
 	play,

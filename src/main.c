@@ -335,7 +335,7 @@ int main(int argc, char **argv)
 		report("Extended Module Player " VERSION "\n"
 			"Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr\n");
 
-		report("Using %s\n", sound->description);
+		report("Using %s\n", sound->description());
 
 		report("Mixer set to %d Hz, %dbit, %s%s%s\n", opt.rate,
 		    opt.format & XMP_FORMAT_8BIT ? 8 : 16,

@@ -34,11 +34,15 @@ static void onresume(void)
 {
 }
 
+static const char *description(void)
+{
+	return "null output";
+}
 
 const struct sound_driver sound_null = {
 	"null",
-	"null output",
 	NULL,
+	description,
 	init,
 	deinit,
 	play,
@@ -46,3 +50,4 @@ const struct sound_driver sound_null = {
 	onpause,
 	onresume
 };
+
