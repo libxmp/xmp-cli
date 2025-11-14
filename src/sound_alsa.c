@@ -52,21 +52,19 @@ static int init(struct options *options)
 	snd_pcm_hw_params_set_access(pcm_handle, hwparams,
 						SND_PCM_ACCESS_RW_INTERLEAVED);
 	snd_pcm_hw_params_set_format(pcm_handle, hwparams, fmt);
-	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &rate, 0);
+	snd_pcm_hw_params_set_rate_near(pcm_handle, hwparams, &rate, NULL);
 	snd_pcm_hw_params_set_channels_near(pcm_handle, hwparams, &channels);
-	snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &btime, 0);
-	snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &ptime, 0);
+	snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &btime, NULL);
+	snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &ptime, NULL);
 	snd_pcm_nonblock(pcm_handle, 0);
 
 	if ((ret = snd_pcm_hw_params(pcm_handle, hwparams)) < 0) {
-		fprintf(stderr, "Unable to set ALSA output parameters: %s\n",
-							snd_strerror(ret));
+		fprintf(stderr, "Unable to set ALSA output parameters: %s\n", snd_strerror(ret));
 		return -1;
 	}
 
 	if ((ret = snd_pcm_prepare(pcm_handle)) < 0) {
-		fprintf(stderr, "Unable to prepare ALSA: %s\n",
-					snd_strerror(ret));
+		fprintf(stderr, "Unable to prepare ALSA: %s\n", snd_strerror(ret));
 		return -1;
 	}
 
@@ -132,4 +130,3 @@ const struct sound_driver sound_alsa = {
 	onpause,
 	onresume
 };
-
