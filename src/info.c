@@ -226,10 +226,20 @@ void info_frame(const struct xmp_module_info *mi, const struct xmp_frame_info *f
 	fflush(stdout);
 }
 
+static void get_sample_pan_string(char pan[4], const struct xmp_subinstrument *sub)
+{
+	if (sub->pan >= 0) {
+		snprintf(pan, 4, "P%02x", sub->pan & 0xff);
+	} else {
+		strcpy(pan, "---");
+	}
+}
+
 void info_ins_smp(const struct xmp_module_info *mi)
 {
 	int i, j;
 	const struct xmp_module *mod = mi->mod;
+	char pan_string[4];
 
 	report("Instruments and samples:\n");
 	report("   Instrument name                  Smp  Size  Loop  End    Vol Fine Xpo Pan\n");
@@ -260,9 +270,10 @@ void info_ins_smp(const struct xmp_module_info *mi)
 				}
 				report("%36.36s", " ");
 			}
+			get_sample_pan_string(pan_string, sub);
 
 			has_sub = 1;
-			report("[%02x] %05x%c%05x %05x%c V%02x %+04d %+03d P%02x\n",
+			report("[%02x] %05x%c%05x %05x%c V%02x %+04d %+03d %-3.3s\n",
 				sub->sid + 1,
 				smp->len,
 				smp->flg & XMP_SAMPLE_16BIT ? '+' : ' ',
@@ -274,7 +285,7 @@ void info_ins_smp(const struct xmp_module_info *mi)
 				sub->vol,
 				sub->fin,
 				sub->xpo,
-				sub->pan & 0xff);
+				pan_string);
 		}
 
 		if (has_sub == 0) {
@@ -287,6 +298,7 @@ void info_instruments(const struct xmp_module_info *mi)
 {
 	int i, j;
 	const struct xmp_module *mod = mi->mod;
+	char pan_string[4];
 
 	report("Instruments:\n");
 	report("   Instrument name                  Vl Fade Env Ns Sub  Gv Vl Fine Xpo Pan Sm\n");
@@ -323,15 +335,16 @@ void info_instruments(const struct xmp_module_info *mi)
 				}
 				report("%51.51s", " ");
 			}
+			get_sample_pan_string(pan_string, sub);
 
 			has_sub = 1;
-			report("[%02x] %02x %02x %+04d %+03d P%02x %02x\n",
+			report("[%02x] %02x %02x %+04d %+03d %-3.3s %02x\n",
 				j + 1,
 				sub->gvl,
 				sub->vol,
 				sub->fin,
 				sub->xpo,
-				sub->pan & 0xff,
+				pan_string,
 				sub->sid);
 		}
 

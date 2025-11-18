@@ -1,6 +1,11 @@
 Stable versions
 ---------------
 
+4.2.1 (?):
+	Changes by Alice Rowan
+	- Report pan value "---" for instruments/samples without
+	  a default panning value (sub->pan < 0).
+
 4.2.0 (20230615):
 	Changes by Özkan Sezer:
 	- Fix OS/2 and Amiga builds. OS-specific tweaks.
