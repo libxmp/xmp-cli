@@ -283,6 +283,9 @@ int main(int argc, char **argv)
 	opt.dsp = XMP_DSP_LOWPASS;
 	opt.player_mode = XMP_MODE_AUTO;
 	opt.amplify = 1;
+	for (i = 0; i < XMP_MAX_CHANNELS; i++) {
+		opt.mute[i] = -1; /* Use module default mute/unmute state */
+	}
 
 	/* read configuration file */
 	if (!opt.norc) {
@@ -484,7 +487,12 @@ int main(int argc, char **argv)
 			/* Mute channels */
 
 			for (i = 0; i < XMP_MAX_CHANNELS; i++) {
-				xmp_channel_mute(xc, i, opt.mute[i]);
+				/* Only mute/unmute if an option has been
+				 * provided explicitly (to avoid unmuting
+				 * disabled channels in IT et al.) */
+				if (opt.mute[i] >= 0) {
+					xmp_channel_mute(xc, i, opt.mute[i]);
+				}
 			}
 
 			/* Set player flags */
