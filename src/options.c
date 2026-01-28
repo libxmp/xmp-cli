@@ -382,8 +382,13 @@ void get_options(int argc, char **argv, struct options *options)
 	/* Set limits */
 	if (options->rate < 1000)
 		options->rate = 1000;	/* Min. rate 1 kHz */
-	if (options->rate > 48000)
-		options->rate = 48000;	/* Max. rate 48 kHz */
+	if (options->rate > XMP_MAX_SRATE)
+		options->rate = XMP_MAX_SRATE;	/* Max. rate 768 kHz */
+
+	if (xmp_vercode < 0x040700) {
+		if (options->rate > 48000)
+			options->rate = 48000;	/* Old max. rate 48kHz */
+	}
 
 	/* apply guess if no driver selected */
 	if (!options->driver_id)
