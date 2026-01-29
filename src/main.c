@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -336,15 +336,16 @@ int main(int argc, char **argv)
 
 	if (opt.verbose > 0) {
 		report("Extended Module Player " VERSION "\n"
-			"Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr\n");
+			"Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr\n");
 
 		report("Using %s\n", sound->description());
 
-		report("Mixer set to %d Hz, %dbit, %s%s%s\n", opt.rate,
-		    opt.format & XMP_FORMAT_8BIT ? 8 : 16,
+		report("Mixer set to %d Hz, %dbit, %s%s%s%s\n", opt.rate,
+		    get_bits_from_format(&opt),
+		    get_signed_from_format(&opt) ? "signed " : "unsigned ",
 		    opt.interp == XMP_INTERP_LINEAR ? "linear interpolated " :
 		    opt.interp == XMP_INTERP_SPLINE ? "cubic spline interpolated " : "",
-		    opt.format & XMP_FORMAT_MONO ? "mono" : "stereo",
+		    get_channels_from_format(&opt) == 1 ? "mono" : "stereo",
 		    opt.dsp & XMP_DSP_LOWPASS ? "" : " (no filter)");
 
 		report("Press 'h' for help\n\n");

@@ -26,7 +26,7 @@ static int swap_endian;
 static long size;
 
 
-static void ulong2extended(unsigned long in, extended *ex) 
+static void ulong2extended(unsigned long in, extended *ex)
 {
 	int exponent = 31 + 16383;
 
@@ -53,29 +53,29 @@ static void write32b(FILE *f, unsigned long w)
 	write8(f,  w & 0x000000ff);
 }
 
-static int init(struct options *options) 
+static int init(struct options *options)
 {
 	char hed[54] = {
 		'F', 'O', 'R', 'M', 0, 0, 0, 0,
 		'A', 'I', 'F', 'F',
 
-		/* COMM chunk */ 
+		/* COMM chunk */
 		'C', 'O', 'M', 'M', 0, 0, 0, 18,
-		0, 0,				/* channels */ 
-		0, 0, 0, 0,			/* frames */ 
-		0, 0,				/* bits */ 
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* rate (extended format) */ 
-		    
-		/* SSND chunk */ 
+		0, 0,				/* channels */
+		0, 0, 0, 0,			/* frames */
+		0, 0,				/* bits */
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* rate (extended format) */
+
+		/* SSND chunk */
 		'S', 'S', 'N', 'D', 0, 0, 0, 0,
-		0, 0, 0, 0,			/* offset */ 
-		0, 0, 0, 0			/* block size */  
+		0, 0, 0, 0,			/* offset */
+		0, 0, 0, 0			/* block size */
 	};
 	extended ex;
 
 	swap_endian = !is_big_endian();
-	channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
-	bits = options->format & XMP_FORMAT_8BIT ? 8 : 16;
+	channels = get_channels_from_format(options);
+	bits = get_bits_from_format(options);
 	size = 0;
 
 	ulong2extended(options->rate, &ex);
@@ -99,22 +99,26 @@ static int init(struct options *options)
 	} else {
 		fd = stdout;
 	}
+	update_format_signed(options, 1);
 
 	fwrite(hed, 1, 54, fd);
 
 	return 0;
 }
 
-static void play(void *b, int len) 
+static void play(void *b, int len)
 {
-	if (swap_endian && bits == 16) {
-		convert_endian((unsigned char *)b, len);
+	if (bits == 24) {
+		len = downmix_32_to_24_packed((unsigned char *)b, len);
+	}
+	if (swap_endian) {
+		convert_endian((unsigned char *)b, len, bits);
 	}
 	fwrite(b, 1, len, fd);
 	size += len;
 }
 
-static void deinit(void) 
+static void deinit(void)
 {
 	if (size > 54) {
 		if (fseek(fd, 4, SEEK_SET) == 0) {	/* FORM chunk size */
@@ -137,18 +141,18 @@ static void deinit(void)
 	fd = NULL;
 }
 
-static void flush(void) 
+static void flush(void)
 {
 	if (fd) {
 		fflush(fd);
 	}
 }
 
-static void onpause(void) 
+static void onpause(void)
 {
 }
 
-static void onresume(void) 
+static void onresume(void)
 {
 }
 
@@ -166,5 +170,5 @@ const struct sound_driver sound_aiff = {
 	play,
 	flush,
 	onpause,
-	onresume 
+	onresume
 };

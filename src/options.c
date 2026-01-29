@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -96,7 +96,7 @@ static void usage(char *s, struct options *options)
 "\nMixer options:\n"
 "   -A --amiga             Use Paula simulation mixer in Amiga formats\n"
 "   -a --amplify {0|1|2|3} Amplification factor: 0=Normal, 1=x2, 2=x4, 3=x8\n"
-"   -b --bits {8|16}       Software mixer resolution (8 or 16 bits)\n"
+"   -b --bits {8|16|24|32} Software mixer resolution (8, 16, 24, or 32 bits)\n"
 "   -c --stdout            Mix the module to stdout\n"
 "   -f --frequency rate    Sampling rate in hertz (default 44100)\n"
 "   -i --interpolation {nearest|linear|spline}\n"
@@ -190,8 +190,19 @@ void get_options(int argc, char **argv, struct options *options)
 			options->amplify = atoi(optarg);
 			break;
 		case 'b':
-			if (atoi(optarg) == 8) {
+			options->format &= ~(XMP_FORMAT_8BIT | XMP_FORMAT_32BIT);
+			options->format_downmix = 0;
+			switch (atoi(optarg)) {
+			case 8:
 				options->format |= XMP_FORMAT_8BIT;
+				break;
+			case 24:
+				options->format |= XMP_FORMAT_32BIT;
+				options->format_downmix = 24;
+				break;
+			case 32:
+				options->format |= XMP_FORMAT_32BIT;
+				break;
 			}
 			break;
 		case 'C':
@@ -387,7 +398,11 @@ void get_options(int argc, char **argv, struct options *options)
 
 	if (xmp_vercode < 0x040700) {
 		if (options->rate > 48000)
-			options->rate = 48000;	/* Old max. rate 48kHz */
+			options->rate = 48000;	/* Old max. rate 48 kHz */
+
+		options->format &= ~XMP_FORMAT_32BIT;
+		options->format_downmix = 0;
+
 	}
 
 	/* apply guess if no driver selected */

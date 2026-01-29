@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -35,6 +35,7 @@ static int buf_read_pos;
 static int num_chunks;
 static int chunk_size;
 static int packet_size;
+static int bits;
 
 
 /* return minimum number of free bytes in buffer, value may change between
@@ -147,23 +148,19 @@ static int init(struct options *options)
 	ad.mFormatFlags = kAudioFormatFlagIsPacked |
 			kAudioFormatFlagsNativeEndian;
 
-	if (~options->format & XMP_FORMAT_UNSIGNED) {
+	ad.mChannelsPerFrame = get_channels_from_format(options);
+	ad.mBitsPerChannel = get_bits_from_format(options);
+
+	/* CoreAudio refuses the stream format unless >8-bit is signed */
+	if (ad.mBitsPerChannel > 8 || get_signed_from_format(options)) {
 		ad.mFormatFlags |= kAudioFormatFlagIsSignedInteger;
 	}
 
-	ad.mChannelsPerFrame = options->format & XMP_FORMAT_MONO ? 1 : 2;
-	ad.mBitsPerChannel = options->format & XMP_FORMAT_8BIT ? 8 : 16;
-
-	if (options->format & XMP_FORMAT_8BIT) {
-		ad.mBytesPerFrame = ad.mChannelsPerFrame;
-	} else {
-		ad.mBytesPerFrame = 2 * ad.mChannelsPerFrame;
-	}
+	ad.mBytesPerFrame = ad.mChannelsPerFrame * ((ad.mBitsPerChannel + 7) / 8);
 	ad.mBytesPerPacket = ad.mBytesPerFrame;
 	ad.mFramesPerPacket = 1;
 
-	packet_size = ad.mFramesPerPacket * ad.mChannelsPerFrame *
-						(ad.mBitsPerChannel / 8);
+	packet_size = ad.mBytesPerPacket;
 
 	cd.componentType = kAudioUnitType_Output;
 	cd.componentSubType = kAudioUnitSubType_DefaultOutput;
@@ -185,12 +182,23 @@ static int init(struct options *options)
 		goto err1;
 
 	size = sizeof(UInt32);
-        if ((status = AudioUnitGetProperty(au, kAudioDevicePropertyBufferSize,
+	if ((status = AudioUnitGetProperty(au, kAudioDevicePropertyBufferSize,
 			kAudioUnitScope_Input, 0, &max_frames, &size)))
 		goto err1;
 
+	size = sizeof(ad);
+	if ((status = AudioUnitGetProperty(au, kAudioUnitProperty_StreamFormat,
+			kAudioUnitScope_Input, 0, &ad, &size)))
+		goto err1;
+
+	if (ad.mChannelsPerFrame > 2 ||
+	    ad.mSampleRate < XMP_MIN_SRATE || ad.mSampleRate > XMP_MAX_SRATE ||
+	    (ad.mBitsPerChannel != 8 && ad.mBitsPerChannel != 16 &&
+	     ad.mBitsPerChannel != 24 && ad.mBitsPerChannel != 32))
+		goto err1;
+
 	chunk_size = max_frames;
-	num_chunks = (options->rate * ad.mBytesPerFrame * latency / 1000
+	num_chunks = (ad.mSampleRate * ad.mBytesPerFrame * latency / 1000
 						+ chunk_size - 1) / chunk_size;
 	buffer_len = (num_chunks + 1) * chunk_size;
 	if ((buffer = calloc(num_chunks + 1, chunk_size)) == NULL)
@@ -208,6 +216,13 @@ static int init(struct options *options)
 			kAudioUnitScope_Input, 0, &rc, sizeof(rc))))
 		goto err2;
 
+	update_format_bits(options, ad.mBitsPerChannel);
+	update_format_signed(options,
+			!!(ad.mFormatFlags & kAudioFormatFlagIsSignedInteger));
+	update_format_channels(options, ad.mChannelsPerFrame);
+	options->rate = ad.mSampleRate;
+	bits = ad.mBitsPerChannel;
+
 	return 0;
 
     err2:
@@ -219,12 +234,15 @@ static int init(struct options *options)
 }
 
 
-/* Build and write one tick (one PAL frame or 1/50 s in standard vblank
- * timed mods) of audio data to the output device.
+/* Write audio data to the output device.
  */
 static void play(void *b, int i)
 {
 	int j = 0;
+
+	if (bits == 24) {
+		i = downmix_32_to_24_packed((unsigned char *)b, i);
+	}
 
 	/* block until we have enough free space in the buffer */
 	while (buf_free() < i)

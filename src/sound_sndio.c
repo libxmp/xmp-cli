@@ -21,6 +21,7 @@
 #include "sound.h"
 
 static struct sio_hdl *hdl;
+static int bits;
 
 static int init(struct options *options)
 {
@@ -33,20 +34,13 @@ static int init(struct options *options)
 	}
 
 	sio_initpar(&par);
-	par.pchan = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	par.pchan = get_channels_from_format(options);
 	par.rate = options->rate;
 	par.le = SIO_LE_NATIVE;
 	par.appbufsz = par.rate / 4;
 
-	if (options->format & XMP_FORMAT_8BIT) {
-		par.bits = 8;
-		par.sig = 0;
-		options->format |= XMP_FORMAT_UNSIGNED;
-	} else {
-		par.bits = 16;
-		par.sig = 1;
-		options->format &= ~XMP_FORMAT_UNSIGNED;
-	}
+	par.bits = get_bits_from_format(options);
+	par.sig = get_signed_from_format(options);
 
 	askpar = par;
 	if (!sio_setpar(hdl, &par) || !sio_getpar(hdl, &par)) {
@@ -54,9 +48,8 @@ static int init(struct options *options)
 		goto error;
 	}
 
-	if ((par.bits == 16 && par.le != askpar.le) ||
-	    par.bits != askpar.bits ||
-	    par.sig != askpar.sig ||
+	if ((par.bits > 8 && par.le != askpar.le) ||
+	    (par.bits != 8 && par.bits != 16 && par.bits != 24 && par.bits != 32) ||
 	    par.pchan != askpar.pchan ||
 	    (par.rate * 1000 < askpar.rate *  995) ||
 	    (par.rate * 1000 > askpar.rate * 1005)) {
@@ -68,6 +61,11 @@ static int init(struct options *options)
 		fprintf(stderr, "%s: failed to start audio device\n", __func__);
 		goto error;
 	}
+
+	update_format_bits(options, par.bits);
+	update_format_signed(options, par.sig);
+	bits = par.bits;
+
 	return 0;
 
     error:
@@ -83,6 +81,10 @@ static void deinit(void)
 
 static void play(void *buf, int len)
 {
+	if (bits == 24) {
+		downmix_32_to_24_aligned(buf, len);
+	}
+
 	if (buf != NULL) {
 		sio_write(hdl, buf, len);
 	}

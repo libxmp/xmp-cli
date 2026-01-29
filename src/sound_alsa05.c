@@ -159,6 +159,7 @@ static int init(struct options *options)
 		printf("Unable to setup channel: %s\n", snd_strerror(rc));
 		return -1;
 	}
+	options->format &= ~XMP_FORMAT_32BIT;
 
 	return 0;
 }

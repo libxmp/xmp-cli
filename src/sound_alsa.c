@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -11,6 +11,7 @@
 #include "sound.h"
 
 static snd_pcm_t *pcm_handle;
+static int bits;
 
 static int init(struct options *options)
 {
@@ -23,7 +24,7 @@ static int init(struct options *options)
 	unsigned int ptime = 50000;	/* 50ms */
 	const char *card_name = "default";
 	unsigned int rate = options->rate;
-	int format = options->format;
+	int sgn;
 
 	parm_init(parm);
 	chkparm1("buffer", btime = 1000 * strtoul(token, NULL, 0));
@@ -38,13 +39,24 @@ static int init(struct options *options)
 		return -1;
 	}
 
-	channels = format & XMP_FORMAT_MONO ? 1 : 2;
-	if (format & XMP_FORMAT_UNSIGNED) {
-		fmt = format & XMP_FORMAT_8BIT ?
-				SND_PCM_FORMAT_U8 : SND_PCM_FORMAT_U16;
-	} else {
-		fmt = format & XMP_FORMAT_8BIT ?
-				SND_PCM_FORMAT_S8 : SND_PCM_FORMAT_S16;
+	bits = get_bits_from_format(options);
+	sgn = get_signed_from_format(options);
+	channels = get_channels_from_format(options);
+
+	switch (bits) {
+	case 8:
+		fmt = sgn ? SND_PCM_FORMAT_S8 : SND_PCM_FORMAT_U8;
+		break;
+	case 16:
+	default:
+		fmt = sgn ? SND_PCM_FORMAT_S16 : SND_PCM_FORMAT_U16;
+		break;
+	case 24:
+		fmt = sgn ? SND_PCM_FORMAT_S24 : SND_PCM_FORMAT_U24;
+		break;
+	case 32:
+		fmt = sgn ? SND_PCM_FORMAT_S32 : SND_PCM_FORMAT_U32;
+		break;
 	}
 
 	snd_pcm_hw_params_alloca(&hwparams);
@@ -68,14 +80,42 @@ static int init(struct options *options)
 		return -1;
 	}
 
-	if (channels == 1) {
-		format |= XMP_FORMAT_MONO;
-	} else {
-		format &= ~XMP_FORMAT_MONO;
+	snd_pcm_hw_params_get_format(hwparams, &fmt);
+	switch (fmt) {
+	case SND_PCM_FORMAT_S8:
+	case SND_PCM_FORMAT_U8:
+		bits = 8;
+		break;
+	case SND_PCM_FORMAT_S16:
+	case SND_PCM_FORMAT_U16:
+		bits = 16;
+		break;
+	case SND_PCM_FORMAT_S24:
+	case SND_PCM_FORMAT_U24:
+		bits = 24;
+		break;
+	case SND_PCM_FORMAT_S32:
+	case SND_PCM_FORMAT_U32:
+		bits = 32;
+		break;
+	default:
+		break;
 	}
-
+	switch (fmt) {
+	case SND_PCM_FORMAT_U8:
+	case SND_PCM_FORMAT_U16:
+	case SND_PCM_FORMAT_U24:
+	case SND_PCM_FORMAT_U32:
+		sgn = 0;
+		break;
+	default:
+		sgn = 1;
+		break;
+	}
+	update_format_bits(options, bits);
+	update_format_signed(options, sgn);
+	update_format_channels(options, channels);
 	options->rate = rate;
-	options->format = format;
 
 	return 0;
 }
@@ -83,6 +123,10 @@ static int init(struct options *options)
 static void play(void *b, int i)
 {
 	int frames = snd_pcm_bytes_to_frames(pcm_handle, i);
+
+	if (bits == 24) {
+		downmix_32_to_24_aligned((unsigned char *)b, i);
+	}
 
 	if (snd_pcm_writei(pcm_handle, b, frames) < 0) {
 		snd_pcm_prepare(pcm_handle);

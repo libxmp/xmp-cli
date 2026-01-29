@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -101,16 +101,105 @@ const struct sound_driver *select_sound_driver(struct options *options)
 	return NULL;
 }
 
-/* Convert little-endian 16 bit samples to big-endian */
-void convert_endian(unsigned char *p, int l)
+/* Downmix 32-bit to 24-bit aligned (in-place) */
+void downmix_32_to_24_aligned(unsigned char *buffer, int buffer_bytes)
+{
+	/* Note: most 24-bit support ignores the high byte.
+	 * sndio, however, expects 24-bit to be sign extended. */
+	int *buf32 = (int *)buffer;
+	int i;
+
+	for (i = 0; i < buffer_bytes; i += 4) {
+		*buf32 >>= 8;
+		buf32++;
+	}
+}
+
+/* Downmix 32-bit to 24-bit packed (in-place).
+ * Returns the new number of useful bytes in the buffer. */
+int downmix_32_to_24_packed(unsigned char *buffer, int buffer_bytes)
+{
+	unsigned char *out = buffer;
+	int buffer_samples = buffer_bytes >> 2;
+	int i;
+
+	/* Big endian 32-bit (22 11 00 XX) -> 24-bit (22 11 00)
+	 * Little endian 32-bit (XX 00 11 22) -> 24-bit (00 11 22)
+	 * Skip the first byte for little endian to allow reusing the same loop.
+	 */
+	if (!is_big_endian()) {
+		buffer++;
+	}
+
+	for (i = 0; i < buffer_samples; i++) {
+		out[0] = buffer[0];
+		out[1] = buffer[1];
+		out[2] = buffer[2];
+		out += 3;
+		buffer += 4;
+	}
+
+	return buffer_samples * 3;
+}
+
+
+/* Convert native endian 16-bit samples for file IO */
+void convert_endian_16bit(unsigned char *buffer, int buffer_bytes)
 {
 	unsigned char b;
 	int i;
 
-	for (i = 0; i < l; i++) {
-		b = p[0];
-		p[0] = p[1];
-		p[1] = b;
-		p += 2;
+	for (i = 0; i < buffer_bytes; i += 2) {
+		b = buffer[0];
+		buffer[0] = buffer[1];
+		buffer[1] = b;
+		buffer += 2;
+	}
+}
+
+/* Convert native endian 24-bit unaligned samples for file IO */
+void convert_endian_24bit(unsigned char *buffer, int buffer_bytes)
+{
+	unsigned char b;
+	int i;
+
+	for (i = 0; i < buffer_bytes; i += 3) {
+		b = buffer[0];
+		buffer[0] = buffer[2];
+		buffer[2] = b;
+		buffer += 3;
+	}
+}
+
+/* Convert native endian 32-bit samples for file IO */
+void convert_endian_32bit(unsigned char *buffer, int buffer_bytes)
+{
+	unsigned char a, b;
+	int i;
+
+	for (i = 0; i < buffer_bytes; i += 4) {
+		a = buffer[0];
+		b = buffer[1];
+		buffer[0] = buffer[3];
+		buffer[1] = buffer[2];
+		buffer[2] = b;
+		buffer[3] = a;
+		buffer += 4;
+	}
+}
+
+/* Convert native endian 16-bit, 24-bit, or 32-bit samples for file IO */
+void convert_endian(unsigned char *buffer, int buffer_bytes, int bits)
+{
+	switch (bits) {
+	case 16:
+		convert_endian_16bit(buffer, buffer_bytes);
+		break;
+	case 24:
+		convert_endian_24bit(buffer, buffer_bytes);
+		break;
+	case 32:
+		convert_endian_32bit(buffer, buffer_bytes);
+		break;
 	}
 }

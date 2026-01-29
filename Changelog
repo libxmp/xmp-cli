@@ -3,12 +3,25 @@ Stable versions
 
 4.2.1 (?):
 	Changes by Alice Rowan
+	- Support 24-bit and 32-bit output (requires libxmp 4.7.0+):
+	  ALSA, BeOS/Haiku, CoreAudio, NetBSD, OSS, PulseAudio,
+	  sndio, WinMM, AIFF, file, WAV.
+	- Use XMP_MAX_SRATE as the limit for -f instead of 48000
+	  (requires libxmp 4.7.0+).
 	- Report pan value "---" for instruments/samples without
 	  a default panning value (sub->pan < 0).
 	- Don't unmute muted IT channels unless explicitly unmuted by
 	  the -S/--solo option.
-	- Use XMP_MAX_SRATE as the limit for -f instead of 48000.
 	- Haiku: Fix configure C++11 detection error message.
+	- ALSA: fix 8-bit and unsigned format mismatches after init.
+	- BeOS/Haiku: support 8-bit unsigned, strip unsigned otherwise.
+	- NetBSD: find the nearest match for the requested format.
+	- PulseAudio: support 8-bit output.
+	- WinMM: support 8-bit unsigned, strip unsigned otherwise.
+	- file: fix incorrect handling of -Dendian ("big" would output
+	  little endian, anything else would output big endian).
+	- wav: fix incorrect RIFF length in output.
+	- wav: add terminal pad byte after odd length data chunks.
 
 4.2.0 (20230615):
 	Changes by Özkan Sezer:

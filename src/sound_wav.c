@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -10,10 +10,18 @@
 #include <string.h>
 #include "sound.h"
 
+#define XMP_WAVE_FORMAT_PCM		0x0001
+#define XMP_WAVE_FORMAT_EXTENSIBLE	0xfffe
+
+static const char subformat[] = {
+	"\x00\x00\x00\x00\x10\x00\x80\x00\x00\xaa\x00\x38\x9b\x71"
+};
+
 static FILE *fd;
-static int format_16bit;
+static int bits_per_sample;
 static int swap_endian;
 static long size;
+static long data_size_offset;
 
 static void write_16l(FILE *f, unsigned short v)
 {
@@ -47,7 +55,7 @@ static int init(struct options *options)
 {
 	unsigned short chan;
 	unsigned int sampling_rate, bytes_per_second;
-	unsigned short bytes_per_frame, bits_per_sample;
+	unsigned short bytes_per_frame;
 
 	swap_endian = is_big_endian();
 
@@ -67,29 +75,38 @@ static int init(struct options *options)
 	write_32l(fd, 0);		/* will be written when finished */
 	fwrite("WAVE", 1, 4, fd);
 
-	chan = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	chan = get_channels_from_format(options);
 	sampling_rate = options->rate;
 
-	bits_per_sample = options->format & XMP_FORMAT_8BIT ? 8 : 16;
-	if (bits_per_sample == 8) {
-		options->format |= XMP_FORMAT_UNSIGNED;
-		format_16bit = 0;
-	} else {
-		options->format &= ~XMP_FORMAT_UNSIGNED;
-		format_16bit = 1;
-	}
+	bits_per_sample = get_bits_from_format(options);
+	update_format_signed(options, bits_per_sample != 8);
 
 	bytes_per_frame = chan * bits_per_sample / 8;
 	bytes_per_second = sampling_rate * bytes_per_frame;
 
 	fwrite("fmt ", 1, 4, fd);
-	write_32l(fd, 16);
-	write_16l(fd, 1);
+	if (bits_per_sample > 16) {
+		write_32l(fd, 40);
+		write_16l(fd, XMP_WAVE_FORMAT_EXTENSIBLE);
+		data_size_offset = 64;
+	} else {
+		write_32l(fd, 16);
+		write_16l(fd, XMP_WAVE_FORMAT_PCM);
+		data_size_offset = 40;
+	}
 	write_16l(fd, chan);
 	write_32l(fd, sampling_rate);
 	write_32l(fd, bytes_per_second);
 	write_16l(fd, bytes_per_frame);
 	write_16l(fd, bits_per_sample);
+
+	if (bits_per_sample > 16) {
+		write_16l(fd, 22);			/* size of extension */
+		write_16l(fd, bits_per_sample);		/* valid bits per sample */
+		write_32l(fd, 0);			/* chn position mask */
+		write_16l(fd, XMP_WAVE_FORMAT_PCM);	/* subformat code */
+		fwrite(subformat, 1, 14, fd);		/* subformat suffix */
+	}
 
 	fwrite("data", 1, 4, fd);
 	write_32l(fd, 0);		/* will be written when finished */
@@ -101,8 +118,11 @@ static int init(struct options *options)
 
 static void play(void *b, int len)
 {
-	if (swap_endian && format_16bit) {
-		convert_endian((unsigned char *)b, len);
+	if (bits_per_sample == 24) {
+		len = downmix_32_to_24_packed((unsigned char *)b, len);
+	}
+	if (swap_endian) {
+		convert_endian((unsigned char *)b, len, bits_per_sample);
 	}
 	fwrite(b, 1, len, fd);
 	size += len;
@@ -110,11 +130,18 @@ static void play(void *b, int len)
 
 static void deinit(void)
 {
-	if (fseek(fd, 40, SEEK_SET) == 0) {
+	/* Pad chunks to word boundaries, even at the end of the file. */
+	int pad = 0;
+	if (size & 1) {
+		fputc(0, fd);
+		pad = 1;
+	}
+
+	if (fseek(fd, data_size_offset, SEEK_SET) == 0) {
 		write_32l(fd, size);
 	}
 	if (fseek(fd, 4, SEEK_SET) == 0) {
-		write_32l(fd, size + 40);
+		write_32l(fd, size + pad + (data_size_offset + 4 - 8));
 	}
 
 	if (fd && fd != stdout) {

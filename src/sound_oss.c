@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -40,21 +40,34 @@ static int audio_fd;
 
 static int fragnum, fragsize;
 static int do_sync = 1;
+static int bits;
 
 static const char *desc_default = "OSS PCM audio";
 static char descbuf[80] = {0};
 
-static int to_fmt(int format)
+static int to_fmt(const struct options *options)
 {
 	int fmt;
 
-	if (format & XMP_FORMAT_8BIT)
+	switch (get_bits_from_format(options)) {
+	case 8:
 		fmt = AFMT_U8 | AFMT_S8;
-	else {
+		break;
+	case 16:
+	default:
 		fmt = AFMT_S16_NE | AFMT_U16_NE;
+		break;
+#if defined(AFMT_S24_NE)
+	case 24:
+		return AFMT_S24_NE;
+#endif
+#if defined(AFMT_S32_NE)
+	case 32:
+		return AFMT_S32_NE;
+#endif
 	}
 
-	if (format & XMP_FORMAT_UNSIGNED)
+	if (!get_signed_from_format(options))
 		fmt &= AFMT_U8 | AFMT_U16_LE | AFMT_U16_BE;
 	else
 		fmt &= AFMT_S8 | AFMT_S16_LE | AFMT_S16_BE;
@@ -62,42 +75,51 @@ static int to_fmt(int format)
 	return fmt;
 }
 
-static int from_fmt(int fmt)
+static void from_fmt(struct options *options, int fmt, int channels)
 {
-	int format = 0;
+	int sgn = 1;
+	bits = 16;
 
+#if defined(AFMT_S32_NE)
+	if (fmt == AFMT_S32_NE) {
+		bits = 32;
+	} else
+#endif
+#if defined(AFMT_S24_NE)
+	if (fmt == AFMT_S24_NE) {
+		bits = 24;
+	} else
+#endif
 	if (!(fmt & (AFMT_S16_LE | AFMT_S16_BE | AFMT_U16_LE | AFMT_U16_BE))) {
-		format |= XMP_FORMAT_8BIT;
+		bits = 8;
 	}
 
 	if (fmt & (AFMT_U8 | AFMT_U16_LE | AFMT_U16_BE)) {
-		format |= XMP_FORMAT_UNSIGNED;
+		sgn = 0;
 	}
-
-	return format;
+	update_format_bits(options, bits);
+	update_format_signed(options, sgn);
+	update_format_channels(options, channels);
 }
 
-static void setaudio(int *rate, int *format)
+static void setaudio(struct options *options)
 {
 	static int fragset = 0;
 	int frag = 0;
+	int stereo;
 	int fmt;
 
 	frag = (fragnum << 16) + fragsize;
 
-	fmt = to_fmt(*format);
+	fmt = to_fmt(options);
 	ioctl(audio_fd, SNDCTL_DSP_SETFMT, &fmt);
-	*format = from_fmt(fmt);
 
-	fmt = !(*format & XMP_FORMAT_MONO);
-	ioctl(audio_fd, SNDCTL_DSP_STEREO, &fmt);
-	if (fmt) {
-		*format &= ~XMP_FORMAT_MONO;
-	} else {
-		*format |= XMP_FORMAT_MONO;
-	}
+	stereo = get_channels_from_format(options) > 1 ? 1 : 0;
+	ioctl(audio_fd, SNDCTL_DSP_STEREO, &stereo);
 
-	ioctl(audio_fd, SNDCTL_DSP_SPEED, rate);
+	ioctl(audio_fd, SNDCTL_DSP_SPEED, &options->rate);
+
+	from_fmt(options, fmt, stereo ? 2 : 1);
 
 	/* Set the fragments only once */
 	if (!fragset) {
@@ -140,7 +162,7 @@ static int init(struct options *options)
 	if (audio_fd < 0)
 		return -1;
 
-	setaudio(&options->rate, &options->format);
+	setaudio(options);
 
 	if (ioctl(audio_fd, SNDCTL_DSP_GETOSPACE, &info) == 0) {
 		snprintf(descbuf, sizeof(descbuf), "%s [%d fragments of %d bytes]",
@@ -157,6 +179,10 @@ static int init(struct options *options)
 static void play(void *b, int i)
 {
 	int j;
+
+	if (bits == 24) {
+		downmix_32_to_24_aligned(b, i);
+	}
 
 	while (i) {
 		if ((j = write(audio_fd, b, i)) > 0) {

@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -11,6 +11,7 @@
 #include "sound.h"
 
 static FILE *fd;
+static int bits;
 static long size;
 static int swap_endian;
 
@@ -18,11 +19,12 @@ static int init(struct options *options)
 {
 	char **parm = options->driver_parm;
 
+	bits = get_bits_from_format(options);
 	swap_endian = 0;
 
 	parm_init(parm);
 	chkparm1("endian",
-		swap_endian = (is_big_endian() ^ strcmp(token, "big")));
+		swap_endian = (is_big_endian() ^ !strcmp(token, "big")));
 	parm_end();
 
 	if (options->out_file == NULL) {
@@ -42,8 +44,11 @@ static int init(struct options *options)
 
 static void play(void *b, int len)
 {
+	if (bits == 24) {
+		len = downmix_32_to_24_packed((unsigned char *)b, len);
+	}
 	if (swap_endian) {
-		convert_endian((unsigned char *)b, len);
+		convert_endian((unsigned char *)b, len, bits);
 	}
 	fwrite(b, 1, len, fd);
 	size += len;

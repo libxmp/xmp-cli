@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -42,7 +42,7 @@ static int init(struct options *options)
 	AUDIO_INITINFO(&ainfo);
 
 	ainfo.play.sample_rate = options->rate;
-	ainfo.play.channels = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	ainfo.play.channels = get_channels_from_format(options);
 	ainfo.play.gain = gain;
 	ainfo.play.buffer_size = bsize;
 
@@ -60,6 +60,7 @@ static int init(struct options *options)
 		close(audio_fd);
 		return -1;
 	}
+	options->format &= ~XMP_FORMAT_32BIT;
 
 	return 0;
 }

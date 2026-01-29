@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -43,9 +43,10 @@ static short ready = 1;
 static HMTX mutex;
 
 /* Buffer update thread (created and called by DART) */
-static LONG APIENTRY OS2_Dart_UpdateBuffers
-    (ULONG ulStatus, PMCI_MIX_BUFFER pBuffer, ULONG ulFlags) {
-
+static LONG APIENTRY OS2_Dart_UpdateBuffers(ULONG ulStatus,
+					    PMCI_MIX_BUFFER pBuffer,
+					    ULONG ulFlags)
+{
 	if ((ulFlags == MIX_WRITE_COMPLETE) ||
 	    ((ulFlags == (MIX_WRITE_COMPLETE | MIX_STREAM_ERROR)) &&
 	     (ulStatus == ERROR_DEVICE_UNDERRUN))) {
@@ -64,6 +65,7 @@ static int init(struct options *options)
 	char sharing = 0;
 	int device = 0;
 	int flags;
+	int bits;
 	int i;
 	MCI_AMP_OPEN_PARMS AmpOpenParms;
 
@@ -107,11 +109,14 @@ static int init(struct options *options)
 	/* setup playback parameters */
 	memset(&MixSetupParms, 0, sizeof(MCI_MIXSETUP_PARMS));
 
-	MixSetupParms.ulBitsPerSample =
-			options->format & XMP_FORMAT_8BIT ? 8 : 16;
+	bits =  get_bits_from_format(options);
+	if (bits > 16) /* TODO: higher? */
+		bits = 16;
+
+	MixSetupParms.ulBitsPerSample = bits;
 	MixSetupParms.ulFormatTag = MCI_WAVE_FORMAT_PCM;
 	MixSetupParms.ulSamplesPerSec = options->rate;
-	MixSetupParms.ulChannels = options->format & XMP_FORMAT_MONO ? 1 : 2;
+	MixSetupParms.ulChannels = get_channels_from_format(options);
 	MixSetupParms.ulFormatMode = MCI_PLAY;
 	MixSetupParms.ulDeviceType = MCI_DEVTYPE_WAVEFORM_AUDIO;
 	MixSetupParms.pmixEvent = OS2_Dart_UpdateBuffers;
@@ -152,6 +157,10 @@ static int init(struct options *options)
 	memset(MixBuffers[1].pBuffer, /*32767 */ 0, bsize);
 	MixSetupParms.pmixWrite(MixSetupParms.ulMixHandle, MixBuffers, 2);
 
+	update_format_bits(options, MixSetupParms.ulBitsPerSample);
+	update_format_signed(options, 1); /* TODO: verify */
+	update_format_channels(options, MixSetupParms.ulChannels);
+	options->rate = MixSetupParms.ulSamplesPerSec;
 	return 0;
 }
 

@@ -92,6 +92,7 @@ static int init(struct options *options) {
                         if (AHIBuf[1]) {
                             /* driver is initialized before calling libxmp, so this is OK : */
                             options->format &= ~XMP_FORMAT_UNSIGNED;/* no unsigned with AHI */
+                            options->format &= ~XMP_FORMAT_32BIT;
                             return 0;
                         }
                     }

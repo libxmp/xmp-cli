@@ -22,6 +22,11 @@
 
 #include <xmp.h>
 
+/* Allow building with <4.7.0 for now... */
+#if XMP_VERCODE < 0x040700
+#define XMP_FORMAT_32BIT	(1 << 3)
+#endif
+
 struct player_mode {
 	const char *name;
 	const char *desc;
@@ -33,6 +38,7 @@ struct options {
 	int amplify;		/* amplification factor */
 	int rate;		/* sampling rate */
 	int format;		/* sample format */
+	int format_downmix;	/* XMP_FORMAT_32BIT may require downmix to 24 */
 	int max_time;		/* max. replay time */
 	int mix;		/* channel separation */
 	int defpan;		/* default pan */

@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -11,6 +11,7 @@
  */
 
 #include <windows.h>
+#include <mmreg.h>
 #include <stdio.h>
 #include "sound.h"
 
@@ -25,12 +26,35 @@ typedef DWORD DWORD_PTR;
 /* frame size = (sampling rate * channels * size) / frame rate */
 #define OUT_MAXLEN 0x8000
 
+#ifndef WAVE_FORMAT_EXTENSIBLE
+#define WAVE_FORMAT_EXTENSIBLE 0xfffe		/* mmreg.h, 98SE and later */
+#endif
+
+#pragma pack(push,1)
+typedef struct _XMP_WAVEFORMATEXTENSIBLE {	/* mmreg.h */
+	WAVEFORMATEX Format;
+	union {
+		WORD wValidBitsPerSample;
+		WORD wSamplesPerBlock;
+		WORD wReserved;
+	} Samples;
+	DWORD dwChannelMask;
+	GUID SubFormat;
+} XMP_WAVEFORMATEXTENSIBLE;
+#pragma pack(pop)
+
+static const GUID XMP_KSDATAFORMAT_SUBTYPE_PCM = { /* mmreg.h, ksuser.dll */
+	WAVE_FORMAT_PCM, 0x0000, 0x0010,
+	{ 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71 }
+};
+
 static HWAVEOUT hwaveout;
 static WAVEHDR header[MAXBUFFERS];
 static LPSTR buffer[MAXBUFFERS];		/* pointers to buffers */
 static WORD freebuffer;				/*  */
 static WORD nextbuffer;				/* next buffer to be mixed */
 static int num_buffers;
+static int bits_per_sample;
 
 static void show_error(int res)
 {
@@ -59,11 +83,11 @@ static void show_error(int res)
 		msg = "Unknown media error";
 	}
 
-	fprintf(stderr, "Error: %s", msg);
+	fprintf(stderr, "Error: %s\n", msg);
 }
 
 static void CALLBACK wave_callback(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance,
-                                  DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+				   DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
 	if (uMsg == WOM_DONE) {
 		freebuffer++;
@@ -71,12 +95,20 @@ static void CALLBACK wave_callback(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance
 	}
 }
 
+static void set_waveformatex(WAVEFORMATEX *wfe, int rate, int bits, int chn)
+{
+	wfe->wBitsPerSample = bits;
+	wfe->nChannels = chn;
+	wfe->nSamplesPerSec = rate;
+	wfe->nAvgBytesPerSec = wfe->nSamplesPerSec * chn * bits / 8;
+	wfe->nBlockAlign = chn * bits / 8;
+}
+
 static int init(struct options *options)
 {
 	char **parm = options->driver_parm;
 	MMRESULT res;
-	WAVEFORMATEX wfe;
-	int i;
+	int chn, i;
 
 	num_buffers = 10;
 
@@ -90,16 +122,36 @@ static int init(struct options *options)
 	if (!waveOutGetNumDevs())
 		return -1;
 
-	wfe.wFormatTag = WAVE_FORMAT_PCM;
-	wfe.wBitsPerSample = options->format & XMP_FORMAT_8BIT ? 8 : 16;
-	wfe.nChannels = options->format & XMP_FORMAT_MONO ? 1 : 2;
-	wfe.nSamplesPerSec = options->rate;
-	wfe.nAvgBytesPerSec = wfe.nSamplesPerSec * wfe.nChannels *
-	    wfe.wBitsPerSample / 8;
-	wfe.nBlockAlign = wfe.nChannels * wfe.wBitsPerSample / 8;
+	bits_per_sample = get_bits_from_format(options);
+	chn = get_channels_from_format(options);
 
-	res = waveOutOpen(&hwaveout, WAVE_MAPPER, &wfe, (DWORD_PTR) wave_callback,
-			  0, CALLBACK_FUNCTION);
+	if (bits_per_sample > 16) {
+		XMP_WAVEFORMATEXTENSIBLE wfx;
+		set_waveformatex(&wfx.Format, options->rate, bits_per_sample, chn);
+		wfx.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+		wfx.Format.cbSize = sizeof(wfx) - sizeof(wfx.Format);
+		wfx.Samples.wValidBitsPerSample = bits_per_sample;
+		wfx.dwChannelMask = 0;
+		wfx.SubFormat = XMP_KSDATAFORMAT_SUBTYPE_PCM;
+
+		res = waveOutOpen(&hwaveout, WAVE_MAPPER, (LPCWAVEFORMATEX)&wfx,
+				  (DWORD_PTR)wave_callback, 0, CALLBACK_FUNCTION);
+
+		if (res != MMSYSERR_NOERROR) {
+			/* May be Windows 95; try 16-bit audio instead */
+			bits_per_sample = 16;
+		}
+	}
+
+	if (bits_per_sample <= 16) {
+		WAVEFORMATEX wfe;
+		set_waveformatex(&wfe, options->rate, bits_per_sample, chn);
+		wfe.wFormatTag = WAVE_FORMAT_PCM;
+		wfe.cbSize = 0;
+
+		res = waveOutOpen(&hwaveout, WAVE_MAPPER, &wfe,
+				  (DWORD_PTR)wave_callback, 0, CALLBACK_FUNCTION);
+	}
 
 	if (res != MMSYSERR_NOERROR) {
 		show_error(res);
@@ -112,12 +164,14 @@ static int init(struct options *options)
 		buffer[i] = (LPSTR) malloc(OUT_MAXLEN);
 		header[i].lpData = buffer[i];
 
-		if (!buffer[i] || res != MMSYSERR_NOERROR) {
-			show_error(res);
+		if (!buffer[i]) {
+			show_error(MMSYSERR_NOMEM);
 			return -1;
 		}
 	}
 
+	update_format_bits(options, bits_per_sample);
+	update_format_signed(options, bits_per_sample != 8);
 	freebuffer = nextbuffer = 0;
 
 	return 0;
@@ -125,6 +179,9 @@ static int init(struct options *options)
 
 static void play(void *b, int len)
 {
+	if (bits_per_sample == 24) {
+		len = downmix_32_to_24_packed((unsigned char *)b, len);
+	}
 	memcpy(buffer[nextbuffer], b, len);
 
 	while ((nextbuffer + 1) % num_buffers == freebuffer)

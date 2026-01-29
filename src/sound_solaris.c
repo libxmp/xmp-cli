@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2016 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -137,6 +137,7 @@ static int init(struct options *options)
 		/* sound_solaris.description = "Solaris CS4231 PCM audio"; */
 	}
 
+	options->format &= ~XMP_FORMAT_32BIT;
 	return 0;
 }
 
