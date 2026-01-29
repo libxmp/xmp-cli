@@ -5,6 +5,13 @@
 *.dll
 *.gz
 
+# VSCode/clangd files
+/.cache
+/.clangd
+/.vscode
+*.code-workspace
+compile_commands.json
+
 # Modules
 *.it
 
@@ -12,6 +19,7 @@
 .deps
 Makefile
 Makefile.in
+*~
 
 /aclocal.m4
 /autom4te.cache/
