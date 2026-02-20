@@ -8,6 +8,7 @@ Stable versions
 	- Don't unmute muted IT channels unless explicitly unmuted by
 	  the -S/--solo option.
 	- Use XMP_MAX_SRATE as the limit for -f instead of 48000.
+	- Haiku: Fix configure C++11 detection error message.
 
 4.2.0 (20230615):
 	Changes by Özkan Sezer:

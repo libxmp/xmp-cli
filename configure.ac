@@ -18,7 +18,8 @@ AC_PROG_CC
 AC_PROG_CXX
 case "$host_os" in
 beos*|haiku*)
-	AS_IF([! which "$CXX" >/dev/null 2>/dev/null],
+	# CXX may have -std=c++11 appended, do not wrap with quotes.
+	AS_IF([! command -v $CXX >/dev/null 2>/dev/null],
 		[AC_MSG_ERROR([C++ compiler required on this platform ($host_os)])])
 	CXXLD='$(CXX)'
 	;;
