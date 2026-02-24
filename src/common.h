@@ -62,7 +62,7 @@ struct options {
 	const char *out_file;	/* output file name */
 	char *ins_path;		/* instrument path */
 	char *driver_parm[MAX_DRV_PARM]; /* driver parameters */
-	char mute[XMP_MAX_CHANNELS];
+	signed char mute[XMP_MAX_CHANNELS];
 };
 
 struct control {
