@@ -1,6 +1,7 @@
 #!/bin/sh
 
+set -e
+
 mkdir -p build-aux
-aclocal
-autoconf
-automake --add-missing
+"${AUTORECONF:-autoreconf}" -i
+rm -rf autom4te.cache

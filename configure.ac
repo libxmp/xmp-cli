@@ -1,21 +1,16 @@
+AC_PREREQ([2.60])
 AC_INIT([xmp], [4.2.0])
-AM_SILENT_RULES([yes])
 AC_CONFIG_AUX_DIR([build-aux])
-0>confdefs.h
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES(yes)])
+AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
+AC_CONFIG_MACRO_DIR([m4])
 
-AC_ARG_ENABLE(oss,
-  [  --disable-oss           don't compile OSS support])
-AC_ARG_ENABLE(alsa,
-  [  --disable-alsa          don't compile ALSA support])
-AC_ARG_ENABLE(pulseaudio,
-  [  --enable-pulseaudio     compile PulseAudio support])
-AC_ARG_ENABLE(sndio,
-  [  --disable-sndio         don't compile sndio support])
-
-AC_SUBST(LD_VERSCRIPT)
 AC_CANONICAL_HOST
 AC_PROG_CC
 AC_PROG_CXX
+PKG_PROG_PKG_CONFIG
+AC_PROG_INSTALL
+
 case "$host_os" in
 beos*|haiku*)
 	# CXX may have -std=c++11 appended, do not wrap with quotes.
@@ -30,8 +25,14 @@ beos*|haiku*)
 esac
 AC_SUBST([CXXLD])
 
-AC_PROG_INSTALL
-AM_INIT_AUTOMAKE([foreign subdir-objects])
+AC_ARG_ENABLE(oss,
+  [  --disable-oss           don't compile OSS support])
+AC_ARG_ENABLE(alsa,
+  [  --disable-alsa          don't compile ALSA support])
+AC_ARG_ENABLE(pulseaudio,
+  [  --enable-pulseaudio     compile PulseAudio support])
+AC_ARG_ENABLE(sndio,
+  [  --disable-sndio         don't compile sndio support])
 
 AC_ARG_WITH([libxmp-lite],
   AS_HELP_STRING([--with-libxmp-lite],[build against libxmp-lite instead of libxmp]),
