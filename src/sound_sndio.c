@@ -1,5 +1,12 @@
-/*
- * Copyright (c) 2009 Thomas Pfaff <tpfaff@tp76.info>
+/* Extended Module Player
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
+ *
+ * This file is part of the Extended Module Player and is distributed
+ * under the terms of the GNU General Public License. See the COPYING
+ * file for more information.
+ */
+
+/* Copyright (c) 2009 Thomas Pfaff <tpfaff@tp76.info>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above

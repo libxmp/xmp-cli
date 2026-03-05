@@ -1,5 +1,5 @@
 AC_PREREQ([2.60])
-AC_INIT([xmp], [4.2.0])
+AC_INIT([xmp], [4.3.0])
 AC_CONFIG_AUX_DIR([build-aux])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES(yes)])
 AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])

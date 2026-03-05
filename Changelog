@@ -1,7 +1,7 @@
 Stable versions
 ---------------
 
-4.2.1 (?):
+4.3.0 (?):
 	Changes by Alice Rowan
 	- Support 24-bit and 32-bit output (requires libxmp 4.7.0+):
 	  ALSA, BeOS/Haiku, CoreAudio, NetBSD, OSS, PulseAudio,
