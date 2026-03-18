@@ -74,6 +74,8 @@ static void close_libs(void)
 static int init(struct options *options)
 {
 	unsigned long fmt;
+	int channels;
+	int bits;
 
 	AHImp = CreateMsgPort();
 	if (AHImp == NULL) {
@@ -97,10 +99,26 @@ static int init(struct options *options)
 		goto err;
 	}
 
-	if (options->format & XMP_FORMAT_8BIT) {
-		fmt = options->format & XMP_FORMAT_MONO ? AHIST_M8S : AHIST_S8S;
-	} else {
-		fmt = options->format & XMP_FORMAT_MONO ? AHIST_M16S : AHIST_S16S;
+	bits = get_bits_from_format(options);
+	channels = get_channels_from_format(options);
+
+	switch (bits) {
+	case 8:
+		fmt = (channels == 1) ? AHIST_M8S : AHIST_S8S;
+		bits = 8;
+		break;
+	case 16:
+	default:
+		fmt = (channels == 1) ? AHIST_M16S : AHIST_S16S;
+		bits = 16;
+		break;
+#if defined(AHIST_M32S) && defined(AHIST_S32S)
+	case 24:
+	case 32:
+		fmt = (channels == 1) ? AHIST_M32S : AHIST_S32S;
+		bits = 32;
+		break;
+#endif
 	}
 
 	AHIReq[0]->ahir_Std.io_Command = CMD_WRITE;
@@ -119,8 +137,9 @@ static int init(struct options *options)
 		goto err;
 	}
 
-	options->format &= ~XMP_FORMAT_UNSIGNED;
-	options->format &= ~XMP_FORMAT_32BIT;
+	update_format_bits(options, bits);
+	update_format_signed(options, 1);
+
 	active = 0;
 	return 0;
 

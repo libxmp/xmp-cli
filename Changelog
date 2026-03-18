@@ -4,7 +4,7 @@ Stable versions
 4.3.0 (?):
 	Changes by Alice Rowan
 	- Support 24-bit and 32-bit output (requires libxmp 4.7.0+):
-	  ALSA, BeOS/Haiku, CoreAudio, NetBSD, OSS, PulseAudio,
+	  AHI, ALSA, BeOS/Haiku, CoreAudio, NetBSD, OSS, PulseAudio,
 	  sndio, WinMM, AIFF, file, WAV.
 	- Use XMP_MAX_SRATE as the limit for -f instead of 48000
 	  (requires libxmp 4.7.0+).
