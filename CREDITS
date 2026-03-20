@@ -60,6 +60,12 @@ The Authors
 - Thomas Pfaff <tpfaff@tp76.info>
   * OpenBSD sndio driver
 
+- Alfonso Ranieri, codesets.library Open Source Team
+  * Amiga StackSwap assembly routine
+
+- Alice Rowan <petrifiedrowan@gmail.com>
+  * Various features, sound driver enhancements and fixes
+
 - Johan Samuelsson <spot@triad.se>
   * Amiga port and fixes
 

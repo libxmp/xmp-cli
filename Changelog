@@ -8,6 +8,10 @@ Stable versions
 	  sndio, WinMM, AIFF, file, WAV.
 	- Use XMP_MAX_SRATE as the limit for -f instead of 48000
 	  (requires libxmp 4.7.0+).
+	- Amiga: automatically expand stack via stack cookie (OS 4),
+	  NewStackSwap (AROS), NewPPCStackSwap (MorphOS), or StackSwap
+	  (Workbench 2.04+). Runtime swapping can be disabled by
+	  defining XMP_NO_STACKSWAP.
 	- Report pan value "---" for instruments/samples without
 	  a default panning value (sub->pan < 0).
 	- Don't unmute muted IT channels unless explicitly unmuted by

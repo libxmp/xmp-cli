@@ -20,6 +20,7 @@
 #if defined(XMP_AMIGA)
 #include <proto/timer.h>
 #include <time.h>
+#include "main_amiga.h"
 #endif
 #if defined(__WATCOMC__)
 #include <time.h>

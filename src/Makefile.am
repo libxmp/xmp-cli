@@ -8,8 +8,9 @@ bin_PROGRAMS = xmp
 
 xmp_SOURCES = \
 	commands.c common.h delay.c getopt_long.h getopt_long.c info.c \
-	main.c options.c read_config.c sound.c sound.h sound_file.c sound_null.c \
-	sound_wav.c sound_aiff.c terminal.c util.c xmp_version.h
+	main.c main_amiga.h options.c read_config.c sound.c sound.h \
+	sound_aiff.c sound_file.c sound_null.c sound_wav.c terminal.c util.c \
+	xmp_version.h
 xmp_LDADD   = ${LIBXMP_LIBS}
 xmp_LDFLAGS = ${XMP_DARWIN_LDFLAGS}
 
