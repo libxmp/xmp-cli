@@ -89,11 +89,6 @@ static int init(struct options *options)
 	}
 	AHIReq[0]->ahir_Version = 4;
 
-	AHIReq[1] = AllocVec(sizeof(struct AHIRequest), SHAREDMEMFLAG);
-	if (AHIReq[1] == NULL) {
-		goto err;
-	}
-
 	if (OpenDevice((CONST_STRPTR)AHINAME, AHI_DEFAULT_UNIT,
 			(struct IORequest *)AHIReq[0], 0) != 0) {
 		goto err;
@@ -129,6 +124,10 @@ static int init(struct options *options)
 	AHIReq[0]->ahir_Volume = 0x10000;
 	AHIReq[0]->ahir_Position = 0x8000;
 
+	AHIReq[1] = AllocVec(sizeof(struct AHIRequest), SHAREDMEMFLAG);
+	if (AHIReq[1] == NULL) {
+		goto err;
+	}
 	CopyMem(AHIReq[0], AHIReq[1], sizeof(struct AHIRequest));
 
 	AHIBuf[0] = AllocVec(BUFFERSIZE, SHAREDMEMFLAG | MEMF_CLEAR);

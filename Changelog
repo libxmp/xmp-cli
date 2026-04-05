@@ -13,6 +13,7 @@ Stable versions
 	- Don't unmute muted IT channels unless explicitly unmuted by
 	  the -S/--solo option.
 	- Haiku: Fix configure C++11 detection error message.
+	- AHI: fix crash on OpenDevice failure.
 	- ALSA: fix 8-bit and unsigned format mismatches after init.
 	- BeOS/Haiku: support 8-bit unsigned, strip unsigned otherwise.
 	- NetBSD: find the nearest match for the requested format.
