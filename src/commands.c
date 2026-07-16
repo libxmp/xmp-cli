@@ -81,39 +81,39 @@ static int stdin_ready_for_reading(void)
 
 static int read_key(void)
 {
-	char key;
-	int ret = 0;
-
 #if defined(_WIN32) || defined(__OS2__) || defined(__EMX__) || defined(__DJGPP__) || defined(_DOS)
 	if (kbhit()) {
-		key = getch();
-		if (!key || (unsigned char)key == 0xe0)
-			key = getch();
-		ret = 1;
-	}
-#elif defined(XMP_AMIGA)
-	/* Amiga CLI */
-	{
-		BPTR in = Input();
-		if (WaitForChar(in, 1)) {
-			Read(in, &key, 1);
-			ret = 1;
+		int key = getch();
+		if (!key || key == 0xe0) {
+			return (0x100 | getch());
 		}
+		if (key > 0x7f) {
+			return -1;
+		}
+		return key;
 	}
+	return -1;
+#elif defined(XMP_AMIGA)
+	BPTR in = Input();
+	if (WaitForChar(in, 1)) {
+		signed char key;
+		Read(in, &key, 1);
+		return key;
+	}
+	return -1;
 #elif defined(HAVE_TERMIOS_H)
+	int ret;
+	signed char key;
 	#ifdef __CYGWIN__
-	if (stdin_ready_for_reading())
-	#endif
-	    ret = read(0, &key, 1);
-#else
-	ret = 0;
-#endif
-
-	if (ret <= 0) {
+	if (!stdin_ready_for_reading()) {
 		return -1;
 	}
-
-	return key;
+	#endif
+	ret = read(0, &key, 1);
+	return (ret <= 0) ? -1 : key;
+#else
+	return -1;
+#endif
 }
 
 static void change_sequence(xmp_context handle, const struct xmp_module_info *mi, struct control *ctl, int i)
@@ -147,23 +147,23 @@ static void change_sequence(xmp_context handle, const struct xmp_module_info *mi
  */
 void read_command(xmp_context handle, const struct xmp_module_info *mi, struct control *ctl)
 {
-	int cmd;
+	int cmd = read_key();
 
-	cmd = read_key();
-	if (cmd <= 0)
+	if (cmd <= 0) {
 		return;
+	}
 
 	switch (cmd) {
-#if defined(_WIN32) || defined(__MSDOS__) || defined(_DOS) || defined(__OS2__) || defined(__EMX__)
-	case 0x48:
+	#if defined(_WIN32) || defined(__OS2__) || defined(__EMX__) || defined(__DJGPP__) || defined(_DOS)
+	case 0x148:
 		goto cmd_next_mod;
-	case 0x50:
+	case 0x150:
 		goto cmd_prev_mod;
-	case 0x4d:
+	case 0x14d:
 		goto cmd_next_pos;
-	case 0x4b:
+	case 0x14b:
 		goto cmd_prev_pos;
-#endif
+	#endif
 	case 0x1b:		/* escape */
 		cmd = read_key();
 		if (cmd != '[')
