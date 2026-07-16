@@ -87,6 +87,8 @@ static int read_key(void)
 #if defined(_WIN32) || defined(__OS2__) || defined(__EMX__) || defined(__DJGPP__) || defined(_DOS)
 	if (kbhit()) {
 		key = getch();
+		if (!key || (unsigned char)key == 0xe0)
+			key = getch();
 		ret = 1;
 	}
 #elif defined(XMP_AMIGA)
@@ -152,6 +154,16 @@ void read_command(xmp_context handle, const struct xmp_module_info *mi, struct c
 		return;
 
 	switch (cmd) {
+#if defined(_WIN32) || defined(__MSDOS__) || defined(_DOS) || defined(__OS2__) || defined(__EMX__)
+	case 0x48:
+		goto cmd_next_mod;
+	case 0x50:
+		goto cmd_prev_mod;
+	case 0x4d:
+		goto cmd_next_pos;
+	case 0x4b:
+		goto cmd_prev_pos;
+#endif
 	case 0x1b:		/* escape */
 		cmd = read_key();
 		if (cmd != '[')

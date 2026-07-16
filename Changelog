@@ -2,6 +2,7 @@ Stable versions
 ---------------
 
 4.3.1 (?):
+	- Fixed arrow keys not working on windows, dos or os2
 	- Use nanosleep() as the delay procedure on unices if available.
 	- Fixed Amiga version of the delay procedure.
 
