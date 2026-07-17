@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2024 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2026 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * This file is part of the Extended Module Player and is distributed
  * under the terms of the GNU General Public License. See the COPYING
@@ -104,15 +104,15 @@ static int read_key(void)
 #elif defined(HAVE_TERMIOS_H)
 	int ret;
 	signed char key;
-	#ifdef __CYGWIN__
+#ifdef __CYGWIN__
 	if (!stdin_ready_for_reading()) {
 		return -1;
 	}
-	#endif
+#endif /* __CYGWIN__ */
 	ret = read(0, &key, 1);
 	return (ret <= 0) ? -1 : key;
 #else
-	return -1;
+#error Please define read_key() for this platform!
 #endif
 }
 
@@ -154,7 +154,7 @@ void read_command(xmp_context handle, const struct xmp_module_info *mi, struct c
 	}
 
 	switch (cmd) {
-	#if defined(_WIN32) || defined(__OS2__) || defined(__EMX__) || defined(__DJGPP__) || defined(_DOS)
+#if defined(_WIN32) || defined(__OS2__) || defined(__EMX__) || defined(__DJGPP__) || defined(_DOS)
 	case 0x148:
 		goto cmd_next_mod;
 	case 0x150:
@@ -163,7 +163,7 @@ void read_command(xmp_context handle, const struct xmp_module_info *mi, struct c
 		goto cmd_next_pos;
 	case 0x14b:
 		goto cmd_prev_pos;
-	#endif
+#endif
 	case 0x1b:		/* escape */
 		cmd = read_key();
 		if (cmd != '[')
